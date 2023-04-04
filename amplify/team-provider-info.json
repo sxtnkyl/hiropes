@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-hiropes-dev-161550-authRole",
+      "UnauthRoleArn": "arn:aws:iam::111337943884:role/amplify-hiropes-dev-161550-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::111337943884:role/amplify-hiropes-dev-161550-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-hiropes-dev-161550-deployment",
+      "UnauthRoleName": "amplify-hiropes-dev-161550-unauthRole",
+      "StackName": "amplify-hiropes-dev-161550",
+      "StackId": "arn:aws:cloudformation:us-east-1:111337943884:stack/amplify-hiropes-dev-161550/7f85a8b0-d325-11ed-b63f-0a3c80fd2065",
+      "AmplifyAppId": "d1wj00zom90t1x"
+    }
+  }
+}
