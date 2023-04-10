@@ -1,21 +1,44 @@
 import TopNavbar from '@/SharedComponents/TopNavbar';
 import { ActiveUserProvider } from '@/contexts/ActiveUserContext';
-import '@/styles/globals.css';
+import createEmotionCache from '@/styles/createEmotionCache';
+import theme from '@/styles/theme';
 import Amplify from '@aws-amplify/core';
 import { withAuthenticator } from '@aws-amplify/ui-react';
+import { CacheProvider } from '@emotion/react';
+import { EmotionCache } from '@emotion/utils';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useEffect } from 'react';
 import config from '../aws-exports';
 
 Amplify.configure(config);
+const clientSideEmotionCache = createEmotionCache();
 
-export default function App({ Component, pageProps, router }: AppProps) {
+export interface NextWithMui extends AppProps {
+  emotionCache?: EmotionCache;
+}
+
+export default function App({
+  Component,
+  pageProps,
+  router,
+  emotionCache = clientSideEmotionCache,
+}: NextWithMui) {
   const { currentAuthenticatedUser } = pageProps;
 
   const AuthenticatedComponent =
     currentAuthenticatedUser || router.route === '/'
       ? Component
       : withAuthenticator(Component);
+
+  useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles?.parentElement?.removeChild(jssStyles);
+    }
+  }, []);
 
   return (
     <div>
@@ -26,10 +49,15 @@ export default function App({ Component, pageProps, router }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <ActiveUserProvider>
-        <TopNavbar />
-        <AuthenticatedComponent {...pageProps} />
-      </ActiveUserProvider>
+      <CacheProvider value={emotionCache}>
+        <ThemeProvider theme={theme}>
+          <ActiveUserProvider>
+            <CssBaseline />
+            <TopNavbar />
+            <AuthenticatedComponent {...pageProps} />
+          </ActiveUserProvider>
+        </ThemeProvider>
+      </CacheProvider>
     </div>
   );
 }

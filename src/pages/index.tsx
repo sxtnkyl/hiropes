@@ -1,9 +1,11 @@
-import styles from '@/styles/Home.module.css';
+import { Typography } from '@mui/material';
 
 const Home = () => {
   return (
     <>
-      <main className={styles.main}>HiRopes Home Page</main>
+      <main>
+        <Typography variant="h1">HiRopes Home Page</Typography>
+      </main>
     </>
   );
 };
