@@ -10,7 +10,7 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document';
-import { NextWithMui } from './_app';
+import { NextWithMui } from './_app.page';
 
 interface MyDocumentProps extends DocumentProps {
   emotionStyleTags: JSX.Element[];
