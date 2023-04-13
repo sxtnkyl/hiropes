@@ -1,8 +1,6 @@
 import theme from '@/styles/theme';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { Box, IconButton, SxProps } from '@mui/material';
-import Link from 'next/link';
+import { Box, SxProps } from '@mui/material';
+import { ReactNode } from 'react';
 
 const titleBarSx: SxProps = {
   width: '100%',
@@ -14,18 +12,22 @@ const titleBarSx: SxProps = {
   boxShadow: theme.shadows[5],
 };
 
-const TitleBar = () => {
+interface TitleBarProps {
+  leftActionItem: ReactNode;
+  title: ReactNode;
+  rightActionItem: ReactNode;
+}
+
+const TitleBar = ({
+  leftActionItem,
+  title,
+  rightActionItem,
+}: TitleBarProps) => {
   return (
     <Box id="title-bar" sx={titleBarSx}>
-      <IconButton aria-label="menu">
-        <MenuOpenIcon />
-      </IconButton>
-      <span>TITLE</span>
-      <Link href={'/profile'}>
-        <IconButton aria-label="profile">
-          <AccountBoxIcon />
-        </IconButton>
-      </Link>
+      {leftActionItem}
+      {title}
+      {rightActionItem}
     </Box>
   );
 };

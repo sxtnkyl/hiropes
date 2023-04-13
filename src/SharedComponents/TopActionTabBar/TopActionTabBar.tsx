@@ -1,34 +1,16 @@
 import theme from '@/styles/theme';
-import { Tab, TabProps, Tabs } from '@mui/material';
-import { SyntheticEvent, useState } from 'react';
+import { Tabs, TabsProps } from '@mui/material';
 
-const homeTabOptions: TabProps[] = [
-  { label: 'create' },
-  { label: 'calendar' },
-  { label: 'tracking' },
-];
-
-const TopActionTabBar = () => {
-  const [activeTab, setActiveTab] = useState('');
-
-  const homeTabs = homeTabOptions.map((option, i) => (
-    <Tab {...option} key={i} />
-  ));
-
-  const handleTabChange = (event: SyntheticEvent, newValue: string) => {
-    setActiveTab(newValue);
-  };
-
+const TopActionTabBar = ({ sx, children, ...rest }: TabsProps) => {
   return (
     <Tabs
-      value={activeTab}
-      onChange={handleTabChange}
+      id="top-action-tab-bar"
       centered
       variant="fullWidth"
-      id="top-action-tab-bar"
-      sx={{ margin: '1rem 0', boxShadow: theme.shadows[1] }}
+      sx={{ margin: '1rem 0', boxShadow: theme.shadows[1], ...sx }}
+      {...rest}
     >
-      {homeTabs}
+      {children}
     </Tabs>
   );
 };

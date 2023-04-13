@@ -1,13 +1,62 @@
-import { Typography } from '@mui/material';
+import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
+import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { IconButton, Tab, TabProps, Typography } from '@mui/material';
+import Link from 'next/link';
+import { SyntheticEvent, useState } from 'react';
+import HomeCalendarContent from './index/HomeCalendarContent';
+import HomeCreateContent from './index/HomeCreateContent';
+import HomePageContent from './index/HomePageContent';
+import HomeTrackingContent from './index/HomeTrackingContent';
 
-const Home = () => {
+const homeActionTabs: TabProps[] = [
+  { label: 'create', value: 'create' },
+  { label: 'calendar', value: 'calendar' },
+  { label: 'tracking', value: 'tracking' },
+];
+
+const HomePage = () => {
+  const [activeTab, setActiveTab] = useState<string | false>(false);
+
+  const homeTabs = homeActionTabs.map((option, i) => (
+    <Tab {...option} key={i} />
+  ));
+
+  const handleTabChange = (event: SyntheticEvent, newValue: string) => {
+    setActiveTab(newValue);
+  };
+
   return (
     <>
+      <TitleBar
+        leftActionItem={
+          <IconButton aria-label="menu">
+            <MenuOpenIcon />
+          </IconButton>
+        }
+        title={<Typography variant="h3">Hiropes</Typography>}
+        rightActionItem={
+          <Link href={'/profile'}>
+            <IconButton aria-label="profile">
+              <AccountBoxIcon />
+            </IconButton>
+          </Link>
+        }
+      />
+
+      <TopActionTabBar value={activeTab} onChange={handleTabChange}>
+        {homeTabs}
+      </TopActionTabBar>
+
       <main>
-        <Typography variant="h1">HiRopes Home Page</Typography>
+        {!activeTab && <HomePageContent />}
+        {activeTab === 'create' && <HomeCreateContent />}
+        {activeTab === 'calendar' && <HomeCalendarContent />}
+        {activeTab === 'tracking' && <HomeTrackingContent />}
       </main>
     </>
   );
 };
 
-export default Home;
+export default HomePage;
