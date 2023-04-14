@@ -38,7 +38,7 @@ export const ActiveUserProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     signedInUserSetter();
-  });
+  }, [router]);
 
   return (
     <ActiveUserContext.Provider value={signedInUser}>

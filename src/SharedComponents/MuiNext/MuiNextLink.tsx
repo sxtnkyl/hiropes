@@ -6,7 +6,7 @@ import Link, { LinkProps } from 'next/link';
  * for Next routing and mui
  * ease of styling styling
  */
-type MuiNextLinkProps = LinkProps & LinkBaseProps;
+export type MuiNextLinkProps = LinkProps & LinkBaseProps;
 
 const MuiNextLink = ({ children, href, ...rest }: MuiNextLinkProps) => {
   return (

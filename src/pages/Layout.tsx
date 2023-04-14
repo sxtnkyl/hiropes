@@ -1,3 +1,4 @@
+import MuiNextLink from '@/SharedComponents/MuiNext/MuiNextLink';
 import SideDrawer from '@/SharedComponents/SideDrawer/SideDrawer';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import styled from '@emotion/styled';
@@ -34,36 +35,56 @@ const Layout = ({ children }: { children: ReactNode }) => {
       >
         <List>
           <ListItem key="new workout" divider>
-            <ListItemButton>
-              <StListItemIcon>
-                <FitnessCenterIcon />
-                <StListItemText primary="new workout" />
-              </StListItemIcon>
-            </ListItemButton>
+            <MuiNextLink
+              href={'/create'}
+              sx={{ width: '100%', textDecoration: 'none' }}
+            >
+              <ListItemButton>
+                <StListItemIcon>
+                  <FitnessCenterIcon />
+                  <StListItemText primary="new workout" />
+                </StListItemIcon>
+              </ListItemButton>
+            </MuiNextLink>
           </ListItem>
           <ListItem key="calendar" divider>
-            <ListItemButton>
-              <StListItemIcon>
-                <CalendarTodayIcon />
-                <StListItemText primary="calendar" />
-              </StListItemIcon>
-            </ListItemButton>
+            <MuiNextLink
+              href={'/calendar'}
+              sx={{ width: '100%', textDecoration: 'none' }}
+            >
+              <ListItemButton>
+                <StListItemIcon>
+                  <CalendarTodayIcon />
+                  <StListItemText primary="calendar" />
+                </StListItemIcon>
+              </ListItemButton>
+            </MuiNextLink>
           </ListItem>
           <ListItem key="tracking" divider>
-            <ListItemButton>
-              <StListItemIcon>
-                <InsightsIcon />
-                <StListItemText primary="tracking" />
-              </StListItemIcon>
-            </ListItemButton>
+            <MuiNextLink
+              href={'/tracking'}
+              sx={{ width: '100%', textDecoration: 'none' }}
+            >
+              <ListItemButton>
+                <StListItemIcon>
+                  <InsightsIcon />
+                  <StListItemText primary="tracking" />
+                </StListItemIcon>
+              </ListItemButton>
+            </MuiNextLink>
           </ListItem>
-          <ListItem key="settings" divider>
-            <ListItemButton>
-              <StListItemIcon>
-                <ManageAccountsIcon />
-                <StListItemText primary="settings" />
-              </StListItemIcon>
-            </ListItemButton>
+          <ListItem key="profile" divider>
+            <MuiNextLink
+              href={'/profile'}
+              sx={{ width: '100%', textDecoration: 'none' }}
+            >
+              <ListItemButton>
+                <StListItemIcon>
+                  <ManageAccountsIcon />
+                  <StListItemText primary="profile" />
+                </StListItemIcon>
+              </ListItemButton>
+            </MuiNextLink>
           </ListItem>
         </List>
       </SideDrawer>

@@ -1,9 +1,9 @@
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
+import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
-import HomeIcon from '@mui/icons-material/Home';
+import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps, Typography } from '@mui/material';
-import Link from 'next/link';
 import { SyntheticEvent, useState } from 'react';
 
 const trackingActionTabs: TabProps[] = [
@@ -13,6 +13,8 @@ const trackingActionTabs: TabProps[] = [
 ];
 
 const TrackingPage = () => {
+  const { setIsGlobalSideNavOpen } = useGlobalSideNav();
+
   const [activeTab, setActiveTab] = useState<string | false>(false);
 
   const trackingTabs = trackingActionTabs.map((option, i) => (
@@ -27,18 +29,16 @@ const TrackingPage = () => {
     <>
       <TitleBar
         leftActionItem={
-          <IconButton aria-label="menu">
+          <IconButton
+            aria-label="menu"
+            onClick={() => setIsGlobalSideNavOpen(true)}
+            color="inherit"
+          >
             <MenuOpenIcon />
           </IconButton>
         }
         title={<Typography variant="h4">Tracking</Typography>}
-        rightActionItem={
-          <Link href={'/'}>
-            <IconButton aria-label="home">
-              <HomeIcon />
-            </IconButton>
-          </Link>
-        }
+        rightActionItem={<RightActionHomeLink />}
       />
 
       <TopActionTabBar value={activeTab} onChange={handleTabChange}>
