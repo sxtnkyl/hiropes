@@ -7,7 +7,8 @@ const TopActionTabBar = ({ sx, children, ...rest }: TabsProps) => {
       id="top-action-tab-bar"
       centered
       variant="fullWidth"
-      sx={{ margin: '1rem 0', boxShadow: theme.shadows[1], ...sx }}
+      textColor="secondary"
+      sx={{ borderBottom: `1px solid ${theme.palette.primary.light}`, ...sx }}
       {...rest}
     >
       {children}

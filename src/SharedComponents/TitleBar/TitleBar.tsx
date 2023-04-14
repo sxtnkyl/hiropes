@@ -1,5 +1,4 @@
-import theme from '@/styles/theme';
-import { Box, SxProps } from '@mui/material';
+import { AppBar, Box, SxProps, Toolbar } from '@mui/material';
 import { ReactNode } from 'react';
 
 const titleBarSx: SxProps = {
@@ -8,8 +7,6 @@ const titleBarSx: SxProps = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: '0 1rem',
-  boxShadow: theme.shadows[5],
 };
 
 interface TitleBarProps {
@@ -24,10 +21,14 @@ const TitleBar = ({
   rightActionItem,
 }: TitleBarProps) => {
   return (
-    <Box id="title-bar" sx={titleBarSx}>
-      {leftActionItem}
-      {title}
-      {rightActionItem}
+    <Box id="title-bar" height={'5rem'} marginBottom="0.5rem">
+      <AppBar>
+        <Toolbar sx={titleBarSx}>
+          {leftActionItem}
+          {title}
+          {rightActionItem}
+        </Toolbar>
+      </AppBar>
     </Box>
   );
 };

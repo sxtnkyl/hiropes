@@ -1,9 +1,10 @@
+import MuiNextLink from '@/SharedComponents/MuiNext/MuiNextLink';
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
+import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps, Typography } from '@mui/material';
-import Link from 'next/link';
 import { SyntheticEvent, useState } from 'react';
 import HomeCalendarContent from './index/HomeCalendarContent';
 import HomeCreateContent from './index/HomeCreateContent';
@@ -17,6 +18,8 @@ const homeActionTabs: TabProps[] = [
 ];
 
 const HomePage = () => {
+  const { setIsGlobalSideNavOpen } = useGlobalSideNav();
+
   const [activeTab, setActiveTab] = useState<string | false>(false);
 
   const homeTabs = homeActionTabs.map((option, i) => (
@@ -31,17 +34,21 @@ const HomePage = () => {
     <>
       <TitleBar
         leftActionItem={
-          <IconButton aria-label="menu">
+          <IconButton
+            aria-label="menu"
+            onClick={() => setIsGlobalSideNavOpen(true)}
+            color="inherit"
+          >
             <MenuOpenIcon />
           </IconButton>
         }
         title={<Typography variant="h3">Hiropes</Typography>}
         rightActionItem={
-          <Link href={'/profile'}>
-            <IconButton aria-label="profile">
+          <MuiNextLink href={'/profile'}>
+            <IconButton aria-label="profile" color="inherit">
               <AccountBoxIcon />
             </IconButton>
-          </Link>
+          </MuiNextLink>
         }
       />
 
