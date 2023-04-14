@@ -1,8 +1,8 @@
-import MuiNextLink from '@/SharedComponents/MuiNext/MuiNextLink';
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
+
+import RightActionProfileLink from '@/SharedComponents/TopActionTabBar/RightActionProfileLink';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps, Typography } from '@mui/material';
 import { SyntheticEvent, useState } from 'react';
@@ -43,13 +43,7 @@ const HomePage = () => {
           </IconButton>
         }
         title={<Typography variant="h3">Hiropes</Typography>}
-        rightActionItem={
-          <MuiNextLink href={'/profile'}>
-            <IconButton aria-label="profile" color="inherit">
-              <AccountBoxIcon />
-            </IconButton>
-          </MuiNextLink>
-        }
+        rightActionItem={<RightActionProfileLink />}
       />
 
       <TopActionTabBar value={activeTab} onChange={handleTabChange}>

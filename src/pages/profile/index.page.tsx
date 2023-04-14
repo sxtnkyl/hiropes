@@ -1,21 +1,23 @@
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
+import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
 import { useActiveUser } from '@/contexts/ActiveUserContext';
-import HomeIcon from '@mui/icons-material/Home';
+import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps, Typography } from '@mui/material';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { SyntheticEvent, useState } from 'react';
 
 const profileActionTabs: TabProps[] = [
   { label: 'update', value: 'update' },
+  { label: 'settings', value: 'settings' },
   { label: 'logout', value: 'logout' },
 ];
 
 const ProfilePage = () => {
-  const user = useActiveUser();
   const router = useRouter();
+  const user = useActiveUser();
+  const { setIsGlobalSideNavOpen } = useGlobalSideNav();
 
   const [activeTab, setActiveTab] = useState<string>('update');
 
@@ -38,30 +40,31 @@ const ProfilePage = () => {
     <>
       <TitleBar
         leftActionItem={
-          <IconButton aria-label="menu">
+          <IconButton
+            aria-label="menu"
+            onClick={() => setIsGlobalSideNavOpen(true)}
+            color="inherit"
+          >
             <MenuOpenIcon />
           </IconButton>
         }
         title={<Typography variant="h3">Profile</Typography>}
-        rightActionItem={
-          <Link href={'/'}>
-            <IconButton aria-label="home">
-              <HomeIcon />
-            </IconButton>
-          </Link>
-        }
+        rightActionItem={<RightActionHomeLink />}
       />
 
       <TopActionTabBar value={activeTab} onChange={handleTabChange}>
         {profileTabs}
       </TopActionTabBar>
 
-      {activeTab === 'update' && <div>update form</div>}
-      {activeTab === 'logout' && (
-        <div>
-          <button onClick={signoutHandler}>Sign Out</button>
-        </div>
-      )}
+      <main>
+        {activeTab === 'update' && <div>update user: {user?.username}</div>}
+        {activeTab === 'settings' && <div>update settings</div>}
+        {activeTab === 'logout' && (
+          <div>
+            <button onClick={signoutHandler}>Sign Out</button>
+          </div>
+        )}
+      </main>
     </>
   );
 };
