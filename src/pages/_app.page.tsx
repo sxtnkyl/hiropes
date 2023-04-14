@@ -1,4 +1,5 @@
 import { ActiveUserProvider } from '@/contexts/ActiveUserContext';
+import { GlobalSideNavProvider } from '@/contexts/GlobalSideNavContext';
 import createEmotionCache from '@/styles/createEmotionCache';
 import theme from '@/styles/theme';
 import Amplify from '@aws-amplify/core';
@@ -52,10 +53,12 @@ export default function App({
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={theme}>
           <ActiveUserProvider>
-            <CssBaseline />
-            <Layout>
-              <AuthenticatedComponent {...pageProps} />
-            </Layout>
+            <GlobalSideNavProvider>
+              <CssBaseline />
+              <Layout>
+                <AuthenticatedComponent {...pageProps} />
+              </Layout>
+            </GlobalSideNavProvider>
           </ActiveUserProvider>
         </ThemeProvider>
       </CacheProvider>
