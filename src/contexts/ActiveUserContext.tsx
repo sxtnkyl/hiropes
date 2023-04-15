@@ -23,7 +23,7 @@ export const ActiveUserProvider = ({ children }: { children: ReactNode }) => {
     Hub.listen('auth', (data) => {
       switch (data.payload.event) {
         case 'signIn':
-          return router.push('/newSignin');
+          return router.push('/profile');
         case 'signOut':
           return setSignedInUser(null);
       }
@@ -38,7 +38,7 @@ export const ActiveUserProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     signedInUserSetter();
-  });
+  }, [router]);
 
   return (
     <ActiveUserContext.Provider value={signedInUser}>

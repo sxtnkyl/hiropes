@@ -1,5 +1,5 @@
-import TopNavbar from '@/SharedComponents/TopNavbar';
 import { ActiveUserProvider } from '@/contexts/ActiveUserContext';
+import { GlobalSideNavProvider } from '@/contexts/GlobalSideNavContext';
 import createEmotionCache from '@/styles/createEmotionCache';
 import theme from '@/styles/theme';
 import Amplify from '@aws-amplify/core';
@@ -11,6 +11,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import config from '../aws-exports';
+import Layout from './Layout';
 
 Amplify.configure(config);
 const clientSideEmotionCache = createEmotionCache();
@@ -52,9 +53,12 @@ export default function App({
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={theme}>
           <ActiveUserProvider>
-            <CssBaseline />
-            <TopNavbar />
-            <AuthenticatedComponent {...pageProps} />
+            <GlobalSideNavProvider>
+              <CssBaseline />
+              <Layout>
+                <AuthenticatedComponent {...pageProps} />
+              </Layout>
+            </GlobalSideNavProvider>
           </ActiveUserProvider>
         </ThemeProvider>
       </CacheProvider>
