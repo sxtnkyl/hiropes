@@ -1,12 +1,21 @@
-import { Typography } from '@mui/material';
-import Link from 'next/link';
+import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
+import MuiNextLink from '@/SharedComponents/MuiNext/MuiNextLink';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import { IconButton, Typography } from '@mui/material';
 
 const HomeTrackingContent = () => {
   return (
-    <>
-      <Link href="/tracking">Go To</Link>
-      <Typography variant="h1">Track Workout Progress</Typography>
-    </>
+    <CardContentContainer>
+      <Typography variant="h1">Progression Tracking</Typography>
+      <MuiNextLink href={'/tracking'} sx={{ margin: '2rem 0' }}>
+        <IconButton>
+          <QueryStatsIcon color="inherit" sx={{ fontSize: '3rem' }} />
+        </IconButton>
+      </MuiNextLink>
+      <Typography variant="h5">
+        Analyze and visualize your workout entries to track incremental progress
+      </Typography>
+    </CardContentContainer>
   );
 };
 export default HomeTrackingContent;

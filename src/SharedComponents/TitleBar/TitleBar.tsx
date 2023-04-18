@@ -1,4 +1,4 @@
-import { AppBar, Box, SxProps, Toolbar } from '@mui/material';
+import { AppBar, SxProps, Toolbar } from '@mui/material';
 import { ReactNode } from 'react';
 
 const titleBarSx: SxProps = {
@@ -21,15 +21,13 @@ const TitleBar = ({
   rightActionItem,
 }: TitleBarProps) => {
   return (
-    <Box id="title-bar" height={'5rem'} marginBottom="0.5rem">
-      <AppBar>
-        <Toolbar sx={titleBarSx}>
-          {leftActionItem}
-          {title}
-          {rightActionItem}
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <AppBar position="sticky" sx={{ height: '5rem', marginBottom: '0.5rem' }}>
+      <Toolbar sx={titleBarSx}>
+        {leftActionItem}
+        {title}
+        {rightActionItem}
+      </Toolbar>
+    </AppBar>
   );
 };
 

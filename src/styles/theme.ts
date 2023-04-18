@@ -23,7 +23,7 @@ const theme = responsiveFontSizes(
         styleOverrides: {
           ':root': {
             'html, body': {
-              minHeight: '100vh',
+              height: '100vh',
             },
             '#__next': {
               height: '100vh',

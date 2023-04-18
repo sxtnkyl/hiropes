@@ -5,7 +5,6 @@ const TopActionTabBar = ({ sx, children, ...rest }: TabsProps) => {
   return (
     <Tabs
       id="top-action-tab-bar"
-      centered
       variant="fullWidth"
       textColor="secondary"
       sx={{ borderBottom: `1px solid ${theme.palette.primary.light}`, ...sx }}

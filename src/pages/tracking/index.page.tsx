@@ -41,7 +41,7 @@ const TrackingPage = () => {
         rightActionItem={<RightActionHomeLink />}
       />
 
-      <TopActionTabBar value={activeTab} onChange={handleTabChange}>
+      <TopActionTabBar value={activeTab} onChange={handleTabChange} centered>
         {trackingTabs}
       </TopActionTabBar>
 
