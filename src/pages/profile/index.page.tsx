@@ -52,7 +52,7 @@ const ProfilePage = () => {
         rightActionItem={<RightActionHomeLink />}
       />
 
-      <TopActionTabBar value={activeTab} onChange={handleTabChange}>
+      <TopActionTabBar value={activeTab} onChange={handleTabChange} centered>
         {profileTabs}
       </TopActionTabBar>
 
