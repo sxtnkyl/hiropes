@@ -6,11 +6,20 @@ import {
   useCurrentActiveWorkout,
 } from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
+import { timeConverters } from '@/utils/timeConverters';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { IconButton, Tab, TabProps, Typography } from '@mui/material';
+import {
+  Button,
+  ButtonProps,
+  IconButton,
+  Tab,
+  TabProps,
+  Typography,
+} from '@mui/material';
 import { SyntheticEvent } from 'react';
+import { CreateWorkoutProjectPage } from './CreateWorkoutProjectPage';
 import CreateWorkoutStartPage from './CreateWorkoutStartPage';
-import { WarmupPage } from './WarmupPage';
+import { CreateWorkoutWarmupPage } from './CreateWorkoutWarmupPage';
 
 const createActionTabs: TabProps[] = [
   { label: 'start', value: 'start' },
@@ -20,10 +29,27 @@ const createActionTabs: TabProps[] = [
   { label: 'strength', value: 'strength' },
 ];
 
+const TimerTitle = (props: ButtonProps) => {
+  return (
+    <Button
+      variant="outlined"
+      color="inherit"
+      sx={{ width: '50%' }}
+      {...props}
+    />
+  );
+};
+
 const CreateWorkoutPage = () => {
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
-  const { activeWorkoutStep, setActiveWorkoutStep, workoutInProgress } =
-    useCurrentActiveWorkout();
+  const {
+    pomoTimer,
+    activeWorkoutStep,
+    setActiveWorkoutStep,
+    workoutInProgress,
+  } = useCurrentActiveWorkout();
+  const { formattedSecondsToMinuteSeconds } = timeConverters();
+  const { minutes, seconds } = formattedSecondsToMinuteSeconds(pomoTimer);
 
   const createWorkoutTabs = createActionTabs.map((option, i) => (
     <Tab
@@ -49,7 +75,14 @@ const CreateWorkoutPage = () => {
             <MenuOpenIcon />
           </IconButton>
         }
-        title={<Typography variant="h4">New Workout</Typography>}
+        title={
+          <Typography
+            variant="h4"
+            {...(workoutInProgress && { component: TimerTitle })}
+          >
+            {workoutInProgress ? `${minutes}m : ${seconds}s` : `New Workout`}
+          </Typography>
+        }
         rightActionItem={<RightActionHomeLink />}
       />
 
@@ -63,7 +96,8 @@ const CreateWorkoutPage = () => {
 
       <main>
         {activeWorkoutStep === 'start' && <CreateWorkoutStartPage />}
-        {activeWorkoutStep === 'warmup' && <WarmupPage />}
+        {activeWorkoutStep === 'warmup' && <CreateWorkoutWarmupPage />}
+        {activeWorkoutStep === 'project' && <CreateWorkoutProjectPage />}
       </main>
     </>
   );
