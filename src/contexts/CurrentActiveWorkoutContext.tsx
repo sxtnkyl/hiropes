@@ -3,6 +3,7 @@ import {
   RoutineOption,
   StrengthOption,
 } from '@/pages/create/types/createTypes';
+import { timeConverters } from '@/utils/timeConverters';
 import {
   Dispatch,
   ReactNode,
@@ -44,7 +45,6 @@ export interface CurrentActiveWorkoutContextProps {
   pauseTimer: () => void;
   resumeTimer: () => void;
   resetAndStartTimer: (time: number) => void;
-  startWorkoutStep: (step: WorkoutStep) => void;
 }
 
 const CurrentActiveWorkoutContext =
@@ -60,6 +60,9 @@ export const CurrentActiveWorkoutProvider = ({
 }: {
   children: ReactNode;
 }) => {
+  const { formattedSeconds } = timeConverters();
+
+  /** for tabs, separate from activeStepTimer */
   const [activeWorkoutStep, setActiveWorkoutStep] =
     useState<WorkoutStep>('start');
   const [workoutInProgress, setWorkoutInProgress] = useState(false);
@@ -67,32 +70,24 @@ export const CurrentActiveWorkoutProvider = ({
     workoutStepsCompleted: [],
     activeStepTimer: null,
   });
-
-  // pomoTime = seconds
+  /** pomoTime = seconds */
   const [pomoTimer, setPomoTimer] = useState(60);
   const [timerIsPaused, setTimerIsPaused] = useState(true);
-
-  const updateCompletedSteps = (step: WorkoutStep) => {
-    setActiveWorkout(({ workoutStepsCompleted, ...rest }) => ({
-      ...rest,
-      workoutStepsCompleted: [...workoutStepsCompleted, step],
-    }));
-  };
 
   useEffect(() => {
     let interval: string | number | NodeJS.Timeout | undefined;
 
     if (!timerIsPaused) {
-      if (pomoTimer === 0) {
+      if (pomoTimer < 1) {
         pauseTimer();
       }
       interval = setInterval(() => {
-        setPomoTimer((prevTimer) => prevTimer - 1);
+        setPomoTimer((prevTimer) => formattedSeconds(prevTimer - 1));
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [pomoTimer, timerIsPaused]);
+  }, [formattedSeconds, pomoTimer, timerIsPaused]);
 
   const workoutSetupIsComplete = useMemo(() => {
     const setupValues = [
@@ -115,11 +110,11 @@ export const CurrentActiveWorkoutProvider = ({
       resumeTimer();
     }, 1000);
   };
-  const startWorkoutStep = (step: WorkoutStep) => {
-    setActiveWorkout({ ...activeWorkout, activeStepTimer: step });
-    setWorkoutInProgress(true);
-    setActiveWorkoutStep('warmup');
-    resumeTimer();
+  const updateCompletedSteps = (step: WorkoutStep) => {
+    setActiveWorkout(({ workoutStepsCompleted, ...rest }) => ({
+      ...rest,
+      workoutStepsCompleted: [...workoutStepsCompleted, step],
+    }));
   };
 
   return (
@@ -138,7 +133,6 @@ export const CurrentActiveWorkoutProvider = ({
         pauseTimer,
         resumeTimer,
         resetAndStartTimer,
-        startWorkoutStep,
       }}
     >
       {children}

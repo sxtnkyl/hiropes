@@ -13,13 +13,27 @@ import {
 const CreateWorkoutStartPage = () => {
   const {
     activeWorkout,
-    setActiveWorkout,
-    updateCompletedSteps,
     workoutSetupIsComplete,
-    startWorkoutStep,
+    setActiveWorkout,
+    setWorkoutInProgress,
+    setActiveWorkoutStep,
+    updateCompletedSteps,
     setPomoTimer,
+    resumeTimer,
   } = useCurrentActiveWorkout();
   const { hoursToSeconds } = timeConverters();
+
+  const handleStartWorkoutClick = () => {
+    setWorkoutInProgress(true);
+    updateCompletedSteps('start');
+    setActiveWorkout((prevSesh) => ({
+      ...prevSesh,
+      activeStepTimer: 'warmup',
+    }));
+    setActiveWorkoutStep('warmup');
+    setPomoTimer(hoursToSeconds(0.004));
+    resumeTimer();
+  };
 
   const handleRoutineOptionClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -155,14 +169,7 @@ const CreateWorkoutStartPage = () => {
           stackProps={{ spacing: 2 }}
         >
           <Typography variant="h4">Begin this session:</Typography>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              startWorkoutStep('warmup');
-              updateCompletedSteps('start');
-              setPomoTimer(hoursToSeconds(0.025));
-            }}
-          >
+          <Button variant="outlined" onClick={handleStartWorkoutClick}>
             Start
           </Button>
         </CardContentContainer>
