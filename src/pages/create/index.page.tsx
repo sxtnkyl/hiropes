@@ -1,18 +1,16 @@
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
+import {
+  WorkoutStep,
+  useCurrentActiveWorkout,
+} from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps, Typography } from '@mui/material';
-import { SyntheticEvent, useMemo, useState } from 'react';
+import { SyntheticEvent } from 'react';
 import CreateWorkoutStartPage from './CreateWorkoutStartPage';
-import { RoutineOption, StrengthOption } from './types/createTypes';
-
-export type NewWorkoutSetup = {
-  routineOption?: RoutineOption;
-  routineOptionWorkout?: NewWorkoutSetup['routineOption'];
-  strengthOption?: StrengthOption;
-};
+import { WarmupPage } from './WarmupPage';
 
 const createActionTabs: TabProps[] = [
   { label: 'start', value: 'start' },
@@ -24,21 +22,19 @@ const createActionTabs: TabProps[] = [
 
 const CreateWorkoutPage = () => {
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
-
-  const [activeTab, setActiveTab] = useState<string>('start');
-  const [newWorkoutSetup, setNewWorkoutSetup] = useState<NewWorkoutSetup>({});
-
-  const workoutSetupIsComplete = useMemo(() => {
-    const setupValues = Object.values(newWorkoutSetup);
-    return setupValues.length === 3 && setupValues.every((val) => Boolean(val));
-  }, [newWorkoutSetup]);
+  const { activeWorkoutStep, setActiveWorkoutStep, workoutInProgress } =
+    useCurrentActiveWorkout();
 
   const createWorkoutTabs = createActionTabs.map((option, i) => (
-    <Tab {...option} key={i} disabled={!workoutSetupIsComplete} />
+    <Tab
+      {...option}
+      key={i}
+      disabled={!workoutInProgress || option.value !== activeWorkoutStep}
+    />
   ));
 
-  const handleTabChange = (event: SyntheticEvent, newValue: string) => {
-    setActiveTab(newValue);
+  const handleTabChange = (event: SyntheticEvent, newValue: WorkoutStep) => {
+    setActiveWorkoutStep(newValue);
   };
 
   return (
@@ -58,7 +54,7 @@ const CreateWorkoutPage = () => {
       />
 
       <TopActionTabBar
-        value={activeTab}
+        value={activeWorkoutStep}
         onChange={handleTabChange}
         variant="scrollable"
       >
@@ -66,14 +62,8 @@ const CreateWorkoutPage = () => {
       </TopActionTabBar>
 
       <main>
-        {activeTab === 'start' && (
-          <CreateWorkoutStartPage
-            newWorkoutSetup={newWorkoutSetup}
-            setNewWorkoutSetup={setNewWorkoutSetup}
-            setActiveTab={setActiveTab}
-            workoutSetupIsComplete={workoutSetupIsComplete}
-          />
-        )}
+        {activeWorkoutStep === 'start' && <CreateWorkoutStartPage />}
+        {activeWorkoutStep === 'warmup' && <WarmupPage />}
       </main>
     </>
   );

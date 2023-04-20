@@ -79,8 +79,9 @@ export type RoutineWorkout = {
   name: string;
   description: string;
   defaultReps: number;
+  repBreakInterval: number;
   defaultSets: number;
-  breakInterval: number;
+  setBreakInterval: number;
   bottomRange: GradeRange;
   topRange: GradeRange;
 };
@@ -90,7 +91,7 @@ export type EnduranceWorkoutKeys =
   | 'fourByFour'
   | 'thirtyCircuit'
   | 'pyramidLong';
-export type PowerWorkoutKeys = 'tempPower';
+export type PowerWorkoutKeys = 'twentyInTwenty' | 'pyramidPump' | 'sevenThrees';
 export type FingerStrengthWorkoutKeys = 'tempFinger';
 
 /**
