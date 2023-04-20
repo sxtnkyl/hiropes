@@ -1,4 +1,5 @@
 import { ActiveUserProvider } from '@/contexts/ActiveUserContext';
+import { CurrentActiveWorkoutProvider } from '@/contexts/CurrentActiveWorkoutContext';
 import { GlobalSideNavProvider } from '@/contexts/GlobalSideNavContext';
 import createEmotionCache from '@/styles/createEmotionCache';
 import theme from '@/styles/theme';
@@ -54,10 +55,12 @@ export default function App({
         <ThemeProvider theme={theme}>
           <ActiveUserProvider>
             <GlobalSideNavProvider>
-              <CssBaseline />
-              <Layout>
-                <AuthenticatedComponent {...pageProps} />
-              </Layout>
+              <CurrentActiveWorkoutProvider>
+                <CssBaseline />
+                <Layout>
+                  <AuthenticatedComponent {...pageProps} />
+                </Layout>
+              </CurrentActiveWorkoutProvider>
             </GlobalSideNavProvider>
           </ActiveUserProvider>
         </ThemeProvider>

@@ -1,53 +1,59 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
+import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
+import { timeConverters } from '@/utils/timeConverters';
 import { routineDetails, strengthWorkouts } from '@/utils/workoutDetails';
 import { Button, Stack, Typography } from '@mui/material';
-import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
-import { NewWorkoutSetup } from './index.page';
-import { RoutineOption, StrengthOption } from './types/createTypes';
+import { useCallback, useMemo } from 'react';
+import {
+  RoutineOption,
+  StrengthOption,
+  WorkoutSession,
+} from './types/createTypes';
 
-const CreateWorkoutStartPage = ({
-  newWorkoutSetup,
-  setNewWorkoutSetup,
-  setActiveTab,
-  workoutSetupIsComplete,
-}: {
-  newWorkoutSetup: NewWorkoutSetup;
-  setNewWorkoutSetup: Dispatch<SetStateAction<NewWorkoutSetup>>;
-  setActiveTab: Dispatch<SetStateAction<string>>;
-  workoutSetupIsComplete: boolean;
-}) => {
+const CreateWorkoutStartPage = () => {
+  const {
+    activeWorkout,
+    setActiveWorkout,
+    updateCompletedSteps,
+    workoutSetupIsComplete,
+    startWorkoutStep,
+    setPomoTimer,
+  } = useCurrentActiveWorkout();
+  const { hoursToSeconds } = timeConverters();
+
   const handleRoutineOptionClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       const routineOption = event.currentTarget.value as RoutineOption;
-      setNewWorkoutSetup(({ strengthOption }) => ({
-        strengthOption,
+      setActiveWorkout((prevSesh) => ({
+        ...prevSesh,
         routineOption,
+        routineOptionWorkout: undefined,
       }));
     },
-    [setNewWorkoutSetup]
+    [setActiveWorkout]
   );
 
   const handleRoutineOptionWorkoutClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       const routineOptionWorkout = event.currentTarget
-        .value as NewWorkoutSetup['routineOption'];
-      setNewWorkoutSetup((prevSesh) => ({
+        .value as WorkoutSession['routineOption'];
+      setActiveWorkout((prevSesh) => ({
         ...prevSesh,
         routineOptionWorkout,
       }));
     },
-    [setNewWorkoutSetup]
+    [setActiveWorkout]
   );
 
   const handleStrengthWorkoutClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       const strengthOption = event.currentTarget.value as StrengthOption;
-      setNewWorkoutSetup((prevSesh) => ({
+      setActiveWorkout((prevSesh) => ({
         ...prevSesh,
         strengthOption,
       }));
     },
-    [setNewWorkoutSetup]
+    [setActiveWorkout]
   );
 
   const routineTypeOptionsButtons = useMemo(() => {
@@ -57,18 +63,18 @@ const CreateWorkoutStartPage = ({
         value={routine}
         onClick={handleRoutineOptionClick}
         variant={
-          routine === newWorkoutSetup.routineOption ? 'contained' : 'outlined'
+          routine === activeWorkout.routineOption ? 'contained' : 'outlined'
         }
       >
         {routine}
       </Button>
     ));
-  }, [handleRoutineOptionClick, newWorkoutSetup.routineOption]);
+  }, [handleRoutineOptionClick, activeWorkout.routineOption]);
 
   const routineOptionWorkoutsButtons = useMemo(() => {
-    if (newWorkoutSetup.routineOption) {
+    if (activeWorkout.routineOption) {
       const selectedRoutineWorkouts = Object.entries(
-        routineDetails[newWorkoutSetup.routineOption]
+        routineDetails[activeWorkout.routineOption]
       );
       return selectedRoutineWorkouts.map(([workoutName, workoutDetails]) => (
         <Button
@@ -76,7 +82,7 @@ const CreateWorkoutStartPage = ({
           value={workoutName}
           onClick={handleRoutineOptionWorkoutClick}
           variant={
-            workoutName === newWorkoutSetup.routineOptionWorkout
+            workoutName === activeWorkout.routineOptionWorkout
               ? 'contained'
               : 'outlined'
           }
@@ -87,12 +93,12 @@ const CreateWorkoutStartPage = ({
     }
   }, [
     handleRoutineOptionWorkoutClick,
-    newWorkoutSetup.routineOption,
-    newWorkoutSetup.routineOptionWorkout,
+    activeWorkout.routineOption,
+    activeWorkout.routineOptionWorkout,
   ]);
 
   const strengthWorkoutOptionsButtons = useMemo(() => {
-    if (newWorkoutSetup.routineOptionWorkout) {
+    if (activeWorkout.routineOptionWorkout) {
       return Object.entries(strengthWorkouts).map(
         ([workout, workoutDetails]) => (
           <Button
@@ -100,7 +106,7 @@ const CreateWorkoutStartPage = ({
             value={workout}
             onClick={handleStrengthWorkoutClick}
             variant={
-              workout === newWorkoutSetup.strengthOption
+              workout === activeWorkout.strengthOption
                 ? 'contained'
                 : 'outlined'
             }
@@ -112,8 +118,8 @@ const CreateWorkoutStartPage = ({
     }
   }, [
     handleStrengthWorkoutClick,
-    newWorkoutSetup.routineOptionWorkout,
-    newWorkoutSetup.strengthOption,
+    activeWorkout.routineOptionWorkout,
+    activeWorkout.strengthOption,
   ]);
 
   return (
@@ -123,7 +129,7 @@ const CreateWorkoutStartPage = ({
         <Stack spacing={1}>{routineTypeOptionsButtons}</Stack>
       </CardContentContainer>
 
-      {newWorkoutSetup.routineOption && (
+      {activeWorkout.routineOption && (
         <CardContentContainer
           sx={{ height: 'auto' }}
           stackProps={{ spacing: 2 }}
@@ -133,7 +139,7 @@ const CreateWorkoutStartPage = ({
         </CardContentContainer>
       )}
 
-      {newWorkoutSetup.routineOptionWorkout && (
+      {activeWorkout.routineOptionWorkout && (
         <CardContentContainer
           sx={{ height: 'auto' }}
           stackProps={{ spacing: 2 }}
@@ -152,7 +158,9 @@ const CreateWorkoutStartPage = ({
           <Button
             variant="outlined"
             onClick={() => {
-              setActiveTab('warmup');
+              startWorkoutStep('warmup');
+              updateCompletedSteps('start');
+              setPomoTimer(hoursToSeconds(0.025));
             }}
           >
             Start
