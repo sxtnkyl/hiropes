@@ -26,17 +26,22 @@ const StListItemText = styled(ListItemText)`
 const Layout = ({ children }: { children: ReactNode }) => {
   const { isGlobalSideNavOpen, setIsGlobalSideNavOpen } = useGlobalSideNav();
 
+  const closeSideNav = () => {
+    setIsGlobalSideNavOpen(false);
+  };
+
   return (
     <>
       <SideDrawer
         open={isGlobalSideNavOpen}
-        onClose={() => setIsGlobalSideNavOpen(false)}
+        onClose={closeSideNav}
         PaperProps={{ sx: { width: '80%' } }}
       >
         <List>
           <ListItem key="new workout" divider>
             <MuiNextLink
               href={'/create'}
+              onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
               <ListItemButton>
@@ -50,6 +55,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <ListItem key="calendar" divider>
             <MuiNextLink
               href={'/calendar'}
+              onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
               <ListItemButton>
@@ -63,6 +69,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <ListItem key="tracking" divider>
             <MuiNextLink
               href={'/tracking'}
+              onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
               <ListItemButton>
@@ -76,6 +83,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <ListItem key="profile" divider>
             <MuiNextLink
               href={'/profile'}
+              onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
               <ListItemButton>

@@ -41,7 +41,7 @@ const CalendarPage = () => {
         rightActionItem={<RightActionHomeLink />}
       />
 
-      <TopActionTabBar value={activeTab} onChange={handleTabChange}>
+      <TopActionTabBar value={activeTab} onChange={handleTabChange} centered>
         {calendarTabs}
       </TopActionTabBar>
 

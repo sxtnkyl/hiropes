@@ -1,30 +1,40 @@
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
+import {
+  WorkoutStep,
+  useCurrentActiveWorkout,
+} from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps, Typography } from '@mui/material';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent } from 'react';
+import CreateWorkoutStartPage from './CreateWorkoutStartPage';
+import { WarmupPage } from './WarmupPage';
 
 const createActionTabs: TabProps[] = [
   { label: 'start', value: 'start' },
   { label: 'warmup', value: 'warmup' },
   { label: 'project', value: 'project' },
   { label: 'routine', value: 'routine' },
-  { label: 'strngth', value: 'strngth' },
+  { label: 'strength', value: 'strength' },
 ];
 
 const CreateWorkoutPage = () => {
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
-
-  const [activeTab, setActiveTab] = useState<string>('start');
+  const { activeWorkoutStep, setActiveWorkoutStep, workoutInProgress } =
+    useCurrentActiveWorkout();
 
   const createWorkoutTabs = createActionTabs.map((option, i) => (
-    <Tab {...option} key={i} />
+    <Tab
+      {...option}
+      key={i}
+      disabled={!workoutInProgress || option.value !== activeWorkoutStep}
+    />
   ));
 
-  const handleTabChange = (event: SyntheticEvent, newValue: string) => {
-    setActiveTab(newValue);
+  const handleTabChange = (event: SyntheticEvent, newValue: WorkoutStep) => {
+    setActiveWorkoutStep(newValue);
   };
 
   return (
@@ -43,11 +53,18 @@ const CreateWorkoutPage = () => {
         rightActionItem={<RightActionHomeLink />}
       />
 
-      <TopActionTabBar value={activeTab} onChange={handleTabChange}>
+      <TopActionTabBar
+        value={activeWorkoutStep}
+        onChange={handleTabChange}
+        variant="scrollable"
+      >
         {createWorkoutTabs}
       </TopActionTabBar>
 
-      <main>{activeTab === 'start' && <>start</>}</main>
+      <main>
+        {activeWorkoutStep === 'start' && <CreateWorkoutStartPage />}
+        {activeWorkoutStep === 'warmup' && <WarmupPage />}
+      </main>
     </>
   );
 };
