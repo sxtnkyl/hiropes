@@ -7,6 +7,7 @@ interface TimeConverters {
     minutes: number;
     seconds: number;
   };
+  formattedSeconds: (seconds: number) => number;
 }
 
 export const timeConverters = (): TimeConverters => {
@@ -32,6 +33,9 @@ export const timeConverters = (): TimeConverters => {
     );
     return { minutes: flatMinutes, seconds: remainderSeconds };
   };
+  const formattedSeconds = (seconds: number) => {
+    return Math.floor(seconds);
+  };
 
   return {
     minutesToSeconds,
@@ -39,5 +43,6 @@ export const timeConverters = (): TimeConverters => {
     minutesToHours,
     hoursToSeconds,
     formattedSecondsToMinuteSeconds,
+    formattedSeconds,
   };
 };

@@ -30,10 +30,12 @@ export type RouteColor =
   | 'other';
 
 export type ProjectRoute = {
-  section: WallSection;
-  color: RouteColor;
-  grade: GradeRange;
-  sessionCount: number;
+  id: string;
+  name: string;
+  section?: WallSection;
+  color?: RouteColor;
+  grade?: GradeRange;
+  sessionCount?: number;
   imageUrl?: string;
   description?: string;
 };
