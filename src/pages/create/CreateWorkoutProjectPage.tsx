@@ -9,6 +9,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from '@mui/material';
+import { useRouter } from 'next/router';
 import { ProjectRoute } from './types/createTypes';
 
 const tempProjData: ProjectRoute[] = [
@@ -18,6 +19,7 @@ const tempProjData: ProjectRoute[] = [
 ];
 
 export const CreateWorkoutProjectPage = () => {
+  const router = useRouter();
   const { activeWorkout, setActiveWorkout } = useCurrentActiveWorkout();
 
   const handleSelectedProjectChange = (event: SelectChangeEvent) => {
@@ -26,7 +28,7 @@ export const CreateWorkoutProjectPage = () => {
   };
 
   const handleCreateNewProjectClick = () => {
-    return;
+    router.push('/projects');
   };
   return (
     <CardContentContainer stackProps={{ spacing: 4 }}>
