@@ -1,3 +1,4 @@
+import TimerTitle from '@/SharedComponents/TimerTitle/TimerTitle';
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
@@ -6,16 +7,8 @@ import {
   useCurrentActiveWorkout,
 } from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
-import { timeConverters } from '@/utils/timeConverters';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import {
-  Button,
-  ButtonProps,
-  IconButton,
-  Tab,
-  TabProps,
-  Typography,
-} from '@mui/material';
+import { IconButton, Tab, TabProps } from '@mui/material';
 import { SyntheticEvent } from 'react';
 import { CreateWorkoutProjectPage } from './CreateWorkoutProjectPage';
 import CreateWorkoutStartPage from './CreateWorkoutStartPage';
@@ -29,17 +22,6 @@ const createActionTabs: TabProps[] = [
   { label: 'strength', value: 'strength' },
 ];
 
-const TimerTitle = (props: ButtonProps) => {
-  return (
-    <Button
-      variant="outlined"
-      color="inherit"
-      sx={{ width: '50%' }}
-      {...props}
-    />
-  );
-};
-
 const CreateWorkoutPage = () => {
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
   const {
@@ -48,8 +30,6 @@ const CreateWorkoutPage = () => {
     setActiveWorkoutStep,
     workoutInProgress,
   } = useCurrentActiveWorkout();
-  const { formattedSecondsToMinuteSeconds } = timeConverters();
-  const { minutes, seconds } = formattedSecondsToMinuteSeconds(pomoTimer);
 
   const createWorkoutTabs = createActionTabs.map((option, i) => (
     <Tab
@@ -76,12 +56,11 @@ const CreateWorkoutPage = () => {
           </IconButton>
         }
         title={
-          <Typography
-            variant="h4"
-            {...(workoutInProgress && { component: TimerTitle })}
-          >
-            {workoutInProgress ? `${minutes}m : ${seconds}s` : `New Workout`}
-          </Typography>
+          <TimerTitle
+            title={`New Workout`}
+            pomoTimer={pomoTimer}
+            workoutInProgress={workoutInProgress}
+          />
         }
         rightActionItem={<RightActionHomeLink />}
       />

@@ -4,6 +4,7 @@ import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import styled from '@emotion/styled';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import HardwareIcon from '@mui/icons-material/Hardware';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import {
@@ -76,6 +77,20 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 <StListItemIcon>
                   <InsightsIcon />
                   <StListItemText primary="tracking" />
+                </StListItemIcon>
+              </ListItemButton>
+            </MuiNextLink>
+          </ListItem>
+          <ListItem key="projects" divider>
+            <MuiNextLink
+              href={'/projects'}
+              onClick={closeSideNav}
+              sx={{ width: '100%', textDecoration: 'none' }}
+            >
+              <ListItemButton>
+                <StListItemIcon>
+                  <HardwareIcon />
+                  <StListItemText primary="projects" />
                 </StListItemIcon>
               </ListItemButton>
             </MuiNextLink>
