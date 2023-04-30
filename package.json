@@ -41,6 +41,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
+    "@types/lodash": "^4.14.194",
     "@typescript-eslint/parser": "^5.57.1",
     "eslint": "^8.37.0",
     "husky": "^8.0.0",

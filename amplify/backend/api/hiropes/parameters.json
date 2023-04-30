@@ -1,0 +1,12 @@
+{
+  "AppSyncApiName": "hiropes",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authhiropes8ed6575b",
+      "Outputs.UserPoolId"
+    ]
+  },
+  "AuthModeLastUpdated": "2023-04-28T08:12:20.690Z"
+}

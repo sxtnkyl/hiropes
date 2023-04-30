@@ -1,13 +1,21 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
 import SelectFormField from '@/SharedComponents/FormFieldComponents/SelectFormField';
 import TextFormField from '@/SharedComponents/FormFieldComponents/TextFormField';
-import { Button, MenuItem, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { ProjectRoute } from '../create/types/createTypes';
+import useCreateProject from '../hooks/useCreateProject';
+import { ProjectRoute } from '../types/projectTypes';
+import {
+  routeColorSelectItems,
+  routeGradeSelectItems,
+  wallSectionSelectItems,
+} from '../utils/projectValues';
 
-type CreateNewProject = Omit<ProjectRoute, 'id'>;
-const initialCreateNewProjectValues: CreateNewProject = {
+/** unique id inserted on create */
+export type CreateNewProjectFormValues = Omit<ProjectRoute, 'id'>;
+
+export const initialCreateNewProjectValues: CreateNewProjectFormValues = {
   name: '',
   section: undefined,
   color: undefined,
@@ -17,26 +25,14 @@ const initialCreateNewProjectValues: CreateNewProject = {
   description: undefined,
 };
 
-const gradeRanges = ['0-2', '2-4', '4-6', '6-8', '8-10', '10+'];
-const wallSections = ['A', 'B', 'C', 'D', 'E', 'F', 'other'];
-const routeColors = [
-  'red',
-  'blue',
-  'green',
-  'yellow',
-  'pink',
-  'black',
-  'orange',
-  'purple',
-  'other',
-];
-
 export const CreateNewProjectForm = () => {
+  const { onSubmit } = useCreateProject();
+
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('a project name is required'),
-    section: Yup.string().required('a project location is required'),
-    color: Yup.string().required('a project color is required'),
-    grade: Yup.string().required('a project grade range is required'),
+    section: Yup.string(),
+    color: Yup.string(),
+    grade: Yup.string(),
     sessionCount: Yup.number()
       .integer('must be a number')
       .positive('must be greater than zero')
@@ -47,34 +43,19 @@ export const CreateNewProjectForm = () => {
     ),
   });
 
-  const routeGradeSelectItems = gradeRanges.map((grade) => (
-    <MenuItem key={grade} value={grade}>
-      {grade}
-    </MenuItem>
-  ));
-  const wallSectionSelectItems = wallSections.map((section) => (
-    <MenuItem key={section} value={section}>
-      {section}
-    </MenuItem>
-  ));
-  const routeColorSelectItems = routeColors.map((color) => (
-    <MenuItem key={color} value={color}>
-      {color}
-    </MenuItem>
-  ));
-
   return (
     <CardContentContainer stackProps={{ spacing: 2 }}>
-      <Typography variant="h2">New Project</Typography>
-      <Formik<CreateNewProject>
+      <Typography variant="h2" marginBottom="1rem">
+        Create Project
+      </Typography>
+      <Formik<CreateNewProjectFormValues>
         initialValues={initialCreateNewProjectValues}
         validationSchema={validationSchema}
         validateOnMount
-        onSubmit={() => {
-          return;
-        }}
+        enableReinitialize
+        onSubmit={onSubmit}
       >
-        {({ isValid, touched }) => (
+        {({ isValid, dirty }) => (
           <Form>
             <Stack spacing={3}>
               <TextFormField name="name" label="Project Name" />
@@ -95,7 +76,7 @@ export const CreateNewProjectForm = () => {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={Boolean(touched) || !isValid}
+                disabled={!dirty || !isValid}
               >
                 Submit
               </Button>

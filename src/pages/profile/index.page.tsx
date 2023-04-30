@@ -16,7 +16,7 @@ const profileActionTabs: TabProps[] = [
 
 const ProfilePage = () => {
   const router = useRouter();
-  const user = useActiveUser();
+  const { user } = useActiveUser();
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
 
   const [activeTab, setActiveTab] = useState<string>('update');
