@@ -1,8 +1,8 @@
 import {
-  ProjectRoute,
   RoutineOption,
   StrengthOption,
 } from '@/pages/create/types/createTypes';
+import { ProjectRoute } from '@/pages/projects/types/projectTypes';
 import { timeConverters } from '@/utils/timeConverters';
 import {
   Dispatch,

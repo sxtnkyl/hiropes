@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/router';
-import { ProjectRoute } from './types/createTypes';
+import { ProjectRoute } from '../projects/types/projectTypes';
 
 const tempProjData: ProjectRoute[] = [
   { id: '1', name: 'proj1' },

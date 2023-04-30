@@ -3,7 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import { Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
-import { CreateNewProjectForm } from './CreateNewProjectForm';
+import { CreateNewProjectForm } from './components/CreateProjectForm';
 
 export const CreateProjectPage = () => {
   const [hasCreateNewProjectSection, setHasCreateNewProjectSection] =

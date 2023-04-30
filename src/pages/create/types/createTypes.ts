@@ -1,3 +1,5 @@
+import { GradeRange, ProjectRoute } from '@/pages/projects/types/projectTypes';
+
 /**
  * Fetched Workout
  */
@@ -5,39 +7,11 @@ export type RoutineOption = 'endurance' | 'power' | 'fingerStrength';
 export type StrengthOption = 'benchAndSquat' | 'absAndShoulders' | 'cardio';
 export type WorkoutSession = {
   id: string;
-  date: Date;
+  createdAt: Date;
   project: ProjectRoute;
   routineOption: RoutineOption;
   routineFocus: RoutineOptions[WorkoutSession['routineOption']];
   strengthOption: StrengthOption;
-};
-
-/**
- * Project Info Types
- *
- */
-export type GradeRange = '0-2' | '2-4' | '4-6' | '6-8' | '8-10' | '10+';
-export type WallSection = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'other';
-export type RouteColor =
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'yellow'
-  | 'pink'
-  | 'black'
-  | 'orange'
-  | 'purple'
-  | 'other';
-
-export type ProjectRoute = {
-  id: string;
-  name: string;
-  section?: WallSection;
-  color?: RouteColor;
-  grade?: GradeRange;
-  sessionCount?: number;
-  imageUrl?: string;
-  description?: string;
 };
 
 /**
@@ -97,7 +71,7 @@ export type PowerWorkoutKeys = 'twentyInTwenty' | 'pyramidPump' | 'sevenThrees';
 export type FingerStrengthWorkoutKeys = 'tempFinger';
 
 /**
- * Strenght Workout Types
+ * Strength Workout Types
  */
 export type StrengthOptions = {
   benchAndSquat: BenchAndSquatWorkout;
