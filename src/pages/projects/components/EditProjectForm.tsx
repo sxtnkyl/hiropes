@@ -1,6 +1,7 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
 import SelectFormField from '@/SharedComponents/FormFieldComponents/SelectFormField';
 import TextFormField from '@/SharedComponents/FormFieldComponents/TextFormField';
+import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
 import { Button, Stack, Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -17,7 +18,7 @@ export const EditProjectForm = ({
 }: {
   initialValues: ProjectRoute;
 }) => {
-  const { onSubmit } = useEditProject();
+  const { onSubmit, loading } = useEditProject();
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('a project name is required'),
@@ -36,6 +37,7 @@ export const EditProjectForm = ({
 
   return (
     <CardContentContainer stackProps={{ spacing: 2 }}>
+      <LoadingOverlay loading={loading} />
       <Typography variant="h2" marginBottom="1rem">
         Update Project
       </Typography>
@@ -67,7 +69,7 @@ export const EditProjectForm = ({
               <Button
                 type="submit"
                 variant="contained"
-                disabled={!dirty || !isValid}
+                disabled={!dirty || !isValid || loading}
               >
                 Submit
               </Button>

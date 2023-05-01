@@ -7,17 +7,21 @@ export interface CardContentContainerProps extends CardProps {
 }
 const CardContentContainer = ({
   children,
-  sx = { height: '100%' },
+  sx,
   stackProps,
   ...rest
 }: CardContentContainerProps) => {
   return (
-    <Card sx={sx} raised {...rest}>
+    <Card
+      raised
+      sx={{ height: '100%', position: 'relative', padding: '2rem', ...sx }}
+      {...rest}
+    >
       <Stack
-        alignItems={'center'}
-        justifyContent={'center'}
-        margin={'2rem 1rem'}
-        textAlign={'center'}
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+        height="100%"
         {...stackProps}
       >
         {children}

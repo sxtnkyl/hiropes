@@ -4,9 +4,9 @@ import { Typography } from '@mui/material';
 
 const HomePageContent = () => {
   return (
-    <CardContentContainer>
+    <CardContentContainer stackProps={{ spacing: 4 }}>
       <Typography variant="h1">Hiropes Climbing</Typography>
-      <HikingIcon sx={{ fontSize: '5rem', margin: '2rem 0' }} />
+      <HikingIcon sx={{ fontSize: '5rem' }} />
       <Typography variant="h1">Regimin Tool</Typography>
     </CardContentContainer>
   );

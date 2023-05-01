@@ -5,9 +5,9 @@ import { IconButton, Typography } from '@mui/material';
 
 const HomeTrackingContent = () => {
   return (
-    <CardContentContainer>
+    <CardContentContainer stackProps={{ spacing: 4 }}>
       <Typography variant="h1">Progression Tracking</Typography>
-      <MuiNextLink href={'/tracking'} sx={{ margin: '2rem 0' }}>
+      <MuiNextLink href={'/tracking'}>
         <IconButton>
           <QueryStatsIcon color="inherit" sx={{ fontSize: '3rem' }} />
         </IconButton>
