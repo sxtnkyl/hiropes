@@ -7,7 +7,7 @@ const HomeTrackingContent = () => {
   return (
     <CardContentContainer stackProps={{ spacing: 4 }}>
       <Typography variant="h1">Progression Tracking</Typography>
-      <MuiNextLink href={'/tracking'}>
+      <MuiNextLink href="/tracking">
         <IconButton>
           <QueryStatsIcon color="inherit" sx={{ fontSize: '3rem' }} />
         </IconButton>

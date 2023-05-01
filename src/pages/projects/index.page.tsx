@@ -48,7 +48,7 @@ const ProjectsPage = () => {
         }
         title={
           <TimerTitle
-            title={'Projects'}
+            title="Projects"
             pomoTimer={pomoTimer}
             workoutInProgress={workoutInProgress}
           />

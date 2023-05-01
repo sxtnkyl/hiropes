@@ -7,7 +7,7 @@ const HomeCreateContent = () => {
   return (
     <CardContentContainer stackProps={{ spacing: 4 }}>
       <Typography variant="h1">New Workout</Typography>
-      <MuiNextLink href={'/create'}>
+      <MuiNextLink href="/create">
         <IconButton>
           <AddIcon color="inherit" sx={{ fontSize: '3rem' }} />
         </IconButton>

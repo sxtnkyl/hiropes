@@ -41,7 +41,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <List>
           <ListItem key="new workout" divider>
             <MuiNextLink
-              href={'/create'}
+              href="/create"
               onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
@@ -55,7 +55,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </ListItem>
           <ListItem key="calendar" divider>
             <MuiNextLink
-              href={'/calendar'}
+              href="/calendar"
               onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
@@ -69,7 +69,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </ListItem>
           <ListItem key="tracking" divider>
             <MuiNextLink
-              href={'/tracking'}
+              href="/tracking"
               onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
@@ -83,7 +83,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </ListItem>
           <ListItem key="projects" divider>
             <MuiNextLink
-              href={'/projects'}
+              href="/projects"
               onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
@@ -97,7 +97,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </ListItem>
           <ListItem key="profile" divider>
             <MuiNextLink
-              href={'/profile'}
+              href="/profile"
               onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >

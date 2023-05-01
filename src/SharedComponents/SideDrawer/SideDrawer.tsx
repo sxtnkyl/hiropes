@@ -36,7 +36,7 @@ const SideDrawer = ({
           justifyContent: 'space-between',
         }}
       >
-        <Box display={'flex'} alignItems={'center'}>
+        <Box display="flex" alignItems="center">
           <HikingIcon />
           <Typography variant="h3">Hiropes</Typography>
         </Box>

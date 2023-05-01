@@ -7,7 +7,7 @@ const HomeCalendarContent = () => {
   return (
     <CardContentContainer stackProps={{ spacing: 4 }}>
       <Typography variant="h1">Workout Calendar</Typography>
-      <MuiNextLink href={'/calendar'}>
+      <MuiNextLink href="/calendar">
         <IconButton>
           <EditCalendarIcon color="inherit" sx={{ fontSize: '3rem' }} />
         </IconButton>
