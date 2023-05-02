@@ -1,9 +1,14 @@
+import { Project } from '@/API';
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
 import SelectFormField from '@/SharedComponents/FormFieldComponents/SelectFormField';
 import TextFormField from '@/SharedComponents/FormFieldComponents/TextFormField';
-import { Button, Stack, Typography } from '@mui/material';
+import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
+import { SubmitButton } from '@/SharedComponents/SubmitButton/SubmitButton';
+import { Stack, Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
+import { Dispatch, SetStateAction, useCallback } from 'react';
 import * as Yup from 'yup';
+import useDeleteProject from '../hooks/useDeleteProject';
 import useEditProject from '../hooks/useEditProject';
 import { ProjectRoute } from '../types/projectTypes';
 import {
@@ -14,10 +19,17 @@ import {
 
 export const EditProjectForm = ({
   initialValues,
+  setSelectedProject,
 }: {
   initialValues: ProjectRoute;
+  setSelectedProject: Dispatch<SetStateAction<Project | undefined>>;
 }) => {
-  const { onSubmit } = useEditProject();
+  const { onSubmit, loading } = useEditProject();
+  const { onDelete, loading: deleteLoading } = useDeleteProject();
+
+  const handleDelete = useCallback(async () => {
+    await onDelete(initialValues.id, () => setSelectedProject(undefined));
+  }, [initialValues.id, onDelete, setSelectedProject]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('a project name is required'),
@@ -36,6 +48,9 @@ export const EditProjectForm = ({
 
   return (
     <CardContentContainer stackProps={{ spacing: 2 }}>
+      <LoadingOverlay
+        loading={loading === 'pending' || deleteLoading === 'pending'}
+      />
       <Typography variant="h2" marginBottom="1rem">
         Update Project
       </Typography>
@@ -64,13 +79,23 @@ export const EditProjectForm = ({
                 label="Previous Session Count"
               />
               <TextFormField name="description" label="Project Description" />
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={!dirty || !isValid}
-              >
-                Submit
-              </Button>
+              <SubmitButton
+                status={loading}
+                buttonProps={{
+                  variant: 'contained',
+                  type: 'submit',
+                  disabled: !dirty || !isValid || loading !== 'inactive',
+                }}
+              />
+              <SubmitButton
+                status={deleteLoading}
+                submitText="delete"
+                buttonProps={{
+                  variant: 'contained',
+                  type: 'button',
+                  onClick: handleDelete,
+                }}
+              />
             </Stack>
           </Form>
         )}

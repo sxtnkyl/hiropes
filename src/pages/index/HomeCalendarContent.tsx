@@ -5,9 +5,9 @@ import { IconButton, Typography } from '@mui/material';
 
 const HomeCalendarContent = () => {
   return (
-    <CardContentContainer>
+    <CardContentContainer stackProps={{ spacing: 4 }}>
       <Typography variant="h1">Workout Calendar</Typography>
-      <MuiNextLink href={'/calendar'} sx={{ margin: '2rem 0' }}>
+      <MuiNextLink href="/calendar">
         <IconButton>
           <EditCalendarIcon color="inherit" sx={{ fontSize: '3rem' }} />
         </IconButton>

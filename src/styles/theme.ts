@@ -8,10 +8,10 @@ const theme = responsiveFontSizes(
         main: '#364c56',
       },
       secondary: {
-        main: '#004d40',
+        main: '#FFC400',
       },
       background: {
-        default: '#b0bec5',
+        default: '#78909C',
         paper: '#f9fcff',
       },
       text: {

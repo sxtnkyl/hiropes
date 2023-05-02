@@ -16,7 +16,7 @@ const profileActionTabs: TabProps[] = [
 
 const ProfilePage = () => {
   const router = useRouter();
-  const { user } = useActiveUser();
+  const { signedInUser } = useActiveUser();
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
 
   const [activeTab, setActiveTab] = useState<string>('update');
@@ -26,8 +26,8 @@ const ProfilePage = () => {
   ));
 
   const signoutHandler = () => {
-    if (user?.signOut) {
-      user?.signOut();
+    if (signedInUser?.signOut) {
+      signedInUser?.signOut();
       router.push('/');
     }
   };
@@ -57,7 +57,9 @@ const ProfilePage = () => {
       </TopActionTabBar>
 
       <main>
-        {activeTab === 'update' && <div>update user: {user?.username}</div>}
+        {activeTab === 'update' && (
+          <div>update user: {signedInUser?.username}</div>
+        )}
         {activeTab === 'settings' && <div>update settings</div>}
         {activeTab === 'logout' && (
           <div>

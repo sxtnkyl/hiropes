@@ -5,9 +5,9 @@ import { IconButton, Typography } from '@mui/material';
 
 const HomeCreateContent = () => {
   return (
-    <CardContentContainer>
-      <Typography variant="h1">Create New Workout</Typography>
-      <MuiNextLink href={'/create'} sx={{ margin: '2rem 0' }}>
+    <CardContentContainer stackProps={{ spacing: 4 }}>
+      <Typography variant="h1">New Workout</Typography>
+      <MuiNextLink href="/create">
         <IconButton>
           <AddIcon color="inherit" sx={{ fontSize: '3rem' }} />
         </IconButton>

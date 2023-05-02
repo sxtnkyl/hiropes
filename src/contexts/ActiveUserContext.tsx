@@ -4,7 +4,9 @@ import { AmplifyUser } from '@aws-amplify/ui';
 import { API, Auth, Hub } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import {
+  Dispatch,
   ReactNode,
+  SetStateAction,
   createContext,
   useContext,
   useEffect,
@@ -12,20 +14,24 @@ import {
 } from 'react';
 import * as queries from '../graphql/queries';
 
-type HiropesUser = Partial<AmplifyUser> | null;
-interface ActiveUserProps {
-  user: HiropesUser;
+type HiropesUser = Partial<AmplifyUser> | undefined;
+interface ActiveUserContextProps {
+  signedInUser?: HiropesUser;
+  setSignedInUser: Dispatch<SetStateAction<HiropesUser>>;
   projects?: Project[];
+  setProjects: Dispatch<SetStateAction<Project[] | undefined>>;
+  fetchAndUpdateProjects: () => Promise<void>;
 }
-const ActiveUserContext = createContext<ActiveUserProps>({} as ActiveUserProps);
+const ActiveUserContext = createContext<ActiveUserContextProps>(
+  {} as ActiveUserContextProps
+);
 export const useActiveUser = () => useContext(ActiveUserContext);
 
 export const ActiveUserProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
-  const [signedInUser, setSignedInUser] = useState<ActiveUserProps>({
-    user: null,
-  });
+  const [signedInUser, setSignedInUser] = useState<HiropesUser>();
+  const [projects, setProjects] = useState<Project[]>();
 
   /** auth listener */
   useEffect(() => {
@@ -34,7 +40,7 @@ export const ActiveUserProvider = ({ children }: { children: ReactNode }) => {
         case 'signIn':
           return router.push('/profile');
         case 'signOut':
-          return setSignedInUser({ user: null });
+          return setSignedInUser(undefined);
       }
     });
 
@@ -43,7 +49,7 @@ export const ActiveUserProvider = ({ children }: { children: ReactNode }) => {
         const userData = await Auth.currentAuthenticatedUser();
         setSignedInUser(userData);
       } catch (err) {
-        setSignedInUser({ user: null });
+        setSignedInUser(undefined);
       }
     };
     signedInUserSetter();
@@ -51,26 +57,32 @@ export const ActiveUserProvider = ({ children }: { children: ReactNode }) => {
 
   /** projects */
   useEffect(() => {
-    if (!signedInUser.projects) {
-      const userProjects = async () => {
-        const { data } = await API.graphql<GraphQLQuery<ListProjectsQuery>>({
-          query: queries.listProjects,
-        });
-        if (data?.listProjects?.items) {
-          const projects = data?.listProjects?.items as Project[];
-          setSignedInUser((prev) => ({
-            ...prev,
-            projects,
-          }));
-        }
-      };
-
-      userProjects();
+    if (!projects) {
+      fetchAndUpdateProjects();
     }
-  }, [signedInUser.projects]);
+  }, [projects]);
+
+  const fetchAndUpdateProjects = async () => {
+    const { data } = await API.graphql<GraphQLQuery<ListProjectsQuery>>({
+      query: queries.listProjects,
+    });
+    /** type assertion needed as response is (Project | null)[] */
+    const projects = data?.listProjects?.items.filter(
+      (proj) => proj !== null
+    ) as Project[];
+    setProjects(projects);
+  };
 
   return (
-    <ActiveUserContext.Provider value={signedInUser}>
+    <ActiveUserContext.Provider
+      value={{
+        signedInUser,
+        setSignedInUser,
+        projects,
+        setProjects,
+        fetchAndUpdateProjects,
+      }}
+    >
       {children}
     </ActiveUserContext.Provider>
   );
