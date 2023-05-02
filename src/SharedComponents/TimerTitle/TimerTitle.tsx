@@ -1,14 +1,18 @@
 import { timeConverters } from '@/utils/timeConverters';
-import { Button, ButtonProps, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
+import MuiNextLink, { MuiNextLinkProps } from '../MuiNext/MuiNextLink';
 
-const TimerButton = (props: ButtonProps) => {
+const TimerButton = ({
+  children,
+  href = '/create',
+  ...rest
+}: MuiNextLinkProps) => {
   return (
-    <Button
-      variant="outlined"
-      color="inherit"
-      sx={{ width: '50%' }}
-      {...props}
-    />
+    <MuiNextLink sx={{ width: '50%' }} href={href} {...rest}>
+      <Button variant="outlined" color="inherit" fullWidth>
+        {children}
+      </Button>
+    </MuiNextLink>
   );
 };
 

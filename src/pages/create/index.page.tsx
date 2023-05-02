@@ -57,7 +57,7 @@ const CreateWorkoutPage = () => {
         }
         title={
           <TimerTitle
-            title={`New Workout`}
+            title="New Workout"
             pomoTimer={pomoTimer}
             workoutInProgress={workoutInProgress}
           />
