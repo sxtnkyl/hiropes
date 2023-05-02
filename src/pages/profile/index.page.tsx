@@ -14,12 +14,14 @@ const profileActionTabs: TabProps[] = [
   { label: 'logout', value: 'logout' },
 ];
 
+type ActiveProfileTab = 'update' | 'settings' | 'logout';
+
 const ProfilePage = () => {
   const router = useRouter();
   const { signedInUser } = useActiveUser();
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
 
-  const [activeTab, setActiveTab] = useState<string>('update');
+  const [activeTab, setActiveTab] = useState<ActiveProfileTab>('update');
 
   const profileTabs = profileActionTabs.map((option, i) => (
     <Tab {...option} key={i} />
@@ -32,7 +34,10 @@ const ProfilePage = () => {
     }
   };
 
-  const handleTabChange = (event: SyntheticEvent, newValue: string) => {
+  const handleTabChange = (
+    event: SyntheticEvent,
+    newValue: ActiveProfileTab
+  ) => {
     setActiveTab(newValue);
   };
 

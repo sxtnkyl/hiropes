@@ -21,7 +21,8 @@ const ProjectsPage = () => {
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
   const { pomoTimer, workoutInProgress } = useCurrentActiveWorkout();
 
-  const [activeProjectTab, setActiveProjectTab] = useState('create');
+  const [activeProjectTab, setActiveProjectTab] =
+    useState<ProjectTabValues>('create');
 
   const projectsTabs = projectsPageTabs.map((option, i) => (
     <Tab {...option} key={i} />

@@ -65,14 +65,14 @@ export const CurrentActiveWorkoutProvider = ({
   /** for tabs, separate from activeStepTimer */
   const [activeWorkoutStep, setActiveWorkoutStep] =
     useState<WorkoutStep>('start');
-  const [workoutInProgress, setWorkoutInProgress] = useState(false);
+  const [workoutInProgress, setWorkoutInProgress] = useState<boolean>(false);
   const [activeWorkout, setActiveWorkout] = useState<WorkoutSession>({
     workoutStepsCompleted: [],
     activeStepTimer: null,
   });
   /** pomoTime = seconds */
-  const [pomoTimer, setPomoTimer] = useState(60);
-  const [timerIsPaused, setTimerIsPaused] = useState(true);
+  const [pomoTimer, setPomoTimer] = useState<number>(60);
+  const [timerIsPaused, setTimerIsPaused] = useState<boolean>(true);
 
   useEffect(() => {
     let interval: string | number | NodeJS.Timeout | undefined;

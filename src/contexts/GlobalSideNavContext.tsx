@@ -21,7 +21,8 @@ export const GlobalSideNavProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [isGlobalSideNavOpen, setIsGlobalSideNavOpen] = useState(false);
+  const [isGlobalSideNavOpen, setIsGlobalSideNavOpen] =
+    useState<boolean>(false);
 
   return (
     <GlobalSideNavContext.Provider
