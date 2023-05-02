@@ -1,30 +1,46 @@
 import { CreateProjectInput } from '@/API';
+import { SubmissionStatus } from '@/SharedComponents/SubmitButton/SubmitButton';
+import { useActiveUser } from '@/contexts/ActiveUserContext';
 import { GraphQLQuery } from '@aws-amplify/api';
 import { API } from 'aws-amplify';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import * as mutations from '../../../graphql/mutations';
 import { CreateNewProjectFormValues } from '../components/CreateProjectForm';
 
 interface UseCreateProjectProps {
   onSubmit: (values: CreateNewProjectFormValues) => Promise<void>;
-  loading: boolean;
+  loading: SubmissionStatus;
 }
 
 const useCreateProject = (): UseCreateProjectProps => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const { fetchAndUpdateProjects } = useActiveUser();
 
-  const onSubmit = useCallback(async (values: CreateNewProjectFormValues) => {
-    try {
-      setLoading(true);
-      API.graphql<GraphQLQuery<CreateProjectInput>>({
-        query: mutations.createProject,
-        variables: { input: values },
-      });
-      setLoading(false);
-    } catch (err: unknown) {
-      return;
+  const [loading, setLoading] = useState<SubmissionStatus>('inactive');
+
+  useEffect(() => {
+    if (loading === 'success' || loading === 'error') {
+      setTimeout(() => {
+        setLoading('inactive');
+      }, 3000);
     }
-  }, []);
+  }, [loading]);
+
+  const onSubmit = useCallback(
+    async (values: CreateNewProjectFormValues) => {
+      try {
+        setLoading('pending');
+        await API.graphql<GraphQLQuery<CreateProjectInput>>({
+          query: mutations.createProject,
+          variables: { input: values },
+        });
+        await fetchAndUpdateProjects();
+        setLoading('success');
+      } catch (err: unknown) {
+        setLoading('error');
+      }
+    },
+    [fetchAndUpdateProjects]
+  );
   return { onSubmit, loading };
 };
 

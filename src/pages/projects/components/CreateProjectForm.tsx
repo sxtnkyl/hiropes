@@ -2,7 +2,8 @@ import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/Ca
 import SelectFormField from '@/SharedComponents/FormFieldComponents/SelectFormField';
 import TextFormField from '@/SharedComponents/FormFieldComponents/TextFormField';
 import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
-import { Button, Stack, Typography } from '@mui/material';
+import { SubmitButton } from '@/SharedComponents/SubmitButton/SubmitButton';
+import { Stack, Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import useCreateProject from '../hooks/useCreateProject';
@@ -46,7 +47,7 @@ export const CreateNewProjectForm = () => {
 
   return (
     <CardContentContainer stackProps={{ spacing: 2 }}>
-      <LoadingOverlay loading={loading} />
+      <LoadingOverlay loading={loading === 'pending'} />
       <Typography variant="h2" marginBottom="1rem">
         Create Project
       </Typography>
@@ -55,7 +56,10 @@ export const CreateNewProjectForm = () => {
         validationSchema={validationSchema}
         validateOnMount
         enableReinitialize
-        onSubmit={onSubmit}
+        onSubmit={(values, { resetForm }) => {
+          onSubmit(values);
+          resetForm();
+        }}
       >
         {({ isValid, dirty }) => (
           <Form>
@@ -75,13 +79,14 @@ export const CreateNewProjectForm = () => {
                 label="Previous Session Count"
               />
               <TextFormField name="description" label="Project Description" />
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={!dirty || !isValid || loading}
-              >
-                Submit
-              </Button>
+              <SubmitButton
+                status={loading}
+                buttonProps={{
+                  variant: 'contained',
+                  type: 'submit',
+                  disabled: !dirty || !isValid || loading !== 'inactive',
+                }}
+              />
             </Stack>
           </Form>
         )}
