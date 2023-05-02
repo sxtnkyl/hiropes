@@ -29,12 +29,16 @@ const useEditProject = (): UseEditProjectProps => {
     async (values: ProjectRoute) => {
       try {
         setLoading('pending');
-        await API.graphql<GraphQLQuery<UpdateProjectInput>>({
+        const response = await API.graphql<GraphQLQuery<UpdateProjectInput>>({
           query: mutations.updateProject,
           variables: { input: values },
         });
-        await fetchAndUpdateProjects();
-        setLoading('success');
+        if (Boolean(response?.errors?.length)) {
+          setLoading('error');
+        } else {
+          await fetchAndUpdateProjects();
+          setLoading('success');
+        }
       } catch (err: unknown) {
         setLoading('error');
       }

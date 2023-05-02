@@ -1,18 +1,17 @@
-import { CreateProjectInput } from '@/API';
+import { DeleteProjectInput } from '@/API';
 import { SubmissionStatus } from '@/SharedComponents/SubmitButton/SubmitButton';
 import { useActiveUser } from '@/contexts/ActiveUserContext';
 import { GraphQLQuery } from '@aws-amplify/api';
 import { API } from 'aws-amplify';
 import { useCallback, useEffect, useState } from 'react';
 import * as mutations from '../../../graphql/mutations';
-import { CreateNewProjectFormValues } from '../components/CreateProjectForm';
 
-interface UseCreateProjectProps {
-  onSubmit: (values: CreateNewProjectFormValues) => Promise<void>;
+interface UseDeleteProjectProps {
+  onDelete: (projectId: string, successCallback: () => void) => Promise<void>;
   loading: SubmissionStatus;
 }
 
-const useCreateProject = (): UseCreateProjectProps => {
+const useDeleteProject = (): UseDeleteProjectProps => {
   const { fetchAndUpdateProjects } = useActiveUser();
 
   const [loading, setLoading] = useState<SubmissionStatus>('inactive');
@@ -25,18 +24,20 @@ const useCreateProject = (): UseCreateProjectProps => {
     }
   }, [loading]);
 
-  const onSubmit = useCallback(
-    async (values: CreateNewProjectFormValues) => {
+  const onDelete = useCallback(
+    async (projectId: string, successCallback: () => void) => {
       try {
         setLoading('pending');
-        const response = await API.graphql<GraphQLQuery<CreateProjectInput>>({
-          query: mutations.createProject,
-          variables: { input: values },
+        const response = await API.graphql<GraphQLQuery<DeleteProjectInput>>({
+          query: mutations.deleteProject,
+          variables: { input: { id: projectId } },
         });
+
         if (Boolean(response?.errors?.length)) {
           setLoading('error');
         } else {
           await fetchAndUpdateProjects();
+          successCallback();
           setLoading('success');
         }
       } catch (err: unknown) {
@@ -45,7 +46,7 @@ const useCreateProject = (): UseCreateProjectProps => {
     },
     [fetchAndUpdateProjects]
   );
-  return { onSubmit, loading };
+  return { onDelete, loading };
 };
 
-export default useCreateProject;
+export default useDeleteProject;

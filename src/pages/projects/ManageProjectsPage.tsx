@@ -11,7 +11,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { EditProjectForm } from './components/EditProjectForm';
 import { createProjectFormValuesFromProject } from './utils/createProjectFormValuesFromProject';
 
@@ -20,10 +20,13 @@ export const ManageProjectsPage = () => {
 
   const [selectedProject, setSelectedProject] = useState<Project>();
 
-  const handleSelectChange = (event: SelectChangeEvent) => {
-    const proj = projects?.find((proj) => proj?.id === event.target.value);
-    proj && setSelectedProject(proj);
-  };
+  const handleSelectChange = useCallback(
+    (event: SelectChangeEvent) => {
+      const proj = projects?.find((proj) => proj?.id === event.target.value);
+      proj && setSelectedProject(proj);
+    },
+    [projects]
+  );
 
   const projectOptions = useMemo(() => {
     return projects?.map((proj) => (
@@ -60,6 +63,7 @@ export const ManageProjectsPage = () => {
       {selectedProject && (
         <EditProjectForm
           initialValues={createProjectFormValuesFromProject(selectedProject)}
+          setSelectedProject={setSelectedProject}
         />
       )}
     </Stack>
