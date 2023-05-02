@@ -1,22 +1,22 @@
-import { GradeRange, ProjectRoute } from '@/pages/projects/types/projectTypes';
+import { Project } from '@/API';
+import { GradeRange } from '@/pages/projects/types/projectTypes';
 
-/**
- * Fetched Workout
- */
+/** Workout Session */
 export type RoutineOption = 'endurance' | 'power' | 'fingerStrength';
 export type StrengthOption = 'benchAndSquat' | 'absAndShoulders' | 'cardio';
-export type WorkoutSession = {
-  id: string;
-  createdAt: Date;
-  project: ProjectRoute;
-  routineOption: RoutineOption;
-  routineFocus: RoutineOptions[WorkoutSession['routineOption']];
-  strengthOption: StrengthOption;
-};
+export type WorkoutStep =
+  | 'start'
+  | 'warmup'
+  | 'project'
+  | 'routine'
+  | 'strength';
 
-/**
- * Create Workout Types
- */
+export interface WorkoutSession {
+  routineOption?: RoutineOption;
+  routineOptionWorkout?: WorkoutSession['routineOption'];
+  strengthOption?: StrengthOption;
+  project?: Project;
+}
 
 /**
  * defaultReps = amount per set

@@ -1,8 +1,4 @@
-import {
-  RoutineOption,
-  StrengthOption,
-} from '@/pages/create/types/createTypes';
-import { ProjectRoute } from '@/pages/projects/types/projectTypes';
+import { WorkoutSession, WorkoutStep } from '@/pages/create/types/createTypes';
 import { timeConverters } from '@/utils/timeConverters';
 import {
   Dispatch,
@@ -15,22 +11,6 @@ import {
   useState,
 } from 'react';
 
-export type WorkoutStep =
-  | 'start'
-  | 'warmup'
-  | 'project'
-  | 'routine'
-  | 'strength';
-
-export interface WorkoutSession {
-  routineOption?: RoutineOption;
-  routineOptionWorkout?: WorkoutSession['routineOption'];
-  strengthOption?: StrengthOption;
-  project?: ProjectRoute;
-  workoutStepsCompleted: WorkoutStep[];
-  activeStepTimer: WorkoutStep | null;
-}
-
 export interface CurrentActiveWorkoutContextProps {
   activeWorkoutStep: WorkoutStep;
   setActiveWorkoutStep: Dispatch<SetStateAction<WorkoutStep>>;
@@ -38,7 +18,10 @@ export interface CurrentActiveWorkoutContextProps {
   setWorkoutInProgress: Dispatch<SetStateAction<boolean>>;
   activeWorkout: WorkoutSession;
   setActiveWorkout: Dispatch<SetStateAction<WorkoutSession>>;
-  updateCompletedSteps: (step: WorkoutStep) => void;
+  workoutStepsCompleted: WorkoutStep[];
+  setWorkoutStepsCompleted: Dispatch<SetStateAction<WorkoutStep[]>>;
+  activeStepTimer: WorkoutStep;
+  setActiveStepTimer: Dispatch<SetStateAction<WorkoutStep>>;
   pomoTimer: number;
   setPomoTimer: Dispatch<SetStateAction<number>>;
   workoutSetupIsComplete: boolean;
@@ -62,14 +45,20 @@ export const CurrentActiveWorkoutProvider = ({
 }) => {
   const { formattedSeconds } = timeConverters();
 
-  /** for tabs, separate from activeStepTimer */
+  /** for which /create tab is selected */
   const [activeWorkoutStep, setActiveWorkoutStep] =
     useState<WorkoutStep>('start');
+  /** if a workout currently being conducted */
   const [workoutInProgress, setWorkoutInProgress] = useState<boolean>(false);
-  const [activeWorkout, setActiveWorkout] = useState<WorkoutSession>({
-    workoutStepsCompleted: [],
-    activeStepTimer: null,
-  });
+
+  /** Workout Session Variables */
+  const [workoutStepsCompleted, setWorkoutStepsCompleted] = useState<
+    WorkoutStep[]
+  >([]);
+  /** which step the timer is tracking */
+  const [activeStepTimer, setActiveStepTimer] = useState<WorkoutStep>('start');
+  const [activeWorkout, setActiveWorkout] = useState<WorkoutSession>({});
+
   /** pomoTime = seconds */
   const [pomoTimer, setPomoTimer] = useState<number>(60);
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(true);
@@ -110,12 +99,6 @@ export const CurrentActiveWorkoutProvider = ({
       resumeTimer();
     }, 1000);
   };
-  const updateCompletedSteps = (step: WorkoutStep) => {
-    setActiveWorkout(({ workoutStepsCompleted, ...rest }) => ({
-      ...rest,
-      workoutStepsCompleted: [...workoutStepsCompleted, step],
-    }));
-  };
 
   return (
     <CurrentActiveWorkoutContext.Provider
@@ -126,7 +109,10 @@ export const CurrentActiveWorkoutProvider = ({
         setWorkoutInProgress,
         activeWorkout,
         setActiveWorkout,
-        updateCompletedSteps,
+        workoutStepsCompleted,
+        setWorkoutStepsCompleted,
+        activeStepTimer,
+        setActiveStepTimer,
         pomoTimer,
         setPomoTimer,
         workoutSetupIsComplete,

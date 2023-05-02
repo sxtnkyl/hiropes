@@ -14,10 +14,11 @@ const CreateWorkoutStartPage = () => {
   const {
     activeWorkout,
     workoutSetupIsComplete,
-    setActiveWorkout,
+    setActiveStepTimer,
     setWorkoutInProgress,
+    setActiveWorkout,
     setActiveWorkoutStep,
-    updateCompletedSteps,
+    setWorkoutStepsCompleted,
     setPomoTimer,
     resumeTimer,
   } = useCurrentActiveWorkout();
@@ -25,11 +26,8 @@ const CreateWorkoutStartPage = () => {
 
   const handleStartWorkoutClick = () => {
     setWorkoutInProgress(true);
-    updateCompletedSteps('start');
-    setActiveWorkout((prevSesh) => ({
-      ...prevSesh,
-      activeStepTimer: 'warmup',
-    }));
+    setWorkoutStepsCompleted(['start']);
+    setActiveStepTimer('warmup');
     setActiveWorkoutStep('warmup');
     setPomoTimer(hoursToSeconds(0.004));
     resumeTimer();

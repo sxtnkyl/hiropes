@@ -2,10 +2,7 @@ import TimerTitle from '@/SharedComponents/TimerTitle/TimerTitle';
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
-import {
-  WorkoutStep,
-  useCurrentActiveWorkout,
-} from '@/contexts/CurrentActiveWorkoutContext';
+import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps } from '@mui/material';
@@ -13,6 +10,7 @@ import { SyntheticEvent } from 'react';
 import { CreateWorkoutProjectPage } from './CreateWorkoutProjectPage';
 import CreateWorkoutStartPage from './CreateWorkoutStartPage';
 import { CreateWorkoutWarmupPage } from './CreateWorkoutWarmupPage';
+import { WorkoutStep } from './types/createTypes';
 
 const createActionTabs: TabProps[] = [
   { label: 'start', value: 'start' },
