@@ -1,11 +1,11 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
 import { useActiveUser } from '@/contexts/ActiveUserContext';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
-import AddIcon from '@mui/icons-material/Add';
 import HardwareIcon from '@mui/icons-material/Hardware';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+
+import { PauseResumeButton } from '@/SharedComponents/PauseResumeButton/PauseResumeButton';
+import { SkipButton } from '@/SharedComponents/SkipButton/SkipButton';
 import {
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -14,16 +14,23 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useRouter } from 'next/router';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { EditProjectForm } from '../projects/components/EditProjectForm';
 import { createProjectFormValuesFromProject } from '../projects/utils/createProjectFormValuesFromProject';
 
 export const CreateWorkoutProjectPage = () => {
-  const router = useRouter();
   const { projects } = useActiveUser();
-  const { activeWorkout, setActiveWorkout, pauseTimer, resumeTimer } =
-    useCurrentActiveWorkout();
+  const {
+    activeWorkout,
+    setActiveWorkout,
+    setWorkoutStepsCompleted,
+    setActiveWorkoutStep,
+    setActiveStepTimer,
+    pomoTimer,
+    pauseTimer,
+    resumeTimer,
+    timerIsPaused,
+  } = useCurrentActiveWorkout();
 
   const projectOptions = useMemo(() => {
     return projects?.map((proj) => (
@@ -41,13 +48,25 @@ export const CreateWorkoutProjectPage = () => {
     [projects, setActiveWorkout]
   );
 
-  const handleCreateNewProjectClick = () => {
-    router.push('/projects');
-  };
+  const endProjectStep = useCallback(() => {
+    setWorkoutStepsCompleted((prev) => [...prev, 'project']);
+    setActiveWorkoutStep('routine');
+    setActiveStepTimer('routine');
+    // TODO: determine timer from selected routine
+    // setPomoTimer(hoursToSeconds(0.025));
+  }, [setActiveStepTimer, setActiveWorkoutStep, setWorkoutStepsCompleted]);
+
   const handleDeleteProjectClick = () => {
     pauseTimer();
     setActiveWorkout((prev) => ({ ...prev, project: undefined }));
   };
+
+  useEffect(() => {
+    if (pomoTimer === 0) {
+      endProjectStep();
+    }
+  }, [endProjectStep, pomoTimer]);
+
   return (
     <Stack spacing={2}>
       <CardContentContainer stackProps={{ spacing: 4 }}>
@@ -69,23 +88,19 @@ export const CreateWorkoutProjectPage = () => {
           </Select>
         </FormControl>
         {activeWorkout.project && (
-          <Button
-            variant="outlined"
-            onClick={resumeTimer}
-            endIcon={<PlayCircleOutlineIcon />}
-            fullWidth
-          >
-            Begin Project Session
-          </Button>
+          <PauseResumeButton
+            paused={timerIsPaused}
+            resumeAction={resumeTimer}
+            resumeText="Resume Project"
+            pauseAction={pauseTimer}
+            pauseText="Pause Project"
+          />
         )}
-        <Button
-          variant="outlined"
-          onClick={handleCreateNewProjectClick}
-          endIcon={<AddIcon />}
-          fullWidth
-        >
-          Create New Project
-        </Button>
+        <SkipButton
+          onClick={endProjectStep}
+          buttonText="skip project"
+          disabled={!activeWorkout.project}
+        />
       </CardContentContainer>
       {activeWorkout.project && (
         <EditProjectForm

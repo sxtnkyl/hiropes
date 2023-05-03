@@ -24,6 +24,7 @@ export interface CurrentActiveWorkoutContextProps {
   setActiveStepTimer: Dispatch<SetStateAction<WorkoutStep>>;
   pomoTimer: number;
   setPomoTimer: Dispatch<SetStateAction<number>>;
+  timerIsPaused: boolean;
   workoutSetupIsComplete: boolean;
   pauseTimer: () => void;
   resumeTimer: () => void;
@@ -115,6 +116,7 @@ export const CurrentActiveWorkoutProvider = ({
         setActiveStepTimer,
         pomoTimer,
         setPomoTimer,
+        timerIsPaused,
         workoutSetupIsComplete,
         pauseTimer,
         resumeTimer,

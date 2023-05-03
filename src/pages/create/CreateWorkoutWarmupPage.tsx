@@ -1,20 +1,23 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
+import { PauseResumeButton } from '@/SharedComponents/PauseResumeButton/PauseResumeButton';
+import { SkipButton } from '@/SharedComponents/SkipButton/SkipButton';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { timeConverters } from '@/utils/timeConverters';
 import FireplaceIcon from '@mui/icons-material/Fireplace';
-import PauseIcon from '@mui/icons-material/Pause';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
-import { Button, Typography } from '@mui/material';
+
+import { Typography } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 
 export const CreateWorkoutWarmupPage = () => {
   const {
     pauseTimer,
+    resumeTimer,
     setActiveWorkoutStep,
     setActiveStepTimer,
     setWorkoutStepsCompleted,
     pomoTimer,
     setPomoTimer,
+    timerIsPaused,
   } = useCurrentActiveWorkout();
   const { hoursToSeconds } = timeConverters();
 
@@ -62,20 +65,17 @@ export const CreateWorkoutWarmupPage = () => {
         </>
       ) : (
         <>
-          <Button
-            variant="outlined"
-            onClick={pauseTimer}
-            endIcon={<PauseIcon />}
-          >
-            pause warmup
-          </Button>
-          <Button
-            variant="outlined"
+          <PauseResumeButton
+            paused={timerIsPaused}
+            resumeAction={resumeTimer}
+            resumeText="Resume Warmup"
+            pauseAction={pauseTimer}
+            pauseText="Pause Warmup"
+          />
+          <SkipButton
             onClick={handleSkipWarmupClick}
-            endIcon={<SkipNextIcon />}
-          >
-            skip warmup
-          </Button>
+            buttonText="skip warmup"
+          />
         </>
       )}
     </CardContentContainer>
