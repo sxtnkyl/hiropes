@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import * as mutations from '../../../graphql/mutations';
 
 interface UseDeleteProjectProps {
-  onDelete: (projectId: string, successCallback: () => void) => Promise<void>;
+  onDelete: (projectId: string, successCallback?: () => void) => Promise<void>;
   loading: SubmissionStatus;
 }
 
@@ -25,7 +25,7 @@ const useDeleteProject = (): UseDeleteProjectProps => {
   }, [loading]);
 
   const onDelete = useCallback(
-    async (projectId: string, successCallback: () => void) => {
+    async (projectId: string, successCallback?: () => void) => {
       try {
         setLoading('pending');
         const response = await API.graphql<GraphQLQuery<DeleteProjectInput>>({
@@ -37,7 +37,7 @@ const useDeleteProject = (): UseDeleteProjectProps => {
           setLoading('error');
         } else {
           await fetchAndUpdateProjects();
-          successCallback();
+          successCallback && successCallback();
           setLoading('success');
         }
       } catch (err: unknown) {
