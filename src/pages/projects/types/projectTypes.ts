@@ -16,6 +16,7 @@ export type RouteColor =
   | 'other';
 
 /** different from @/API Project - doesn't have dynamoDB fields like owner */
+/** used for create and edit projects */
 export type ProjectRoute = {
   id: string;
   name: string;

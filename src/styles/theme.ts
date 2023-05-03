@@ -23,10 +23,10 @@ const theme = responsiveFontSizes(
         styleOverrides: {
           ':root': {
             'html, body': {
-              height: '100vh',
+              height: '100dvh',
             },
             '#__next': {
-              height: '100vh',
+              height: '100dvh',
               position: 'relative',
               display: 'flex',
               flexDirection: 'column',

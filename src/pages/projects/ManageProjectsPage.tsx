@@ -63,7 +63,7 @@ export const ManageProjectsPage = () => {
       {selectedProject && (
         <EditProjectForm
           initialValues={createProjectFormValuesFromProject(selectedProject)}
-          setSelectedProject={setSelectedProject}
+          onDeleteCallback={() => setSelectedProject(undefined)}
         />
       )}
     </Stack>

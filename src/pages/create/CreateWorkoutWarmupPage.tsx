@@ -9,29 +9,26 @@ import { useCallback, useEffect } from 'react';
 
 export const CreateWorkoutWarmupPage = () => {
   const {
-    setActiveWorkout,
     pauseTimer,
     setActiveWorkoutStep,
-    updateCompletedSteps,
+    setActiveStepTimer,
+    setWorkoutStepsCompleted,
     pomoTimer,
     setPomoTimer,
   } = useCurrentActiveWorkout();
   const { hoursToSeconds } = timeConverters();
 
   const endWarmupStep = useCallback(() => {
-    updateCompletedSteps('warmup');
+    setWorkoutStepsCompleted((prev) => [...prev, 'warmup']);
     setActiveWorkoutStep('project');
-    setActiveWorkout((prevSesh) => ({
-      ...prevSesh,
-      activeStepTimer: 'project',
-    }));
+    setActiveStepTimer('project');
     setPomoTimer(hoursToSeconds(0.025));
   }, [
     hoursToSeconds,
-    setActiveWorkout,
+    setActiveStepTimer,
     setActiveWorkoutStep,
     setPomoTimer,
-    updateCompletedSteps,
+    setWorkoutStepsCompleted,
   ]);
 
   const handleSkipWarmupClick = () => {

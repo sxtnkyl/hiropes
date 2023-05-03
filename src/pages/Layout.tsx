@@ -1,5 +1,6 @@
 import MuiNextLink from '@/SharedComponents/MuiNext/MuiNextLink';
 import SideDrawer from '@/SharedComponents/SideDrawer/SideDrawer';
+import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import styled from '@emotion/styled';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -25,6 +26,7 @@ const StListItemText = styled(ListItemText)`
 `;
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const { workoutInProgress } = useCurrentActiveWorkout();
   const { isGlobalSideNavOpen, setIsGlobalSideNavOpen } = useGlobalSideNav();
 
   const closeSideNav = () => {
@@ -48,7 +50,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
               <ListItemButton>
                 <StListItemIcon>
                   <FitnessCenterIcon />
-                  <StListItemText primary="new workout" />
+                  <StListItemText
+                    primary={
+                      workoutInProgress ? 'active workout' : 'new workout'
+                    }
+                  />
                 </StListItemIcon>
               </ListItemButton>
             </MuiNextLink>
