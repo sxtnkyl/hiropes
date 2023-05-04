@@ -81,15 +81,15 @@ export const CurrentActiveWorkoutProvider = ({
 
   const workoutSetupIsComplete = useMemo(() => {
     const setupValues = [
-      activeWorkout.routineOption,
-      activeWorkout.routineOptionWorkout,
-      activeWorkout.strengthOption,
+      activeWorkout.routineFocus,
+      activeWorkout.routineFocusWorkout,
+      activeWorkout.strengthWorkout,
     ];
     return setupValues.every((val) => Boolean(val));
   }, [
-    activeWorkout.routineOption,
-    activeWorkout.routineOptionWorkout,
-    activeWorkout.strengthOption,
+    activeWorkout.routineFocus,
+    activeWorkout.routineFocusWorkout,
+    activeWorkout.strengthWorkout,
   ]);
 
   const pauseTimer = () => setTimerIsPaused(true);

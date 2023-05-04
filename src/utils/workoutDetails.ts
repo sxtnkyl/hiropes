@@ -1,9 +1,9 @@
 import {
-  RoutineOptions,
-  StrengthOptions,
+  RoutineWorkoutsLookupObject,
+  StrengthWorkouts,
 } from '@/pages/create/types/createTypes';
 
-export const routineDetails: RoutineOptions = {
+export const routineDetails: RoutineWorkoutsLookupObject = {
   endurance: {
     sixBySix: {
       name: '6x6',
@@ -99,7 +99,7 @@ export const routineDetails: RoutineOptions = {
   },
 };
 
-export const strengthWorkouts: StrengthOptions = {
+export const strengthWorkouts: StrengthWorkouts = {
   benchAndSquat: { name: 'Bench And Squat', weight: 1 },
   absAndShoulders: { name: 'Abs And Shoulders', reps: 2 },
   cardio: { name: 'Cardio Run', distance: 3 },

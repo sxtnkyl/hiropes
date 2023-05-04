@@ -2,8 +2,7 @@ import { Project } from '@/API';
 import { GradeRange } from '@/pages/projects/types/projectTypes';
 
 /** Workout Session */
-export type RoutineOption = 'endurance' | 'power' | 'fingerStrength';
-export type StrengthOption = 'benchAndSquat' | 'absAndShoulders' | 'cardio';
+export type RoutineFocus = 'endurance' | 'power' | 'fingerStrength';
 export type WorkoutStep =
   | 'start'
   | 'warmup'
@@ -11,47 +10,15 @@ export type WorkoutStep =
   | 'routine'
   | 'strength';
 
-export interface WorkoutSession {
-  routineOption?: RoutineOption;
-  routineOptionWorkout?: WorkoutSession['routineOption'];
-  strengthOption?: StrengthOption;
-  project?: Project;
-}
-
 /**
- * defaultReps = amount per set
- * defaultSets = group of reps
- * breakInterval: time between sets (min)
+ * defaultReps = amount of reps per set
+ * repBreakInterval = break time between reps
+ * defaultSets = number of sets
+ * setBreakInterval: break time between sets
  * bottomRange: low end of rep
  * topRange: high end of rep
  */
 export type WorkoutDetail = {
-  name: string;
-  description: string;
-  defaultReps: number;
-  defaultSets: number;
-  breakInterval: number;
-  bottomRange: GradeRange;
-  topRange: GradeRange;
-};
-
-export type RoutineOptions = {
-  endurance: EnduranceOptions;
-  power: PowerOptions;
-  fingerStrength: FingerStrengthOptions;
-};
-
-export type EnduranceOptions = {
-  [K in EnduranceWorkoutKeys]: RoutineWorkout;
-};
-export type PowerOptions = {
-  [K in PowerWorkoutKeys]: RoutineWorkout;
-};
-export type FingerStrengthOptions = {
-  [K in FingerStrengthWorkoutKeys]: RoutineWorkout;
-};
-
-export type RoutineWorkout = {
   name: string;
   description: string;
   defaultReps: number;
@@ -70,15 +37,41 @@ export type EnduranceWorkoutKeys =
 export type PowerWorkoutKeys = 'twentyInTwenty' | 'pyramidPump' | 'sevenThrees';
 export type FingerStrengthWorkoutKeys = 'tempFinger';
 
+export type EnduranceWorkouts = {
+  [K in EnduranceWorkoutKeys]: WorkoutDetail;
+};
+export type PowerWorkouts = {
+  [K in PowerWorkoutKeys]: WorkoutDetail;
+};
+export type FingerStrengthWorkouts = {
+  [K in FingerStrengthWorkoutKeys]: WorkoutDetail;
+};
+
+export type RoutineWorkoutsLookupObject = {
+  endurance: EnduranceWorkouts;
+  power: PowerWorkouts;
+  fingerStrength: FingerStrengthWorkouts;
+};
+
 /**
  * Strength Workout Types
  */
-export type StrengthOptions = {
+export type StrengthWorkout = 'benchAndSquat' | 'absAndShoulders' | 'cardio';
+
+export type StrengthWorkouts = {
   benchAndSquat: BenchAndSquatWorkout;
   absAndShoulders: AbsAndShouldersWorkout;
   cardio: CardioWorkout;
 };
-export type StrengthWorkout = { name: string };
-export type BenchAndSquatWorkout = { weight: number } & StrengthWorkout;
-export type AbsAndShouldersWorkout = { reps: number } & StrengthWorkout;
-export type CardioWorkout = { distance: number } & StrengthWorkout;
+export type StrengthWorkoutBase = { name: string };
+export type BenchAndSquatWorkout = { weight: number } & StrengthWorkoutBase;
+export type AbsAndShouldersWorkout = { reps: number } & StrengthWorkoutBase;
+export type CardioWorkout = { distance: number } & StrengthWorkoutBase;
+
+/** State */
+export interface WorkoutSession {
+  routineFocus?: RoutineFocus;
+  routineFocusWorkout?: WorkoutSession['routineFocus'];
+  strengthWorkout?: StrengthWorkout;
+  project?: Project;
+}
