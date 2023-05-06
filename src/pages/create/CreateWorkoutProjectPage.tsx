@@ -27,6 +27,7 @@ export const CreateWorkoutProjectPage = () => {
     setActiveWorkoutStep,
     setActiveStepTimer,
     pomoTimer,
+    setPomoTimer,
     pauseTimer,
     resumeTimer,
     timerIsPaused,
@@ -52,9 +53,13 @@ export const CreateWorkoutProjectPage = () => {
     setWorkoutStepsCompleted((prev) => [...prev, 'project']);
     setActiveWorkoutStep('routine');
     setActiveStepTimer('routine');
-    // TODO: determine timer from selected routine
-    // setPomoTimer(hoursToSeconds(0.025));
-  }, [setActiveStepTimer, setActiveWorkoutStep, setWorkoutStepsCompleted]);
+    setPomoTimer(0);
+  }, [
+    setActiveStepTimer,
+    setActiveWorkoutStep,
+    setPomoTimer,
+    setWorkoutStepsCompleted,
+  ]);
 
   const handleDeleteProjectClick = () => {
     pauseTimer();

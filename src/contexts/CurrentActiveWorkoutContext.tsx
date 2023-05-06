@@ -63,7 +63,6 @@ export const CurrentActiveWorkoutProvider = ({
   /** pomoTime = seconds */
   const [pomoTimer, setPomoTimer] = useState<number>(60);
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(true);
-
   useEffect(() => {
     let interval: string | number | NodeJS.Timeout | undefined;
 

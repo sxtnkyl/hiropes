@@ -4,11 +4,7 @@ import { timeConverters } from '@/utils/timeConverters';
 import { routineDetails, strengthWorkouts } from '@/utils/workoutDetails';
 import { Button, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo } from 'react';
-import {
-  RoutineFocus,
-  StrengthWorkout,
-  WorkoutSession,
-} from './types/createTypes';
+import { RoutineFocus, StrengthWorkout } from './types/createTypes';
 
 const CreateWorkoutStartPage = () => {
   const {
@@ -47,8 +43,7 @@ const CreateWorkoutStartPage = () => {
 
   const handleRoutineFocusWorkoutClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      const routineFocusWorkout = event.currentTarget
-        .value as WorkoutSession['routineFocus'];
+      const routineFocusWorkout = event.currentTarget.value;
       setActiveWorkout((prevSesh) => ({
         ...prevSesh,
         routineFocusWorkout,
