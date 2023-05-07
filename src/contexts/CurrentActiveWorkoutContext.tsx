@@ -24,6 +24,7 @@ export interface CurrentActiveWorkoutContextProps {
   setActiveStepTimer: Dispatch<SetStateAction<WorkoutStep>>;
   pomoTimer: number;
   setPomoTimer: Dispatch<SetStateAction<number>>;
+  timerIsPaused: boolean;
   workoutSetupIsComplete: boolean;
   pauseTimer: () => void;
   resumeTimer: () => void;
@@ -62,7 +63,6 @@ export const CurrentActiveWorkoutProvider = ({
   /** pomoTime = seconds */
   const [pomoTimer, setPomoTimer] = useState<number>(60);
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(true);
-
   useEffect(() => {
     let interval: string | number | NodeJS.Timeout | undefined;
 
@@ -80,15 +80,15 @@ export const CurrentActiveWorkoutProvider = ({
 
   const workoutSetupIsComplete = useMemo(() => {
     const setupValues = [
-      activeWorkout.routineOption,
-      activeWorkout.routineOptionWorkout,
-      activeWorkout.strengthOption,
+      activeWorkout.routineFocus,
+      activeWorkout.routineFocusWorkout,
+      activeWorkout.strengthWorkout,
     ];
     return setupValues.every((val) => Boolean(val));
   }, [
-    activeWorkout.routineOption,
-    activeWorkout.routineOptionWorkout,
-    activeWorkout.strengthOption,
+    activeWorkout.routineFocus,
+    activeWorkout.routineFocusWorkout,
+    activeWorkout.strengthWorkout,
   ]);
 
   const pauseTimer = () => setTimerIsPaused(true);
@@ -115,6 +115,7 @@ export const CurrentActiveWorkoutProvider = ({
         setActiveStepTimer,
         pomoTimer,
         setPomoTimer,
+        timerIsPaused,
         workoutSetupIsComplete,
         pauseTimer,
         resumeTimer,

@@ -8,6 +8,7 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps } from '@mui/material';
 import { SyntheticEvent } from 'react';
 import { CreateWorkoutProjectPage } from './CreateWorkoutProjectPage';
+import { CreateWorkoutRoutinePage } from './CreateWorkoutRoutinePage';
 import CreateWorkoutStartPage from './CreateWorkoutStartPage';
 import { CreateWorkoutWarmupPage } from './CreateWorkoutWarmupPage';
 import { WorkoutStep } from './types/createTypes';
@@ -75,6 +76,7 @@ const CreateWorkoutPage = () => {
         {activeWorkoutStep === 'start' && <CreateWorkoutStartPage />}
         {activeWorkoutStep === 'warmup' && <CreateWorkoutWarmupPage />}
         {activeWorkoutStep === 'project' && <CreateWorkoutProjectPage />}
+        {activeWorkoutStep === 'routine' && <CreateWorkoutRoutinePage />}
       </main>
     </>
   );
