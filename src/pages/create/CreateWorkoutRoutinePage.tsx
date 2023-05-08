@@ -13,18 +13,18 @@ import {
 import { useMemo, useState } from 'react';
 import { GradeRange } from '../projects/types/projectTypes';
 import { routeGradeSelectItems } from '../projects/utils/projectValues';
+import { WorkoutIntervalTimer } from './utils/WourkoutIntervalTimer';
 
 export const CreateWorkoutRoutinePage = () => {
-  const { activeWorkout, pauseTimer, resumeTimer, timerIsPaused } =
-    useCurrentActiveWorkout();
+  const { activeWorkout } = useCurrentActiveWorkout();
   const { routineFocus = 'endurance', routineFocusWorkout = 'pyramidLong' } =
     activeWorkout;
-  const { formattedSecondsToMinuteSeconds, minutesToSeconds } =
-    timeConverters();
+  const { formattedSecondsToMinuteSeconds } = timeConverters();
 
   const focusWorkoutDetails = useMemo(() => {
     return routineDetails[routineFocus][routineFocusWorkout];
   }, [routineFocus, routineFocusWorkout]);
+
   const {
     name,
     description,
@@ -41,15 +41,17 @@ export const CreateWorkoutRoutinePage = () => {
     useState<GradeRange>(bottomRange);
   const [topGradeRangeValue, setTopGradeRangeValue] =
     useState<GradeRange>(topRange);
+  const [routineIsInProgress, setRoutineIsInProgress] =
+    useState<boolean>(false);
 
-  const estimatedCompletionTimeSeconds = minutesToSeconds(
+  const estimatedCompletionTimeSeconds =
     repInterval * defaultReps +
-      defaultReps * repBreakInterval +
-      defaultSets * setBreakInterval
-  );
+    defaultReps * repBreakInterval +
+    defaultSets * setBreakInterval;
   const { minutes: completionMinutes, seconds: completionSeconds } =
     formattedSecondsToMinuteSeconds(estimatedCompletionTimeSeconds);
 
+  // TODO: lift routine timer state to context
   return (
     <Stack spacing={2}>
       <CardContentContainer stackProps={{ spacing: 2 }}>
@@ -57,50 +59,65 @@ export const CreateWorkoutRoutinePage = () => {
         <Typography variant="h6">{description}</Typography>
 
         <PauseResumeButton
-          paused={timerIsPaused}
-          resumeAction={resumeTimer}
+          paused={!routineIsInProgress}
+          resumeAction={() => {
+            setRoutineIsInProgress(true);
+          }}
           resumeText="Start Workout"
-          pauseAction={pauseTimer}
+          pauseAction={() => {
+            setRoutineIsInProgress(false);
+          }}
           pauseText="Pause Workout"
         />
       </CardContentContainer>
 
-      <CardContentContainer>
-        <Typography variant="h5">Estimated Completion Time:</Typography>
-        <Typography variant="h3">
-          {completionMinutes} M: {completionSeconds} S
-        </Typography>
-      </CardContentContainer>
+      {routineIsInProgress && (
+        <WorkoutIntervalTimer
+          {...focusWorkoutDetails}
+          timerIsPaused={!routineIsInProgress}
+        />
+      )}
 
-      <CardContentContainer stackProps={{ spacing: 2 }}>
-        <Typography variant="h2">Difficulty Ranges</Typography>
-        <FormControl fullWidth>
-          <InputLabel>Lower Difficulty Range</InputLabel>
-          <Select
-            fullWidth
-            value={bottomGradeRangeValue}
-            onChange={(e) =>
-              setBottomGradeRangeValue(e.target.value as GradeRange)
-            }
-            label="Lower Difficulty Range"
-          >
-            {routeGradeSelectItems}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel>Upper Difficulty Range</InputLabel>
-          <Select
-            fullWidth
-            value={topGradeRangeValue}
-            onChange={(e) =>
-              setTopGradeRangeValue(e.target.value as GradeRange)
-            }
-            label="Upper Difficulty Range"
-          >
-            {routeGradeSelectItems}
-          </Select>
-        </FormControl>
-      </CardContentContainer>
+      {!routineIsInProgress && (
+        <>
+          <CardContentContainer>
+            <Typography variant="h5">Estimated Completion Time:</Typography>
+            <Typography variant="h3">
+              {completionMinutes} M: {completionSeconds} S
+            </Typography>
+          </CardContentContainer>
+
+          <CardContentContainer stackProps={{ spacing: 2 }}>
+            <Typography variant="h2">Difficulty Ranges</Typography>
+            <FormControl fullWidth>
+              <InputLabel>Lower Difficulty Range</InputLabel>
+              <Select
+                fullWidth
+                value={bottomGradeRangeValue}
+                onChange={(e) =>
+                  setBottomGradeRangeValue(e.target.value as GradeRange)
+                }
+                label="Lower Difficulty Range"
+              >
+                {routeGradeSelectItems}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Upper Difficulty Range</InputLabel>
+              <Select
+                fullWidth
+                value={topGradeRangeValue}
+                onChange={(e) =>
+                  setTopGradeRangeValue(e.target.value as GradeRange)
+                }
+                label="Upper Difficulty Range"
+              >
+                {routeGradeSelectItems}
+              </Select>
+            </FormControl>
+          </CardContentContainer>
+        </>
+      )}
     </Stack>
   );
 };
