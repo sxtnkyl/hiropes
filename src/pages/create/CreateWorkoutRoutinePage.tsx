@@ -13,7 +13,8 @@ import {
 import { useMemo, useState } from 'react';
 import { GradeRange } from '../projects/types/projectTypes';
 import { routeGradeSelectItems } from '../projects/utils/projectValues';
-import { WorkoutIntervalTimer } from './utils/WourkoutIntervalTimer';
+import { useRoutineIntervalTimer } from './hooks/useRoutineIntervalTimer';
+import { WorkoutIntervalTimer } from './utils/WorkoutIntervalTimer';
 
 export const CreateWorkoutRoutinePage = () => {
   const { activeWorkout } = useCurrentActiveWorkout();
@@ -24,6 +25,10 @@ export const CreateWorkoutRoutinePage = () => {
   const focusWorkoutDetails = useMemo(() => {
     return routineDetails[routineFocus][routineFocusWorkout];
   }, [routineFocus, routineFocusWorkout]);
+
+  const routineInterval = useRoutineIntervalTimer({
+    ...focusWorkoutDetails,
+  });
 
   const {
     name,
@@ -41,8 +46,6 @@ export const CreateWorkoutRoutinePage = () => {
     useState<GradeRange>(bottomRange);
   const [topGradeRangeValue, setTopGradeRangeValue] =
     useState<GradeRange>(topRange);
-  const [routineIsInProgress, setRoutineIsInProgress] =
-    useState<boolean>(false);
 
   const estimatedCompletionTimeSeconds =
     repInterval * defaultReps +
@@ -51,7 +54,6 @@ export const CreateWorkoutRoutinePage = () => {
   const { minutes: completionMinutes, seconds: completionSeconds } =
     formattedSecondsToMinuteSeconds(estimatedCompletionTimeSeconds);
 
-  // TODO: lift routine timer state to context
   return (
     <Stack spacing={2}>
       <CardContentContainer stackProps={{ spacing: 2 }}>
@@ -59,26 +61,23 @@ export const CreateWorkoutRoutinePage = () => {
         <Typography variant="h6">{description}</Typography>
 
         <PauseResumeButton
-          paused={!routineIsInProgress}
+          paused={!routineInterval.routineIsInProgress}
           resumeAction={() => {
-            setRoutineIsInProgress(true);
+            routineInterval.setRoutineIsInProgress(true);
           }}
           resumeText="Start Workout"
           pauseAction={() => {
-            setRoutineIsInProgress(false);
+            routineInterval.setRoutineIsInProgress(false);
           }}
           pauseText="Pause Workout"
         />
       </CardContentContainer>
 
-      {routineIsInProgress && (
-        <WorkoutIntervalTimer
-          {...focusWorkoutDetails}
-          timerIsPaused={!routineIsInProgress}
-        />
+      {routineInterval.routineIsInProgress && (
+        <WorkoutIntervalTimer {...routineInterval} />
       )}
 
-      {!routineIsInProgress && (
+      {!routineInterval.routineIsInProgress && (
         <>
           <CardContentContainer>
             <Typography variant="h5">Estimated Completion Time:</Typography>

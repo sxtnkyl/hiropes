@@ -1,33 +1,45 @@
-import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
-import { Box, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { WorkoutDetail } from '../types/createTypes';
 
-export interface WorkoutIntervalTimerProps extends Partial<WorkoutDetail> {
-  timerIsPaused?: boolean;
-}
 export type IntervalType = 'rep' | 'repBreak' | 'set' | 'setBreak';
+export interface RoutineInterval {
+  secondsLeft: number;
+  currentRep: number;
+  setCurrentRep: Dispatch<SetStateAction<number>>;
+  currentRepBreak: number;
+  setCurrentRepBreak: Dispatch<SetStateAction<number>>;
+  currentSet: number;
+  setCurrentSet: Dispatch<SetStateAction<number>>;
+  currentSetBreak: number;
+  setCurrentSetBreak: Dispatch<SetStateAction<number>>;
+  activeInterval: IntervalType;
+  setActiveInterval: Dispatch<SetStateAction<IntervalType>>;
+  routineIsInProgress: boolean;
+  setRoutineIsInProgress: Dispatch<SetStateAction<boolean>>;
+}
 
-export const WorkoutIntervalTimer = ({
-  defaultReps = 3,
-  repInterval = 4,
-  repBreakInterval = 2,
-  defaultSets = 2,
-  setBreakInterval = 4,
-  timerIsPaused = false,
-}: WorkoutIntervalTimerProps) => {
-  const [secondsLeft, setSecondsLeft] = useState(repInterval);
+export const useRoutineIntervalTimer = ({
+  defaultReps,
+  repInterval,
+  repBreakInterval,
+  defaultSets,
+  setBreakInterval,
+}: WorkoutDetail): RoutineInterval => {
+  const [routineIsInProgress, setRoutineIsInProgress] =
+    useState<boolean>(false);
 
-  const [currentRep, setCurrentRep] = useState(1);
-  const [currentRepBreak, setCurrentRepBreak] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState<number>(repInterval);
 
-  const [currentSet, setCurrentSet] = useState(1);
-  const [currentSetBreak, setCurrentSetBreak] = useState(0);
+  const [currentRep, setCurrentRep] = useState<number>(1);
+  const [currentRepBreak, setCurrentRepBreak] = useState<number>(0);
+
+  const [currentSet, setCurrentSet] = useState<number>(1);
+  const [currentSetBreak, setCurrentSetBreak] = useState<number>(0);
 
   const [activeInterval, setActiveInterval] = useState<IntervalType>('rep');
 
   useEffect(() => {
-    if (!timerIsPaused) {
+    if (routineIsInProgress) {
       const intervalId = setInterval(() => {
         if (secondsLeft > 0) {
           setSecondsLeft((prevSeconds) => prevSeconds - 1);
@@ -78,26 +90,23 @@ export const WorkoutIntervalTimer = ({
     repBreakInterval,
     repInterval,
     currentSetBreak,
-    timerIsPaused,
     secondsLeft,
+    routineIsInProgress,
   ]);
 
-  return (
-    <CardContentContainer stackProps={{ spacing: 2 }}>
-      <Typography variant="h2">Active Interval</Typography>
-
-      <Typography variant="h5">{activeInterval.toLocaleUpperCase()}</Typography>
-
-      <Typography variant="h5">Rep #: {currentRep}</Typography>
-      <Typography variant="h5">Rep Break #: {currentRepBreak}</Typography>
-      <Typography variant="h5">Set #: {currentSet}</Typography>
-      <Typography variant="h5">Set Break #: {currentSetBreak}</Typography>
-
-      <Box>
-        <Typography variant="h5">
-          Sec left: {Math.floor(secondsLeft)}
-        </Typography>
-      </Box>
-    </CardContentContainer>
-  );
+  return {
+    routineIsInProgress,
+    setRoutineIsInProgress,
+    secondsLeft,
+    currentRep,
+    setCurrentRep,
+    currentRepBreak,
+    setCurrentRepBreak,
+    currentSet,
+    setCurrentSet,
+    currentSetBreak,
+    setCurrentSetBreak,
+    activeInterval,
+    setActiveInterval,
+  };
 };
