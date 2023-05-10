@@ -10,14 +10,15 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { GradeRange } from '../projects/types/projectTypes';
 import { routeGradeSelectItems } from '../projects/utils/projectValues';
 import { useRoutineIntervalTimer } from './hooks/useRoutineIntervalTimer';
 import { WorkoutIntervalTimer } from './utils/WorkoutIntervalTimer';
 
 export const CreateWorkoutRoutinePage = () => {
-  const { activeWorkout } = useCurrentActiveWorkout();
+  const { activeWorkout, savedRoutineInterval, setSavedRoutineInterval } =
+    useCurrentActiveWorkout();
   const { routineFocus = 'endurance', routineFocusWorkout = 'pyramidLong' } =
     activeWorkout;
   const { formattedSecondsToMinuteSeconds } = timeConverters();
@@ -27,8 +28,29 @@ export const CreateWorkoutRoutinePage = () => {
   }, [routineFocus, routineFocusWorkout]);
 
   const routineInterval = useRoutineIntervalTimer({
-    ...focusWorkoutDetails,
+    ...(savedRoutineInterval ?? focusWorkoutDetails),
   });
+
+  useEffect(() => {
+    setSavedRoutineInterval({
+      ...focusWorkoutDetails,
+      previousSeconds: routineInterval.secondsLeft,
+      previousRep: routineInterval.currentRep,
+      previousRepBreak: routineInterval.currentRepBreak,
+      previousSet: routineInterval.currentSet,
+      previousSetBreak: routineInterval.currentSetBreak,
+      previousInterval: routineInterval.activeInterval,
+    });
+  }, [
+    focusWorkoutDetails,
+    routineInterval.activeInterval,
+    routineInterval.currentRep,
+    routineInterval.currentRepBreak,
+    routineInterval.currentSet,
+    routineInterval.currentSetBreak,
+    routineInterval.secondsLeft,
+    setSavedRoutineInterval,
+  ]);
 
   const {
     name,
@@ -65,7 +87,9 @@ export const CreateWorkoutRoutinePage = () => {
           resumeAction={() => {
             routineInterval.setRoutineIsInProgress(true);
           }}
-          resumeText="Start Workout"
+          resumeText={
+            savedRoutineInterval ? 'Continue Workout' : 'Start Workout'
+          }
           pauseAction={() => {
             routineInterval.setRoutineIsInProgress(false);
           }}
@@ -73,9 +97,7 @@ export const CreateWorkoutRoutinePage = () => {
         />
       </CardContentContainer>
 
-      {routineInterval.routineIsInProgress && (
-        <WorkoutIntervalTimer {...routineInterval} />
-      )}
+      {savedRoutineInterval && <WorkoutIntervalTimer {...routineInterval} />}
 
       {!routineInterval.routineIsInProgress && (
         <>

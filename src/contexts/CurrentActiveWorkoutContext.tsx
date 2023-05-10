@@ -1,3 +1,4 @@
+import { UseRoutineIntervalProps } from '@/pages/create/hooks/useRoutineIntervalTimer';
 import { WorkoutSession, WorkoutStep } from '@/pages/create/types/createTypes';
 import { timeConverters } from '@/utils/timeConverters';
 import {
@@ -29,6 +30,10 @@ export interface CurrentActiveWorkoutContextProps {
   pauseTimer: () => void;
   resumeTimer: () => void;
   resetAndStartTimer: (time: number) => void;
+  savedRoutineInterval?: UseRoutineIntervalProps;
+  setSavedRoutineInterval: Dispatch<
+    SetStateAction<UseRoutineIntervalProps | undefined>
+  >;
 }
 
 const CurrentActiveWorkoutContext =
@@ -100,6 +105,10 @@ export const CurrentActiveWorkoutProvider = ({
     }, 1000);
   };
 
+  /** stores in-progress routine in case nav change */
+  const [savedRoutineInterval, setSavedRoutineInterval] =
+    useState<UseRoutineIntervalProps>();
+
   return (
     <CurrentActiveWorkoutContext.Provider
       value={{
@@ -120,6 +129,8 @@ export const CurrentActiveWorkoutProvider = ({
         pauseTimer,
         resumeTimer,
         resetAndStartTimer,
+        savedRoutineInterval,
+        setSavedRoutineInterval,
       }}
     >
       {children}

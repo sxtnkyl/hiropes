@@ -18,25 +18,48 @@ export interface RoutineInterval {
   setRoutineIsInProgress: Dispatch<SetStateAction<boolean>>;
 }
 
+export interface UseRoutineIntervalProps extends WorkoutDetail {
+  previousSeconds?: number;
+  previousRep?: number;
+  previousRepBreak?: number;
+  previousSet?: number;
+  previousSetBreak?: number;
+  previousInterval?: IntervalType;
+}
+
 export const useRoutineIntervalTimer = ({
   defaultReps,
   repInterval,
   repBreakInterval,
   defaultSets,
   setBreakInterval,
-}: WorkoutDetail): RoutineInterval => {
+  previousSeconds,
+  previousRep,
+  previousRepBreak,
+  previousSet,
+  previousSetBreak,
+  previousInterval,
+}: UseRoutineIntervalProps): RoutineInterval => {
   const [routineIsInProgress, setRoutineIsInProgress] =
     useState<boolean>(false);
 
-  const [secondsLeft, setSecondsLeft] = useState<number>(repInterval);
+  const [secondsLeft, setSecondsLeft] = useState<number>(
+    previousSeconds || repInterval
+  );
 
-  const [currentRep, setCurrentRep] = useState<number>(1);
-  const [currentRepBreak, setCurrentRepBreak] = useState<number>(0);
+  const [currentRep, setCurrentRep] = useState<number>(previousRep || 1);
+  const [currentRepBreak, setCurrentRepBreak] = useState<number>(
+    previousRepBreak || 0
+  );
 
-  const [currentSet, setCurrentSet] = useState<number>(1);
-  const [currentSetBreak, setCurrentSetBreak] = useState<number>(0);
+  const [currentSet, setCurrentSet] = useState<number>(previousSet || 1);
+  const [currentSetBreak, setCurrentSetBreak] = useState<number>(
+    previousSetBreak || 0
+  );
 
-  const [activeInterval, setActiveInterval] = useState<IntervalType>('rep');
+  const [activeInterval, setActiveInterval] = useState<IntervalType>(
+    previousInterval || 'rep'
+  );
 
   useEffect(() => {
     if (routineIsInProgress) {
