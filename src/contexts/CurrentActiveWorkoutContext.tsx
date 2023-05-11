@@ -1,6 +1,11 @@
 import { UseRoutineIntervalProps } from '@/pages/create/hooks/useRoutineIntervalTimer';
-import { WorkoutSession, WorkoutStep } from '@/pages/create/types/createTypes';
+import {
+  WorkoutDetail,
+  WorkoutSession,
+  WorkoutStep,
+} from '@/pages/create/types/createTypes';
 import { timeConverters } from '@/utils/timeConverters';
+import { routineDetails } from '@/utils/workoutDetails';
 import {
   Dispatch,
   ReactNode,
@@ -26,10 +31,10 @@ export interface CurrentActiveWorkoutContextProps {
   pomoTimer: number;
   setPomoTimer: Dispatch<SetStateAction<number>>;
   timerIsPaused: boolean;
-  workoutSetupIsComplete: boolean;
   pauseTimer: () => void;
   resumeTimer: () => void;
   resetAndStartTimer: (time: number) => void;
+  focusWorkoutDetails: WorkoutDetail;
   savedRoutineInterval?: UseRoutineIntervalProps;
   setSavedRoutineInterval: Dispatch<
     SetStateAction<UseRoutineIntervalProps | undefined>
@@ -78,23 +83,9 @@ export const CurrentActiveWorkoutProvider = ({
       interval = setInterval(() => {
         setPomoTimer((prevTimer) => formattedSeconds(prevTimer - 1));
       }, 1000);
+      return () => clearInterval(interval);
     }
-
-    return () => clearInterval(interval);
   }, [formattedSeconds, pomoTimer, timerIsPaused]);
-
-  const workoutSetupIsComplete = useMemo(() => {
-    const setupValues = [
-      activeWorkout.routineFocus,
-      activeWorkout.routineFocusWorkout,
-      activeWorkout.strengthWorkout,
-    ];
-    return setupValues.every((val) => Boolean(val));
-  }, [
-    activeWorkout.routineFocus,
-    activeWorkout.routineFocusWorkout,
-    activeWorkout.strengthWorkout,
-  ]);
 
   const pauseTimer = () => setTimerIsPaused(true);
   const resumeTimer = () => setTimerIsPaused(false);
@@ -105,9 +96,15 @@ export const CurrentActiveWorkoutProvider = ({
     }, 1000);
   };
 
+  /** Routine Variables */
   /** stores in-progress routine in case nav change */
   const [savedRoutineInterval, setSavedRoutineInterval] =
     useState<UseRoutineIntervalProps>();
+  const focusWorkoutDetails = useMemo(() => {
+    const { routineFocus = 'endurance', routineFocusWorkout = 'sixBySix' } =
+      activeWorkout;
+    return routineDetails[routineFocus][routineFocusWorkout];
+  }, [activeWorkout]);
 
   return (
     <CurrentActiveWorkoutContext.Provider
@@ -125,10 +122,10 @@ export const CurrentActiveWorkoutProvider = ({
         pomoTimer,
         setPomoTimer,
         timerIsPaused,
-        workoutSetupIsComplete,
         pauseTimer,
         resumeTimer,
         resetAndStartTimer,
+        focusWorkoutDetails,
         savedRoutineInterval,
         setSavedRoutineInterval,
       }}

@@ -1,3 +1,4 @@
+import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { WorkoutDetail } from '../types/createTypes';
 
@@ -40,6 +41,9 @@ export const useRoutineIntervalTimer = ({
   previousSetBreak,
   previousInterval,
 }: UseRoutineIntervalProps): RoutineInterval => {
+  const { focusWorkoutDetails, setSavedRoutineInterval } =
+    useCurrentActiveWorkout();
+
   const [routineIsInProgress, setRoutineIsInProgress] =
     useState<boolean>(false);
 
@@ -61,9 +65,10 @@ export const useRoutineIntervalTimer = ({
     previousInterval || 'rep'
   );
 
+  /** timer logic */
   useEffect(() => {
     if (routineIsInProgress) {
-      const intervalId = setInterval(() => {
+      const routineInterval = setInterval(() => {
         if (secondsLeft > 0) {
           setSecondsLeft((prevSeconds) => prevSeconds - 1);
         }
@@ -98,10 +103,10 @@ export const useRoutineIntervalTimer = ({
         }
         // done
         else {
-          clearInterval(intervalId);
+          clearInterval(routineInterval);
         }
       }, 1000);
-      return () => clearInterval(intervalId);
+      return () => clearInterval(routineInterval);
     }
   }, [
     currentRep,
@@ -115,6 +120,31 @@ export const useRoutineIntervalTimer = ({
     currentSetBreak,
     secondsLeft,
     routineIsInProgress,
+  ]);
+
+  /** track and store routine for nav purposes */
+  useEffect(() => {
+    if (routineIsInProgress) {
+      setSavedRoutineInterval({
+        ...focusWorkoutDetails,
+        previousSeconds: secondsLeft,
+        previousRep: currentRep,
+        previousRepBreak: currentRepBreak,
+        previousSet: currentSet,
+        previousSetBreak: currentSetBreak,
+        previousInterval: activeInterval,
+      });
+    }
+  }, [
+    focusWorkoutDetails,
+    activeInterval,
+    currentRep,
+    currentRepBreak,
+    currentSet,
+    currentSetBreak,
+    routineIsInProgress,
+    secondsLeft,
+    setSavedRoutineInterval,
   ]);
 
   return {
