@@ -2,7 +2,6 @@ import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/Ca
 import { PauseResumeButton } from '@/SharedComponents/PauseResumeButton/PauseResumeButton';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { timeConverters } from '@/utils/timeConverters';
-import { routineDetails } from '@/utils/workoutDetails';
 import {
   FormControl,
   InputLabel,
@@ -13,67 +12,94 @@ import {
 import { useMemo, useState } from 'react';
 import { GradeRange } from '../projects/types/projectTypes';
 import { routeGradeSelectItems } from '../projects/utils/projectValues';
+import { useRoutineIntervalTimer } from './hooks/useRoutineIntervalTimer';
+import { WorkoutIntervalTimer } from './utils/WorkoutIntervalTimer';
 
 export const CreateWorkoutRoutinePage = () => {
-  const { activeWorkout, pauseTimer, resumeTimer, timerIsPaused } =
+  const { focusWorkoutDetails, savedRoutineInterval, resumeTimer, pauseTimer } =
     useCurrentActiveWorkout();
-  const { routineFocus = 'endurance', routineFocusWorkout = 'pyramidLong' } =
-    activeWorkout;
-  const { formattedSecondsToMinuteSeconds, minutesToSeconds } =
-    timeConverters();
+  const { formattedSecondsToMinuteSeconds } = timeConverters();
 
-  const focusWorkoutDetails = useMemo(() => {
-    return routineDetails[routineFocus][routineFocusWorkout];
-  }, [routineFocus, routineFocusWorkout]);
-  const {
-    name,
-    description,
-    defaultReps,
-    repInterval,
-    defaultSets,
-    repBreakInterval,
-    setBreakInterval,
-    bottomRange,
-    topRange,
-  } = focusWorkoutDetails;
+  const { name, description, bottomRange, topRange } = focusWorkoutDetails;
+
+  const routineInterval = useRoutineIntervalTimer({
+    ...(savedRoutineInterval ?? focusWorkoutDetails),
+  });
 
   const [bottomGradeRangeValue, setBottomGradeRangeValue] =
     useState<GradeRange>(bottomRange);
   const [topGradeRangeValue, setTopGradeRangeValue] =
     useState<GradeRange>(topRange);
 
-  const estimatedCompletionTimeSeconds = minutesToSeconds(
-    repInterval * defaultReps +
-      defaultReps * repBreakInterval +
-      defaultSets * setBreakInterval
-  );
+  const handleResumeRoutineTimer = () => {
+    routineInterval.setRoutineIsInProgress(true);
+    resumeTimer();
+  };
+  const handlePauseRoutineTimer = () => {
+    routineInterval.setRoutineIsInProgress(false);
+    pauseTimer();
+  };
+
+  const estimatedRoutineCompletionTimeSeconds = useMemo(() => {
+    if (focusWorkoutDetails) {
+      const {
+        defaultReps,
+        repInterval,
+        defaultSets,
+        repBreakInterval,
+        setBreakInterval,
+      } = focusWorkoutDetails;
+      return (
+        repInterval * defaultReps +
+        defaultReps * repBreakInterval +
+        defaultSets * setBreakInterval
+      );
+    } else {
+      return 0;
+    }
+  }, [focusWorkoutDetails]);
   const { minutes: completionMinutes, seconds: completionSeconds } =
-    formattedSecondsToMinuteSeconds(estimatedCompletionTimeSeconds);
+    formattedSecondsToMinuteSeconds(estimatedRoutineCompletionTimeSeconds);
 
   return (
     <Stack spacing={2}>
-      <CardContentContainer stackProps={{ spacing: 2 }}>
-        <Typography variant="h2">{name}</Typography>
-        <Typography variant="h6">{description}</Typography>
+      <CardContentContainer stackProps={{ spacing: 4 }}>
+        <Typography variant="h2" fontWeight="bold">
+          {name}
+        </Typography>
+        <Typography variant="h5" fontStyle="italic">
+          {description}
+        </Typography>
 
         <PauseResumeButton
-          paused={timerIsPaused}
-          resumeAction={resumeTimer}
-          resumeText="Start Workout"
-          pauseAction={pauseTimer}
+          paused={!routineInterval.routineIsInProgress}
+          resumeAction={handleResumeRoutineTimer}
+          resumeText={
+            savedRoutineInterval ? 'Continue Workout' : 'Start Workout'
+          }
+          pauseAction={handlePauseRoutineTimer}
           pauseText="Pause Workout"
         />
       </CardContentContainer>
 
-      <CardContentContainer>
-        <Typography variant="h5">Estimated Completion Time:</Typography>
-        <Typography variant="h3">
+      <WorkoutIntervalTimer
+        routineInterval={routineInterval}
+        workoutDetail={focusWorkoutDetails}
+      />
+
+      <CardContentContainer stackProps={{ spacing: 4 }}>
+        <Typography variant="h3" fontWeight="bold">
+          Estimated Completion Time
+        </Typography>
+        <Typography variant="h5" fontStyle="italic">
           {completionMinutes} M: {completionSeconds} S
         </Typography>
       </CardContentContainer>
 
-      <CardContentContainer stackProps={{ spacing: 2 }}>
-        <Typography variant="h2">Difficulty Ranges</Typography>
+      <CardContentContainer stackProps={{ spacing: 4 }}>
+        <Typography variant="h3" fontWeight="bold">
+          Difficulty Ranges
+        </Typography>
         <FormControl fullWidth>
           <InputLabel>Lower Difficulty Range</InputLabel>
           <Select

@@ -9,7 +9,6 @@ import { RoutineFocus, StrengthWorkout } from './types/createTypes';
 const CreateWorkoutStartPage = () => {
   const {
     activeWorkout,
-    workoutSetupIsComplete,
     setActiveStepTimer,
     setWorkoutInProgress,
     setActiveWorkout,
@@ -125,6 +124,19 @@ const CreateWorkoutStartPage = () => {
     }
   }, [
     handleStrengthWorkoutClick,
+    activeWorkout.routineFocusWorkout,
+    activeWorkout.strengthWorkout,
+  ]);
+
+  const workoutSetupIsComplete = useMemo(() => {
+    const setupValues = [
+      activeWorkout.routineFocus,
+      activeWorkout.routineFocusWorkout,
+      activeWorkout.strengthWorkout,
+    ];
+    return setupValues.every((val) => Boolean(val));
+  }, [
+    activeWorkout.routineFocus,
     activeWorkout.routineFocusWorkout,
     activeWorkout.strengthWorkout,
   ]);

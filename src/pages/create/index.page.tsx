@@ -6,7 +6,7 @@ import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext'
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps } from '@mui/material';
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, useMemo } from 'react';
 import { CreateWorkoutProjectPage } from './CreateWorkoutProjectPage';
 import { CreateWorkoutRoutinePage } from './CreateWorkoutRoutinePage';
 import CreateWorkoutStartPage from './CreateWorkoutStartPage';
@@ -28,7 +28,25 @@ const CreateWorkoutPage = () => {
     activeWorkoutStep,
     setActiveWorkoutStep,
     workoutInProgress,
+    focusWorkoutDetails,
   } = useCurrentActiveWorkout();
+
+  const titlebarTitle = useMemo(() => {
+    return activeWorkoutStep === 'routine' ? (
+      focusWorkoutDetails?.name ?? ''
+    ) : (
+      <TimerTitle
+        title="New Workout"
+        pomoTimer={pomoTimer}
+        workoutInProgress={workoutInProgress}
+      />
+    );
+  }, [
+    activeWorkoutStep,
+    focusWorkoutDetails?.name,
+    pomoTimer,
+    workoutInProgress,
+  ]);
 
   const createWorkoutTabs = createActionTabs.map((option, i) => (
     <Tab
@@ -54,13 +72,7 @@ const CreateWorkoutPage = () => {
             <MenuOpenIcon />
           </IconButton>
         }
-        title={
-          <TimerTitle
-            title="New Workout"
-            pomoTimer={pomoTimer}
-            workoutInProgress={workoutInProgress}
-          />
-        }
+        title={titlebarTitle}
         rightActionItem={<RightActionHomeLink />}
       />
 
