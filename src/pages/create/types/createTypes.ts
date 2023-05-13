@@ -37,6 +37,7 @@ export type WorkoutDetail = {
   setBreakInterval: number;
   bottomRange: GradeRange;
   topRange: GradeRange;
+  numberOfRoutes?: number;
 };
 
 // export type EnduranceWorkoutKeys =

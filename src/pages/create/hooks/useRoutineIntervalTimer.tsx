@@ -26,6 +26,7 @@ export interface UseRoutineIntervalProps extends WorkoutDetail {
   previousSet?: number;
   previousSetBreak?: number;
   previousInterval?: IntervalType;
+  routineRoutes?: { [key: string]: number };
 }
 
 export const useRoutineIntervalTimer = ({

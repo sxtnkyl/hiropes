@@ -16,6 +16,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 120,
       bottomRange: '0-2',
       topRange: '4-6',
+      numberOfRoutes: 6,
     },
     fourByFour: {
       name: '4x4',
@@ -28,6 +29,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 300,
       bottomRange: '0-2',
       topRange: '4-6',
+      numberOfRoutes: 4,
     },
     thirtyCircuit: {
       name: '30 Circuit',
@@ -40,6 +42,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 0,
       bottomRange: '0-2',
       topRange: '4-6',
+      numberOfRoutes: 30,
     },
     pyramidLong: {
       name: 'Pyramid Long',
@@ -52,6 +55,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 0,
       bottomRange: '0-2',
       topRange: '4-6',
+      numberOfRoutes: 15,
     },
   },
   power: {
@@ -66,6 +70,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 0,
       bottomRange: '0-2',
       topRange: '4-6',
+      numberOfRoutes: 20,
     },
     pyramidPump: {
       name: 'Pyramid Pump',
@@ -78,6 +83,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 0,
       bottomRange: '0-2',
       topRange: '4-6',
+      numberOfRoutes: 8,
     },
     sevenThrees: {
       name: '7:3s',

@@ -1,0 +1,52 @@
+import theme from '@/styles/theme';
+import {
+  FormControl,
+  FormHelperText,
+  Slider,
+  SliderProps,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { Field, FieldProps, useFormikContext } from 'formik';
+
+interface SliderFormFieldProps extends Omit<SliderProps, 'name'> {
+  name: string;
+  label: string;
+}
+
+const SliderFormField = ({
+  name,
+  label,
+  children,
+  ...rest
+}: SliderFormFieldProps) => {
+  const { setFieldValue } = useFormikContext();
+  return (
+    <>
+      <Field name={name}>
+        {({ field, form }: FieldProps) => (
+          <FormControl component={Stack}>
+            <Typography>{label}</Typography>
+            <Slider
+              {...field}
+              value={field.value || ''}
+              onChange={(e, val) => {
+                setFieldValue(name, val);
+              }}
+              {...rest}
+            >
+              {children}
+            </Slider>
+            {form.touched[name] && Boolean(form.errors[name]) && (
+              <FormHelperText sx={{ color: theme.palette.error.main }}>
+                {form.errors[name]?.toString()}
+              </FormHelperText>
+            )}
+          </FormControl>
+        )}
+      </Field>
+    </>
+  );
+};
+
+export default SliderFormField;
