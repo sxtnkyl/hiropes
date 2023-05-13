@@ -58,9 +58,9 @@ export const LinearNumberRoutineRangePanel = ({
 
   const initialValues = useMemo(() => {
     let obj = {};
-    customDifficultyRanges.forEach((val, idx) => {
-      const objKey = `Route ${idx + 1}`;
-      obj = { ...obj, [objKey]: val };
+    customDifficultyRanges.forEach((value, idx) => {
+      const objKey = idx;
+      obj = { ...obj, [objKey]: value };
     });
     return obj;
   }, [customDifficultyRanges]);
@@ -119,7 +119,7 @@ export const LinearNumberRoutineRangePanel = ({
           sx={{
             '& .MuiAccordionSummary-content': {
               display: 'flex',
-              justifyContent: 'center !important',
+              justifyContent: 'center',
             },
           }}
         >

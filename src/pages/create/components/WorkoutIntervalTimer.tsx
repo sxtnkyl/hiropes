@@ -1,7 +1,12 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
+import theme from '@/styles/theme';
 import styled from '@emotion/styled';
 import { Box, Stack, Typography } from '@mui/material';
-import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
+import { useCallback } from 'react';
+import {
+  IntervalType,
+  RoutineInterval,
+} from '../hooks/useRoutineIntervalTimer';
 import { WorkoutDetail } from '../types/createTypes';
 
 const StBox = styled(Box)`
@@ -28,6 +33,14 @@ export const WorkoutIntervalTimer = ({
     routineIsInProgress,
   } = routineInterval;
   const { defaultReps, defaultSets } = workoutDetail;
+  const highlightActiveInterval = useCallback(
+    (intervalType: IntervalType) => {
+      return intervalType === activeInterval
+        ? theme.palette.secondary.main
+        : theme.palette.primary.main;
+    },
+    [activeInterval]
+  );
 
   return (
     <CardContentContainer stackProps={{ spacing: 2 }}>
@@ -46,7 +59,7 @@ export const WorkoutIntervalTimer = ({
             {Math.floor(secondsLeft)}
           </Typography>
         </Box>
-        <StBox>
+        <StBox color={highlightActiveInterval('rep')}>
           <Typography display="inline" variant="h5" fontStyle="italic">
             Rep #
           </Typography>
@@ -54,13 +67,13 @@ export const WorkoutIntervalTimer = ({
             {currentRep} / {defaultReps}
           </Typography>
         </StBox>
-        <StBox>
+        <StBox color={highlightActiveInterval('repBreak')}>
           <Typography variant="h5" fontStyle="italic">
             Rep Break #
           </Typography>
           <Typography variant="h5">{currentRepBreak}</Typography>
         </StBox>
-        <StBox>
+        <StBox color={highlightActiveInterval('set')}>
           <Typography variant="h5" fontStyle="italic">
             Set #
           </Typography>
@@ -68,7 +81,7 @@ export const WorkoutIntervalTimer = ({
             {currentSet} / {defaultSets}
           </Typography>
         </StBox>
-        <StBox>
+        <StBox color={highlightActiveInterval('setBreak')}>
           <Typography variant="h5" fontStyle="italic">
             Set Break #
           </Typography>

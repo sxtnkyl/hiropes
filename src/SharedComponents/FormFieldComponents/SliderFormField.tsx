@@ -31,7 +31,7 @@ const SliderFormField = ({
             <Typography>{label}</Typography>
             <Slider
               {...field}
-              value={field.value || ''}
+              value={field.value || 0}
               onChange={(e, val) => {
                 if (onChange) {
                   onChange();
