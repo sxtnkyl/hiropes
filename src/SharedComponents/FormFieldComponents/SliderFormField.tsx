@@ -9,14 +9,16 @@ import {
 } from '@mui/material';
 import { Field, FieldProps, useFormikContext } from 'formik';
 
-interface SliderFormFieldProps extends Omit<SliderProps, 'name'> {
+interface SliderFormFieldProps extends Omit<SliderProps, 'name' | 'onChange'> {
   name: string;
   label: string;
+  onChange: () => void;
 }
 
 const SliderFormField = ({
   name,
   label,
+  onChange,
   children,
   ...rest
 }: SliderFormFieldProps) => {
@@ -31,6 +33,9 @@ const SliderFormField = ({
               {...field}
               value={field.value || ''}
               onChange={(e, val) => {
+                if (onChange) {
+                  onChange();
+                }
                 setFieldValue(name, val);
               }}
               {...rest}

@@ -1,4 +1,5 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
+import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { GradeRange } from '@/pages/projects/types/projectTypes';
 import { routeGradeSelectItems } from '@/pages/projects/utils/projectValues';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -6,6 +7,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   FormControl,
   InputLabel,
   Select,
@@ -25,14 +27,25 @@ export const LinearNumberRoutineRangePanel = ({
   topRange: GradeRange;
   numberOfRoutes: number;
 }) => {
+  const { savedRoutineInterval, setSavedRoutineInterval } =
+    useCurrentActiveWorkout();
+
   const [bottomGradeRangeValue, setBottomGradeRangeValue] =
     useState<GradeRange>(bottomRange);
   const [topGradeRangeValue, setTopGradeRangeValue] =
     useState<GradeRange>(topRange);
   const [accordionIsExpanded, setAccordionIsExpanded] =
     useState<boolean>(false);
+
   const handleAccordionChange = () => {
     setAccordionIsExpanded(!accordionIsExpanded);
+  };
+  const handleResetCustomRouteRanges = () => {
+    if (savedRoutineInterval) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { routineRoutes, ...rest } = savedRoutineInterval;
+      setSavedRoutineInterval({ ...rest });
+    }
   };
 
   const customDifficultyRanges = useMemo(() => {
@@ -67,6 +80,7 @@ export const LinearNumberRoutineRangePanel = ({
             setBottomGradeRangeValue(e.target.value as GradeRange)
           }
           label="Lower Difficulty Range"
+          disabled={Boolean(savedRoutineInterval?.routineRoutes)}
         >
           {routeGradeSelectItems}
         </Select>
@@ -78,10 +92,20 @@ export const LinearNumberRoutineRangePanel = ({
           value={topGradeRangeValue}
           onChange={(e) => setTopGradeRangeValue(e.target.value as GradeRange)}
           label="Upper Difficulty Range"
+          disabled={Boolean(savedRoutineInterval?.routineRoutes)}
         >
           {routeGradeSelectItems}
         </Select>
       </FormControl>
+      {savedRoutineInterval?.routineRoutes && (
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleResetCustomRouteRanges}
+        >
+          Reset Custom Route Ranges
+        </Button>
+      )}
 
       <Accordion
         expanded={accordionIsExpanded}
@@ -109,7 +133,9 @@ export const LinearNumberRoutineRangePanel = ({
           </Stack>
         </AccordionSummary>
         <AccordionDetails>
-          <RoutineRouteSlidersForm initialValues={initialValues} />
+          <RoutineRouteSlidersForm
+            initialValues={savedRoutineInterval?.routineRoutes ?? initialValues}
+          />
         </AccordionDetails>
       </Accordion>
     </CardContentContainer>

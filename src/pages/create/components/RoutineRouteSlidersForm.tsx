@@ -2,7 +2,7 @@ import SliderFormField from '@/SharedComponents/FormFieldComponents/SliderFormFi
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { Stack } from '@mui/material';
 import { Form, Formik } from 'formik';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 
 export const RoutineRouteSlidersForm = ({
   initialValues,
@@ -11,47 +11,51 @@ export const RoutineRouteSlidersForm = ({
 }) => {
   const { savedRoutineInterval, setSavedRoutineInterval } =
     useCurrentActiveWorkout();
-  const customDifficultySliders = useMemo(() => {
-    return Object.entries(initialValues).map(([key, val]) => {
-      function valueText(value: number) {
-        return value === 10 ? `V${value}+` : `V${value}`;
+  const updateSavedRoutineRouteDifficulty = useCallback(
+    (values: { [key: string]: number }) => {
+      if (savedRoutineInterval) {
+        setSavedRoutineInterval({
+          ...savedRoutineInterval,
+          routineRoutes: values,
+        });
       }
-
-      return (
-        <SliderFormField
-          key={key}
-          label={key}
-          aria-label={key}
-          name={key}
-          defaultValue={val}
-          getAriaValueText={valueText}
-          valueLabelDisplay="auto"
-          valueLabelFormat={valueText}
-          step={1}
-          marks
-          min={0}
-          max={10}
-        />
-      );
-    });
-  }, [initialValues]);
+    },
+    [savedRoutineInterval, setSavedRoutineInterval]
+  );
 
   return (
     <Formik<{ [key: string]: number }>
       initialValues={initialValues}
       enableReinitialize
-      onSubmit={(values) => {
-        if (savedRoutineInterval) {
-          setSavedRoutineInterval({
-            ...savedRoutineInterval,
-            routineRoutes: values,
-          });
-        }
-      }}
+      onSubmit={(values) => updateSavedRoutineRouteDifficulty(values)}
     >
-      {() => (
+      {({ values }) => (
         <Form>
-          <Stack>{customDifficultySliders}</Stack>
+          <Stack>
+            {Object.entries(initialValues).map(([key, val]) => {
+              function valueText(value: number) {
+                return value === 10 ? `V${value}+` : `V${value}`;
+              }
+
+              return (
+                <SliderFormField
+                  key={key}
+                  label={key}
+                  aria-label={key}
+                  name={key}
+                  onChange={() => updateSavedRoutineRouteDifficulty(values)}
+                  defaultValue={val}
+                  getAriaValueText={valueText}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={valueText}
+                  step={1}
+                  marks
+                  min={0}
+                  max={10}
+                />
+              );
+            })}
+          </Stack>
         </Form>
       )}
     </Formik>
