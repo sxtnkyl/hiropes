@@ -1,6 +1,5 @@
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { RoutineRouteSliders } from '../components/RoutineRouteSlidersForm';
 import { WorkoutDetail } from '../types/createTypes';
 
 export type IntervalType = 'rep' | 'repBreak' | 'set' | 'setBreak';
@@ -27,7 +26,6 @@ export interface UseRoutineIntervalProps extends WorkoutDetail {
   previousSet?: number;
   previousSetBreak?: number;
   previousInterval?: IntervalType;
-  routineRoutes?: RoutineRouteSliders;
 }
 
 export const useRoutineIntervalTimer = ({

@@ -14,21 +14,23 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
 import { calculateLinearRouteRanges } from '../utils/calculateLinearRouteRanges';
+import { formatRouteNumberToSetRep } from '../utils/formatRouteNumberToSetRep';
 import { RoutineRouteSlidersForm } from './RoutineRouteSlidersForm';
 
 export const LinearNumberRoutineRangePanel = ({
-  bottomRange,
-  topRange,
-  numberOfRoutes,
+  routineInterval,
 }: {
-  bottomRange: GradeRange;
-  topRange: GradeRange;
-  numberOfRoutes: number;
+  routineInterval: RoutineInterval;
 }) => {
-  const { savedRoutineInterval, setSavedRoutineInterval } =
-    useCurrentActiveWorkout();
+  const {
+    focusWorkoutDetails,
+    customRoutineRouteGrades,
+    setCustomRoutineRouteGrades,
+  } = useCurrentActiveWorkout();
+  const { bottomRange, topRange } = focusWorkoutDetails;
 
   const [bottomGradeRangeValue, setBottomGradeRangeValue] =
     useState<GradeRange>(bottomRange);
@@ -40,13 +42,13 @@ export const LinearNumberRoutineRangePanel = ({
   const handleAccordionChange = () => {
     setAccordionIsExpanded(!accordionIsExpanded);
   };
-  const handleResetCustomRouteRanges = () => {
-    if (savedRoutineInterval) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { routineRoutes, ...rest } = savedRoutineInterval;
-      setSavedRoutineInterval({ ...rest });
-    }
-  };
+  const gradeRangeSelectsAreDisabled = useMemo(() => {
+    return Boolean(customRoutineRouteGrades);
+  }, [customRoutineRouteGrades]);
+
+  const numberOfRoutes = useMemo(() => {
+    return focusWorkoutDetails.defaultReps * focusWorkoutDetails.defaultSets;
+  }, [focusWorkoutDetails.defaultReps, focusWorkoutDetails.defaultSets]);
 
   const customDifficultyRanges = useMemo(() => {
     return calculateLinearRouteRanges({
@@ -59,11 +61,24 @@ export const LinearNumberRoutineRangePanel = ({
   const initialValues = useMemo(() => {
     let obj = {};
     customDifficultyRanges.forEach((value, idx) => {
-      const objKey = idx;
+      const setRep = formatRouteNumberToSetRep({
+        routeNumber: idx,
+        defaultSets: focusWorkoutDetails?.defaultSets,
+        defaultReps: focusWorkoutDetails?.defaultReps,
+      });
+      const objKey = setRep ? `${setRep.set}-${setRep.rep}` : idx;
       obj = { ...obj, [objKey]: value };
     });
     return obj;
-  }, [customDifficultyRanges]);
+  }, [
+    customDifficultyRanges,
+    focusWorkoutDetails?.defaultReps,
+    focusWorkoutDetails?.defaultSets,
+  ]);
+
+  const resetCustomGradeRanges = useCallback(() => {
+    setCustomRoutineRouteGrades(undefined);
+  }, [setCustomRoutineRouteGrades]);
 
   return (
     <CardContentContainer stackProps={{ spacing: 4 }}>
@@ -80,7 +95,7 @@ export const LinearNumberRoutineRangePanel = ({
             setBottomGradeRangeValue(e.target.value as GradeRange)
           }
           label="Lower Difficulty Range"
-          disabled={Boolean(savedRoutineInterval?.routineRoutes)}
+          disabled={gradeRangeSelectsAreDisabled}
         >
           {routeGradeSelectItems}
         </Select>
@@ -92,16 +107,16 @@ export const LinearNumberRoutineRangePanel = ({
           value={topGradeRangeValue}
           onChange={(e) => setTopGradeRangeValue(e.target.value as GradeRange)}
           label="Upper Difficulty Range"
-          disabled={Boolean(savedRoutineInterval?.routineRoutes)}
+          disabled={gradeRangeSelectsAreDisabled}
         >
           {routeGradeSelectItems}
         </Select>
       </FormControl>
-      {savedRoutineInterval?.routineRoutes && (
+      {customRoutineRouteGrades && (
         <Button
           variant="contained"
           color="secondary"
-          onClick={handleResetCustomRouteRanges}
+          onClick={resetCustomGradeRanges}
         >
           Reset Custom Route Ranges
         </Button>
@@ -134,7 +149,8 @@ export const LinearNumberRoutineRangePanel = ({
         </AccordionSummary>
         <AccordionDetails>
           <RoutineRouteSlidersForm
-            initialValues={savedRoutineInterval?.routineRoutes ?? initialValues}
+            initialValues={customRoutineRouteGrades ?? initialValues}
+            routineInterval={routineInterval}
           />
         </AccordionDetails>
       </Accordion>

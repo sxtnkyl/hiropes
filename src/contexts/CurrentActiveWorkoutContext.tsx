@@ -39,6 +39,10 @@ export interface CurrentActiveWorkoutContextProps {
   setSavedRoutineInterval: Dispatch<
     SetStateAction<UseRoutineIntervalProps | undefined>
   >;
+  customRoutineRouteGrades?: { [key: string]: number };
+  setCustomRoutineRouteGrades: Dispatch<
+    SetStateAction<{ [key: string]: number } | undefined>
+  >;
 }
 
 const CurrentActiveWorkoutContext =
@@ -100,6 +104,9 @@ export const CurrentActiveWorkoutProvider = ({
   /** stores in-progress routine in case nav change */
   const [savedRoutineInterval, setSavedRoutineInterval] =
     useState<UseRoutineIntervalProps>();
+  const [customRoutineRouteGrades, setCustomRoutineRouteGrades] = useState<{
+    [key: string]: number;
+  }>();
   const focusWorkoutDetails = useMemo(() => {
     const { routineFocus = 'endurance', routineFocusWorkout = 'sixBySix' } =
       activeWorkout;
@@ -128,6 +135,8 @@ export const CurrentActiveWorkoutProvider = ({
         focusWorkoutDetails,
         savedRoutineInterval,
         setSavedRoutineInterval,
+        customRoutineRouteGrades,
+        setCustomRoutineRouteGrades,
       }}
     >
       {children}

@@ -1,78 +1,97 @@
 import SliderFormField from '@/SharedComponents/FormFieldComponents/SliderFormField';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import theme from '@/styles/theme';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
+import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
+import { RepSetDataObject } from '../types/createTypes';
 
-export type RoutineRouteSliders = {
-  [key: string]: number;
-};
 export const RoutineRouteSlidersForm = ({
   initialValues,
+  routineInterval,
 }: {
-  initialValues: RoutineRouteSliders;
+  initialValues: RepSetDataObject;
+  routineInterval: RoutineInterval;
 }) => {
-  const { savedRoutineInterval, setSavedRoutineInterval } =
+  const { savedRoutineInterval, setCustomRoutineRouteGrades } =
     useCurrentActiveWorkout();
-  const updateSavedRoutineRouteDifficulty = useCallback(
-    (values: RoutineRouteSliders) => {
-      if (savedRoutineInterval) {
-        setSavedRoutineInterval({
-          ...savedRoutineInterval,
-          routineRoutes: values,
-        });
-      }
-    },
-    [savedRoutineInterval, setSavedRoutineInterval]
-  );
 
+  const intervalTimerValuesToFormKeyFormat = useMemo(() => {
+    if (
+      savedRoutineInterval?.previousRep &&
+      savedRoutineInterval?.previousSet
+    ) {
+      return `${savedRoutineInterval.previousSet}-${savedRoutineInterval.previousRep}`;
+    }
+  }, [savedRoutineInterval?.previousRep, savedRoutineInterval?.previousSet]);
+
+  const sliders = useCallback(
+    (values: RepSetDataObject) => {
+      return Object.entries(initialValues).map(([key, value]) => {
+        const label = `Route ${key}`;
+        const valueText = (value: number) =>
+          value === 10 ? `V${value}+` : `V${value}`;
+
+        return (
+          <SliderFormField
+            key={key}
+            label={
+              <Typography
+                sx={{
+                  ...(routineInterval.activeInterval === 'rep' &&
+                    savedRoutineInterval?.previousRep &&
+                    key === intervalTimerValuesToFormKeyFormat && {
+                      color: `${theme.palette.secondary.main}`,
+                    }),
+                }}
+              >
+                {label}
+              </Typography>
+            }
+            aria-label={label}
+            name={key}
+            onChange={() => setCustomRoutineRouteGrades(values)}
+            defaultValue={value}
+            getAriaValueText={(value) => valueText(value)}
+            valueLabelDisplay="auto"
+            valueLabelFormat={(value) => valueText(value)}
+            step={1}
+            marks
+            min={0}
+            max={10}
+            componentsProps={{
+              thumb: {
+                style: {
+                  ...(routineInterval.activeInterval === 'rep' &&
+                    savedRoutineInterval?.previousRep &&
+                    key === intervalTimerValuesToFormKeyFormat && {
+                      backgroundColor: `${theme.palette.secondary.main}`,
+                    }),
+                },
+              },
+            }}
+          />
+        );
+      });
+    },
+    [
+      initialValues,
+      intervalTimerValuesToFormKeyFormat,
+      routineInterval.activeInterval,
+      savedRoutineInterval?.previousRep,
+      setCustomRoutineRouteGrades,
+    ]
+  );
   return (
-    <Formik<RoutineRouteSliders>
+    <Formik<RepSetDataObject>
       initialValues={initialValues}
       enableReinitialize
-      onSubmit={(values) => updateSavedRoutineRouteDifficulty(values)}
+      onSubmit={(values) => setCustomRoutineRouteGrades(values)}
     >
       {({ values }) => (
         <Form>
-          <Stack>
-            {Object.entries(initialValues).map(([key, value], idx) => {
-              const label = `Route ${idx + 1}`;
-              const valueText = () =>
-                value === 10 ? `V${value}+` : `V${value}`;
-
-              return (
-                <SliderFormField
-                  key={key}
-                  label={label}
-                  aria-label={label}
-                  name={key}
-                  onChange={() => updateSavedRoutineRouteDifficulty(values)}
-                  defaultValue={value}
-                  getAriaValueText={valueText}
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={valueText}
-                  step={1}
-                  marks
-                  min={0}
-                  max={10}
-                  componentsProps={{
-                    thumb: {
-                      style: {
-                        ...(savedRoutineInterval?.previousRep &&
-                          key ===
-                            (
-                              savedRoutineInterval?.previousRep - 1
-                            ).toString() && {
-                            backgroundColor: `${theme.palette.secondary.main}`,
-                          }),
-                      },
-                    },
-                  }}
-                />
-              );
-            })}
-          </Stack>
+          <Stack>{sliders(values)}</Stack>
         </Form>
       )}
     </Formik>

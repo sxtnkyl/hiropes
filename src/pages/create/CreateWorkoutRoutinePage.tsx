@@ -13,8 +13,6 @@ export const CreateWorkoutRoutinePage = () => {
     useCurrentActiveWorkout();
   const { formattedSecondsToMinuteSeconds } = timeConverters();
 
-  const { name, description, bottomRange, topRange } = focusWorkoutDetails;
-
   const routineInterval = useRoutineIntervalTimer({
     ...(savedRoutineInterval ?? focusWorkoutDetails),
   });
@@ -53,10 +51,10 @@ export const CreateWorkoutRoutinePage = () => {
     <Stack spacing={2}>
       <CardContentContainer stackProps={{ spacing: 6 }}>
         <Typography variant="h2" fontWeight="bold">
-          {name}
+          {focusWorkoutDetails.name}
         </Typography>
         <Typography variant="h5" fontStyle="italic">
-          {description}
+          {focusWorkoutDetails.description}
         </Typography>
 
         <Stack>
@@ -84,12 +82,8 @@ export const CreateWorkoutRoutinePage = () => {
         workoutDetail={focusWorkoutDetails}
       />
 
-      {focusWorkoutDetails.numberOfRoutes && (
-        <LinearNumberRoutineRangePanel
-          bottomRange={bottomRange}
-          topRange={topRange}
-          numberOfRoutes={focusWorkoutDetails.numberOfRoutes}
-        />
+      {focusWorkoutDetails && (
+        <LinearNumberRoutineRangePanel routineInterval={routineInterval} />
       )}
     </Stack>
   );

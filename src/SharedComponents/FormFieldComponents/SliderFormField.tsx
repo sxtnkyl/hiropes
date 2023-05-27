@@ -5,13 +5,13 @@ import {
   Slider,
   SliderProps,
   Stack,
-  Typography,
 } from '@mui/material';
 import { Field, FieldProps, useFormikContext } from 'formik';
+import { ReactNode } from 'react';
 
 interface SliderFormFieldProps extends Omit<SliderProps, 'name' | 'onChange'> {
   name: string;
-  label: string;
+  label: ReactNode;
   onChange: () => void;
 }
 
@@ -28,7 +28,7 @@ const SliderFormField = ({
       <Field name={name}>
         {({ field, form }: FieldProps) => (
           <FormControl component={Stack}>
-            <Typography>{label}</Typography>
+            {label}
             <Slider
               {...field}
               value={field.value || 0}
