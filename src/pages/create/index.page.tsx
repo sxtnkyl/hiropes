@@ -28,23 +28,25 @@ const CreateWorkoutPage = () => {
     activeWorkoutStep,
     setActiveWorkoutStep,
     workoutInProgress,
-    focusWorkoutDetails,
+    savedRoutineInterval,
   } = useCurrentActiveWorkout();
 
   const titlebarTitle = useMemo(() => {
-    return activeWorkoutStep === 'routine' ? (
-      focusWorkoutDetails?.name ?? ''
-    ) : (
+    return (
       <TimerTitle
         title="New Workout"
-        pomoTimer={pomoTimer}
+        pomoTimer={
+          activeWorkoutStep === 'routine'
+            ? savedRoutineInterval?.previousSeconds ?? 0
+            : pomoTimer
+        }
         workoutInProgress={workoutInProgress}
       />
     );
   }, [
     activeWorkoutStep,
-    focusWorkoutDetails?.name,
     pomoTimer,
+    savedRoutineInterval?.previousSeconds,
     workoutInProgress,
   ]);
 

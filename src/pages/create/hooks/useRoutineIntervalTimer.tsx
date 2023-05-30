@@ -41,7 +41,7 @@ export const useRoutineIntervalTimer = ({
   previousSetBreak,
   previousInterval,
 }: UseRoutineIntervalProps): RoutineInterval => {
-  const { focusWorkoutDetails, setSavedRoutineInterval } =
+  const { focusWorkoutDetails, setSavedRoutineInterval, setActiveWorkoutStep } =
     useCurrentActiveWorkout();
 
   const [routineIsInProgress, setRoutineIsInProgress] =
@@ -74,7 +74,7 @@ export const useRoutineIntervalTimer = ({
         }
 
         // sets remaining
-        else if (currentSet < defaultSets) {
+        else if (currentSet <= defaultSets) {
           if (currentSetBreak === currentSet) {
             setCurrentSet((prev) => prev + 1);
             setActiveInterval('rep');
@@ -104,6 +104,7 @@ export const useRoutineIntervalTimer = ({
         // done
         else {
           clearInterval(routineInterval);
+          setActiveWorkoutStep('strength');
         }
       }, 1000);
       return () => clearInterval(routineInterval);
@@ -120,6 +121,7 @@ export const useRoutineIntervalTimer = ({
     currentSetBreak,
     secondsLeft,
     routineIsInProgress,
+    setActiveWorkoutStep,
   ]);
 
   /** track and store routine for nav purposes */

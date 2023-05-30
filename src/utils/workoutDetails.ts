@@ -16,6 +16,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 120,
       bottomRange: '0-2',
       topRange: '4-6',
+      routeDifficultyRangeSortType: 'linear-invert',
     },
     fourByFour: {
       name: '4x4',
@@ -28,6 +29,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 300,
       bottomRange: '0-2',
       topRange: '4-6',
+      routeDifficultyRangeSortType: 'linear',
     },
     thirtyCircuit: {
       name: '30 Circuit',
@@ -40,11 +42,12 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 0,
       bottomRange: '0-2',
       topRange: '4-6',
+      routeDifficultyRangeSortType: 'linear-invert',
     },
     pyramidLong: {
       name: 'Pyramid Long',
       description:
-        'Select a total of 15 routes for a set structure of 5-4-3-2-1 with a 1 minute break interval. An easy pyramid will have a V-range of 2, while a hard should span 5.',
+        'Select a total of 15 routes for a set structure of 5-4-3-2-1 with a 1 minute break interval. An easy pyramid will have a V-range of 2, while a hard pyramid should span 5.',
       defaultReps: 15,
       repInterval: 90,
       repBreakInterval: 60,
@@ -52,6 +55,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 0,
       bottomRange: '0-2',
       topRange: '4-6',
+      routeDifficultyRangeSortType: 'pyramid-linear',
     },
   },
   power: {
@@ -66,6 +70,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 0,
       bottomRange: '0-2',
       topRange: '4-6',
+      routeDifficultyRangeSortType: 'linear',
     },
     pyramidPump: {
       name: 'Pyramid Pump',
@@ -78,6 +83,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 0,
       bottomRange: '0-2',
       topRange: '4-6',
+      routeDifficultyRangeSortType: 'pyramid',
     },
     sevenThrees: {
       name: '7:3s',
@@ -90,9 +96,22 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 180,
       bottomRange: '0-2',
       topRange: '4-6',
+      routeDifficultyRangeSortType: 'hangboard',
     },
   },
   fingerStrength: {
+    quickIntervalTest: {
+      name: 'Interval Test',
+      description: 'quick ints for testing',
+      defaultReps: 2,
+      repInterval: 3,
+      repBreakInterval: 2,
+      defaultSets: 3,
+      setBreakInterval: 2,
+      bottomRange: '0-2',
+      topRange: '4-6',
+      routeDifficultyRangeSortType: 'linear',
+    },
     tempFinger: {
       name: 'Temp Finger',
       description: 'Temp descrip',
@@ -103,6 +122,7 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       setBreakInterval: 60,
       bottomRange: '0-2',
       topRange: '4-6',
+      routeDifficultyRangeSortType: 'hangboard',
     },
   },
 };

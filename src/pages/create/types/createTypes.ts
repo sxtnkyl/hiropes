@@ -18,6 +18,16 @@ export type WorkoutStep =
   | 'routine'
   | 'strength';
 
+export type RouteDifficultyRangeSortType =
+  | 'linear'
+  | 'linear-invert'
+  | 'pyramid'
+  | 'pyramid-linear'
+  | 'hangboard';
+export type RepSetDataObject = {
+  [key: string]: number;
+};
+
 /**
  * defaultReps = amount of reps per set
  * repInterval= time during rep (min),
@@ -37,6 +47,7 @@ export type WorkoutDetail = {
   setBreakInterval: number;
   bottomRange: GradeRange;
   topRange: GradeRange;
+  routeDifficultyRangeSortType: RouteDifficultyRangeSortType;
 };
 
 // export type EnduranceWorkoutKeys =
