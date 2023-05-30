@@ -4,7 +4,7 @@ import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext'
 import { timeConverters } from '@/utils/timeConverters';
 import { Stack, Typography } from '@mui/material';
 import { useMemo } from 'react';
-import { LinearNumberRoutineRangePanel } from './components/LinearNumberRoutineRangePanel';
+import { RoutineRangePanel } from './components/RoutineRangePanel';
 import { WorkoutIntervalTimer } from './components/WorkoutIntervalTimer';
 import { useRoutineIntervalTimer } from './hooks/useRoutineIntervalTimer';
 
@@ -83,7 +83,7 @@ export const CreateWorkoutRoutinePage = () => {
       />
 
       {focusWorkoutDetails && (
-        <LinearNumberRoutineRangePanel routineInterval={routineInterval} />
+        <RoutineRangePanel routineInterval={routineInterval} />
       )}
     </Stack>
   );

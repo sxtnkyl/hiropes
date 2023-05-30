@@ -15,12 +15,11 @@ import {
   Typography,
 } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
+import { useCustomRouteRanges } from '../hooks/useCustomRouteRanges';
 import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
-import { calculateLinearRouteRanges } from '../utils/calculateLinearRouteRanges';
-import { formatRouteNumberToSetRep } from '../utils/formatRouteNumberToSetRep';
 import { RoutineRouteSlidersForm } from './RoutineRouteSlidersForm';
 
-export const LinearNumberRoutineRangePanel = ({
+export const RoutineRangePanel = ({
   routineInterval,
 }: {
   routineInterval: RoutineInterval;
@@ -46,35 +45,10 @@ export const LinearNumberRoutineRangePanel = ({
     return Boolean(customRoutineRouteGrades);
   }, [customRoutineRouteGrades]);
 
-  const numberOfRoutes = useMemo(() => {
-    return focusWorkoutDetails.defaultReps * focusWorkoutDetails.defaultSets;
-  }, [focusWorkoutDetails.defaultReps, focusWorkoutDetails.defaultSets]);
-
-  const customDifficultyRanges = useMemo(() => {
-    return calculateLinearRouteRanges({
-      bottomRange: bottomGradeRangeValue,
-      topRange: topGradeRangeValue,
-      numberOfRoutes,
-    });
-  }, [bottomGradeRangeValue, numberOfRoutes, topGradeRangeValue]);
-
-  const initialValues = useMemo(() => {
-    let obj = {};
-    customDifficultyRanges.forEach((value, idx) => {
-      const setRep = formatRouteNumberToSetRep({
-        routeNumber: idx,
-        defaultSets: focusWorkoutDetails?.defaultSets,
-        defaultReps: focusWorkoutDetails?.defaultReps,
-      });
-      const objKey = setRep ? `${setRep.set}-${setRep.rep}` : idx;
-      obj = { ...obj, [objKey]: value };
-    });
-    return obj;
-  }, [
-    customDifficultyRanges,
-    focusWorkoutDetails?.defaultReps,
-    focusWorkoutDetails?.defaultSets,
-  ]);
+  const { initialValues } = useCustomRouteRanges({
+    bottomRange: bottomGradeRangeValue,
+    topRange: topGradeRangeValue,
+  });
 
   const resetCustomGradeRanges = useCallback(() => {
     setCustomRoutineRouteGrades(undefined);

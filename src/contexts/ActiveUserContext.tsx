@@ -57,10 +57,10 @@ export const ActiveUserProvider = ({ children }: { children: ReactNode }) => {
 
   /** projects */
   useEffect(() => {
-    if (!projects) {
+    if (signedInUser && !projects) {
       fetchAndUpdateProjects();
     }
-  }, [projects]);
+  }, [projects, signedInUser]);
 
   const fetchAndUpdateProjects = async () => {
     const { data } = await API.graphql<GraphQLQuery<ListProjectsQuery>>({
