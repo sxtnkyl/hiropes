@@ -50,6 +50,13 @@ export type WorkoutDetail = {
   routeDifficultyRangeSortType: RouteDifficultyRangeSortType;
 };
 
+export type StrengthWorkoutDetail = {
+  name: string;
+  defaultReps: number[];
+  defaultSets: number;
+  weight: number[];
+};
+
 // export type EnduranceWorkoutKeys =
 //   | 'sixBySix'
 //   | 'fourByFour'
@@ -71,17 +78,42 @@ export type WorkoutDetail = {
 /**
  * Strength Workout Types
  */
-export type StrengthWorkout = 'benchAndSquat' | 'absAndShoulders' | 'cardio';
+export type StrengthWorkoutGroup = 'benchAndSquat' | 'absAndShoulders';
+export type BenchAndSquatWorkoutNames =
+  | 'bench'
+  | 'squat'
+  | 'singleLegSquat'
+  | 'dips';
+export type AbsAndShouldersWorkoutNames =
+  | 'hangingKneeRaises'
+  | 'planche'
+  | 'overheadPress'
+  | 'lateralToFrontRaises'
+  | 'oneArmInvertedRow';
+
+export type StrengthName = { name: string };
+export type BenchAndSquatWorkout = {
+  workouts: { [key in BenchAndSquatWorkoutNames]: StrengthWorkoutDetail };
+} & StrengthName;
+export type AbsAndShouldersWorkout = {
+  workouts: { [key in AbsAndShouldersWorkoutNames]: StrengthWorkoutDetail };
+} & StrengthName;
 
 export type StrengthWorkouts = {
   benchAndSquat: BenchAndSquatWorkout;
   absAndShoulders: AbsAndShouldersWorkout;
-  cardio: CardioWorkout;
 };
-export type StrengthWorkoutBase = { name: string };
-export type BenchAndSquatWorkout = { weight: number } & StrengthWorkoutBase;
-export type AbsAndShouldersWorkout = { reps: number } & StrengthWorkoutBase;
-export type CardioWorkout = { distance: number } & StrengthWorkoutBase;
+
+export type WorkoutFormValue = {
+  defaultReps: number[];
+  weight: number[];
+};
+export type BenchAndSquatSlidersFormValues = {
+  [key in BenchAndSquatWorkoutNames]: WorkoutFormValue;
+};
+export type AbsAndShouldersSlidersFormValues = {
+  [key in AbsAndShouldersWorkoutNames]: WorkoutFormValue;
+};
 
 /** State */
 // export type RoutineFocusWorkout<T = RoutineFocus> =
@@ -96,7 +128,7 @@ export interface WorkoutSession {
   routineFocus?: RoutineFocus;
   // routineFocusWorkout?: Extract<RoutineFocus, WorkoutSession['routineFocus']>;
   routineFocusWorkout?: string;
-  strengthWorkout?: StrengthWorkout;
+  strengthWorkout?: StrengthWorkoutGroup;
   project?: Project;
 }
 

@@ -12,7 +12,7 @@ import { ReactNode } from 'react';
 interface SliderFormFieldProps extends Omit<SliderProps, 'name' | 'onChange'> {
   name: string;
   label: ReactNode;
-  onChange: () => void;
+  onChange?: () => void;
 }
 
 const SliderFormField = ({
@@ -22,7 +22,7 @@ const SliderFormField = ({
   children,
   ...rest
 }: SliderFormFieldProps) => {
-  const { setFieldValue } = useFormikContext();
+  const { handleChange } = useFormikContext();
   return (
     <>
       <Field name={name}>
@@ -32,11 +32,11 @@ const SliderFormField = ({
             <Slider
               {...field}
               value={field.value || 0}
-              onChange={(e, val) => {
+              onChange={(e) => {
                 if (onChange) {
                   onChange();
                 }
-                setFieldValue(name, val);
+                handleChange(e);
               }}
               {...rest}
             >

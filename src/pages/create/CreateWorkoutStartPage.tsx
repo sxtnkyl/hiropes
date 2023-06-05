@@ -4,7 +4,7 @@ import { timeConverters } from '@/utils/timeConverters';
 import { routineDetails, strengthWorkouts } from '@/utils/workoutDetails';
 import { Button, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo } from 'react';
-import { RoutineFocus, StrengthWorkout } from './types/createTypes';
+import { RoutineFocus, StrengthWorkoutGroup } from './types/createTypes';
 
 const CreateWorkoutStartPage = () => {
   const {
@@ -53,7 +53,7 @@ const CreateWorkoutStartPage = () => {
 
   const handleStrengthWorkoutClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      const strengthWorkout = event.currentTarget.value as StrengthWorkout;
+      const strengthWorkout = event.currentTarget.value as StrengthWorkoutGroup;
       setActiveWorkout((prevSesh) => ({
         ...prevSesh,
         strengthWorkout,
@@ -143,18 +143,15 @@ const CreateWorkoutStartPage = () => {
 
   return (
     <Stack spacing={2}>
-      <CardContentContainer sx={{ height: 'auto' }} stackProps={{ spacing: 2 }}>
-        <Typography variant="h4">Select a routine type:</Typography>
-        <Stack spacing={1}>{routineFocusButtons}</Stack>
-      </CardContentContainer>
-
-      {activeWorkout.routineFocus && (
+      {workoutSetupIsComplete && (
         <CardContentContainer
           sx={{ height: 'auto' }}
           stackProps={{ spacing: 2 }}
         >
-          <Typography variant="h4">Select a routine option:</Typography>
-          <Stack spacing={1}>{routineFocusWorkoutsButtons}</Stack>
+          <Typography variant="h4">Begin this session:</Typography>
+          <Button variant="outlined" onClick={handleStartWorkoutClick}>
+            Start
+          </Button>
         </CardContentContainer>
       )}
 
@@ -168,17 +165,20 @@ const CreateWorkoutStartPage = () => {
         </CardContentContainer>
       )}
 
-      {workoutSetupIsComplete && (
+      {activeWorkout.routineFocus && (
         <CardContentContainer
           sx={{ height: 'auto' }}
           stackProps={{ spacing: 2 }}
         >
-          <Typography variant="h4">Begin this session:</Typography>
-          <Button variant="outlined" onClick={handleStartWorkoutClick}>
-            Start
-          </Button>
+          <Typography variant="h4">Select a routine option:</Typography>
+          <Stack spacing={1}>{routineFocusWorkoutsButtons}</Stack>
         </CardContentContainer>
       )}
+
+      <CardContentContainer sx={{ height: 'auto' }} stackProps={{ spacing: 2 }}>
+        <Typography variant="h4">Select a routine type:</Typography>
+        <Stack spacing={1}>{routineFocusButtons}</Stack>
+      </CardContentContainer>
     </Stack>
   );
 };
