@@ -102,6 +102,19 @@ export const AbsAndShouldersSlidersForm = ({
     [strengthWorkoutEstimatedCompletionTimeInSeconds]
   );
 
+  const resetFormSliders = useCallback(
+    (formTime: number) => {
+      setSavedStrengthSliders(undefined);
+      setStrengthWorkoutEstimatedCompletionTimeInSeconds(undefined);
+      setPomoTimer(formTime);
+    },
+    [
+      setPomoTimer,
+      setSavedStrengthSliders,
+      setStrengthWorkoutEstimatedCompletionTimeInSeconds,
+    ]
+  );
+
   return (
     <Formik<AbsAndShouldersSlidersFormValues>
       initialValues={initialValues}
@@ -161,6 +174,19 @@ export const AbsAndShouldersSlidersForm = ({
                     }
                   >
                     Update Timer
+                  </Button>
+                )}
+
+                {savedStrengthSliders && (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    onClick={() =>
+                      resetFormSliders(formEstimatedCompletionTimeInSeconds)
+                    }
+                  >
+                    Reset Workouts
                   </Button>
                 )}
 
