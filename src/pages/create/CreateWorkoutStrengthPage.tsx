@@ -1,8 +1,6 @@
-import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
-import { PauseResumeButton } from '@/SharedComponents/PauseResumeButton/PauseResumeButton';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { strengthWorkouts } from '@/utils/workoutDetails';
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useMemo } from 'react';
 import { AbsAndShouldersSlidersForm } from './components/AbsAndShouldersSlidersForm';
 import { BenchAndSquatSlidersForm } from './components/BenchAndSquatSlidersForm';
@@ -12,8 +10,7 @@ import {
 } from './types/createTypes';
 
 export const CreateWorkoutStrengthPage = () => {
-  const { activeWorkout, pauseTimer, resumeTimer, timerIsPaused } =
-    useCurrentActiveWorkout();
+  const { activeWorkout } = useCurrentActiveWorkout();
   const { strengthWorkout } = activeWorkout;
 
   const strengthWorkoutDetails = useMemo(() => {
@@ -31,20 +28,6 @@ export const CreateWorkoutStrengthPage = () => {
 
   return (
     <Stack spacing={2}>
-      <CardContentContainer stackProps={{ spacing: 6 }}>
-        <Typography variant="h2" fontWeight="bold">
-          {strengthWorkoutDetails?.name ?? ''}
-        </Typography>
-
-        <PauseResumeButton
-          paused={timerIsPaused}
-          resumeAction={resumeTimer}
-          resumeText="Resume Workout"
-          pauseAction={pauseTimer}
-          pauseText="Pause Workout"
-        />
-      </CardContentContainer>
-
       {isBenchAndSquatAndHasData && (
         <BenchAndSquatSlidersForm
           workouts={strengthWorkoutDetails as BenchAndSquatWorkout}

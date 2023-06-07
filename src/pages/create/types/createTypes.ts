@@ -50,13 +50,6 @@ export type WorkoutDetail = {
   routeDifficultyRangeSortType: RouteDifficultyRangeSortType;
 };
 
-export type StrengthWorkoutDetail = {
-  name: string;
-  defaultReps: number[];
-  defaultSets: number;
-  weight: number[];
-};
-
 // export type EnduranceWorkoutKeys =
 //   | 'sixBySix'
 //   | 'fourByFour'
@@ -90,6 +83,15 @@ export type AbsAndShouldersWorkoutNames =
   | 'overheadPress'
   | 'lateralToFrontRaises'
   | 'oneArmInvertedRow';
+
+export type StrengthWorkoutDetail = {
+  name: string;
+  defaultReps: number[];
+  defaultSets: number;
+  weight: number[];
+};
+
+export type SavedStrengthSliders = { [key: string]: WorkoutDetail };
 
 export type StrengthName = { name: string };
 export type BenchAndSquatWorkout = {
