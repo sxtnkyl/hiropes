@@ -10,6 +10,7 @@ import { SyntheticEvent, useMemo } from 'react';
 import { CreateWorkoutProjectPage } from './CreateWorkoutProjectPage';
 import { CreateWorkoutRoutinePage } from './CreateWorkoutRoutinePage';
 import CreateWorkoutStartPage from './CreateWorkoutStartPage';
+import { CreateWorkoutStrengthPage } from './CreateWorkoutStrengthPage';
 import { CreateWorkoutWarmupPage } from './CreateWorkoutWarmupPage';
 import { WorkoutStep } from './types/createTypes';
 
@@ -91,6 +92,7 @@ const CreateWorkoutPage = () => {
         {activeWorkoutStep === 'warmup' && <CreateWorkoutWarmupPage />}
         {activeWorkoutStep === 'project' && <CreateWorkoutProjectPage />}
         {activeWorkoutStep === 'routine' && <CreateWorkoutRoutinePage />}
+        {activeWorkoutStep === 'strength' && <CreateWorkoutStrengthPage />}
       </main>
     </>
   );

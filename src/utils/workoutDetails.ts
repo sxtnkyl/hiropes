@@ -112,14 +112,26 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
       topRange: '4-6',
       routeDifficultyRangeSortType: 'linear',
     },
-    tempFinger: {
-      name: 'Temp Finger',
-      description: 'Temp descrip',
+    campus: {
+      name: 'Basic Ladders',
+      description: 'campus rung basic ladders',
       defaultReps: 2,
-      repInterval: 360,
-      repBreakInterval: 30,
-      defaultSets: 2,
-      setBreakInterval: 60,
+      repInterval: 3,
+      repBreakInterval: 2,
+      defaultSets: 3,
+      setBreakInterval: 2,
+      bottomRange: '0-2',
+      topRange: '4-6',
+      routeDifficultyRangeSortType: 'hangboard',
+    },
+    oneArmPullUp: {
+      name: 'One Arm Pull ups',
+      description: 'training for one arms',
+      defaultReps: 2,
+      repInterval: 3,
+      repBreakInterval: 2,
+      defaultSets: 3,
+      setBreakInterval: 2,
       bottomRange: '0-2',
       topRange: '4-6',
       routeDifficultyRangeSortType: 'hangboard',
@@ -128,7 +140,68 @@ export const routineDetails: RoutineWorkoutsLookupObject = {
 };
 
 export const strengthWorkouts: StrengthWorkouts = {
-  benchAndSquat: { name: 'Bench And Squat', weight: 1 },
-  absAndShoulders: { name: 'Abs And Shoulders', reps: 2 },
-  cardio: { name: 'Cardio Run', distance: 3 },
+  benchAndSquat: {
+    name: 'Bench And Squat',
+    workouts: {
+      bench: {
+        name: 'Bench',
+        defaultReps: [8, 7, 6],
+        defaultSets: 3,
+        weight: [95, 125, 145],
+      },
+      squat: {
+        name: 'Squat',
+        defaultReps: [8, 7, 6],
+        defaultSets: 3,
+        weight: [95, 135, 135],
+      },
+      singleLegSquat: {
+        name: 'Single Leg Squats',
+        defaultReps: [8, 8, 8],
+        defaultSets: 3,
+        weight: [0, 0, 0],
+      },
+      dips: {
+        name: 'Dips',
+        defaultReps: [8, 8, 8],
+        defaultSets: 3,
+        weight: [0, 0, 0],
+      },
+    },
+  },
+  absAndShoulders: {
+    name: 'Abs And Shoulders',
+    workouts: {
+      hangingKneeRaises: {
+        name: 'Hanging Knee Raises',
+        defaultReps: [8, 8, 8],
+        defaultSets: 3,
+        weight: [0, 0, 0],
+      },
+      planche: {
+        name: 'Planche',
+        defaultReps: [8, 8, 8],
+        defaultSets: 3,
+        weight: [0, 0, 0],
+      },
+      overheadPress: {
+        name: 'Overhead Press',
+        defaultReps: [8, 7, 6],
+        defaultSets: 3,
+        weight: [30, 40, 50],
+      },
+      lateralToFrontRaises: {
+        name: 'Lateral To Front Raises',
+        defaultReps: [8, 8, 8],
+        defaultSets: 3,
+        weight: [10, 15, 20],
+      },
+      oneArmInvertedRow: {
+        name: 'One Arm Inverted Row',
+        defaultReps: [8, 8, 8],
+        defaultSets: 3,
+        weight: [0, 0, 0],
+      },
+    },
+  },
 };

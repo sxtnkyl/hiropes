@@ -1,5 +1,6 @@
 import { UseRoutineIntervalProps } from '@/pages/create/hooks/useRoutineIntervalTimer';
 import {
+  SavedStrengthSliders,
   WorkoutDetail,
   WorkoutSession,
   WorkoutStep,
@@ -42,6 +43,14 @@ export interface CurrentActiveWorkoutContextProps {
   customRoutineRouteGrades?: { [key: string]: number };
   setCustomRoutineRouteGrades: Dispatch<
     SetStateAction<{ [key: string]: number } | undefined>
+  >;
+  strengthWorkoutEstimatedCompletionTimeInSeconds?: number;
+  setStrengthWorkoutEstimatedCompletionTimeInSeconds: Dispatch<
+    SetStateAction<number | undefined>
+  >;
+  savedStrengthSliders?: SavedStrengthSliders;
+  setSavedStrengthSliders: Dispatch<
+    SetStateAction<SavedStrengthSliders | undefined>
   >;
 }
 
@@ -113,6 +122,13 @@ export const CurrentActiveWorkoutProvider = ({
     return routineDetails[routineFocus][routineFocusWorkout];
   }, [activeWorkout]);
 
+  const [
+    strengthWorkoutEstimatedCompletionTimeInSeconds,
+    setStrengthWorkoutEstimatedCompletionTimeInSeconds,
+  ] = useState<number>();
+  const [savedStrengthSliders, setSavedStrengthSliders] =
+    useState<SavedStrengthSliders>();
+
   return (
     <CurrentActiveWorkoutContext.Provider
       value={{
@@ -137,6 +153,10 @@ export const CurrentActiveWorkoutProvider = ({
         setSavedRoutineInterval,
         customRoutineRouteGrades,
         setCustomRoutineRouteGrades,
+        strengthWorkoutEstimatedCompletionTimeInSeconds,
+        setStrengthWorkoutEstimatedCompletionTimeInSeconds,
+        savedStrengthSliders,
+        setSavedStrengthSliders,
       }}
     >
       {children}
