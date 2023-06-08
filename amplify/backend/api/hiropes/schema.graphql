@@ -1,0 +1,10 @@
+type Project @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  name: String!
+  section: String
+  color: String
+  grade: String
+  sessionCount: Int
+  imageUrl: String
+  description: String
+}

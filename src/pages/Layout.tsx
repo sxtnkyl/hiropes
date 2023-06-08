@@ -1,9 +1,11 @@
 import MuiNextLink from '@/SharedComponents/MuiNext/MuiNextLink';
 import SideDrawer from '@/SharedComponents/SideDrawer/SideDrawer';
+import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import styled from '@emotion/styled';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import HardwareIcon from '@mui/icons-material/Hardware';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import {
@@ -24,6 +26,7 @@ const StListItemText = styled(ListItemText)`
 `;
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const { workoutInProgress } = useCurrentActiveWorkout();
   const { isGlobalSideNavOpen, setIsGlobalSideNavOpen } = useGlobalSideNav();
 
   const closeSideNav = () => {
@@ -40,21 +43,25 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <List>
           <ListItem key="new workout" divider>
             <MuiNextLink
-              href={'/create'}
+              href="/create"
               onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
               <ListItemButton>
                 <StListItemIcon>
                   <FitnessCenterIcon />
-                  <StListItemText primary="new workout" />
+                  <StListItemText
+                    primary={
+                      workoutInProgress ? 'active workout' : 'new workout'
+                    }
+                  />
                 </StListItemIcon>
               </ListItemButton>
             </MuiNextLink>
           </ListItem>
           <ListItem key="calendar" divider>
             <MuiNextLink
-              href={'/calendar'}
+              href="/calendar"
               onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
@@ -68,7 +75,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </ListItem>
           <ListItem key="tracking" divider>
             <MuiNextLink
-              href={'/tracking'}
+              href="/tracking"
               onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >
@@ -80,9 +87,23 @@ const Layout = ({ children }: { children: ReactNode }) => {
               </ListItemButton>
             </MuiNextLink>
           </ListItem>
+          <ListItem key="projects" divider>
+            <MuiNextLink
+              href="/projects"
+              onClick={closeSideNav}
+              sx={{ width: '100%', textDecoration: 'none' }}
+            >
+              <ListItemButton>
+                <StListItemIcon>
+                  <HardwareIcon />
+                  <StListItemText primary="projects" />
+                </StListItemIcon>
+              </ListItemButton>
+            </MuiNextLink>
+          </ListItem>
           <ListItem key="profile" divider>
             <MuiNextLink
-              href={'/profile'}
+              href="/profile"
               onClick={closeSideNav}
               sx={{ width: '100%', textDecoration: 'none' }}
             >

@@ -1,9 +1,12 @@
+import { UseRoutineIntervalProps } from '@/pages/create/hooks/useRoutineIntervalTimer';
 import {
-  ProjectRoute,
-  RoutineOption,
-  StrengthOption,
+  SavedStrengthSliders,
+  WorkoutDetail,
+  WorkoutSession,
+  WorkoutStep,
 } from '@/pages/create/types/createTypes';
 import { timeConverters } from '@/utils/timeConverters';
+import { routineDetails } from '@/utils/workoutDetails';
 import {
   Dispatch,
   ReactNode,
@@ -15,22 +18,6 @@ import {
   useState,
 } from 'react';
 
-export type WorkoutStep =
-  | 'start'
-  | 'warmup'
-  | 'project'
-  | 'routine'
-  | 'strength';
-
-export interface WorkoutSession {
-  routineOption?: RoutineOption;
-  routineOptionWorkout?: WorkoutSession['routineOption'];
-  strengthOption?: StrengthOption;
-  project?: ProjectRoute;
-  workoutStepsCompleted: WorkoutStep[];
-  activeStepTimer: WorkoutStep | null;
-}
-
 export interface CurrentActiveWorkoutContextProps {
   activeWorkoutStep: WorkoutStep;
   setActiveWorkoutStep: Dispatch<SetStateAction<WorkoutStep>>;
@@ -38,13 +25,33 @@ export interface CurrentActiveWorkoutContextProps {
   setWorkoutInProgress: Dispatch<SetStateAction<boolean>>;
   activeWorkout: WorkoutSession;
   setActiveWorkout: Dispatch<SetStateAction<WorkoutSession>>;
-  updateCompletedSteps: (step: WorkoutStep) => void;
+  workoutStepsCompleted: WorkoutStep[];
+  setWorkoutStepsCompleted: Dispatch<SetStateAction<WorkoutStep[]>>;
+  activeStepTimer: WorkoutStep;
+  setActiveStepTimer: Dispatch<SetStateAction<WorkoutStep>>;
   pomoTimer: number;
   setPomoTimer: Dispatch<SetStateAction<number>>;
-  workoutSetupIsComplete: boolean;
+  timerIsPaused: boolean;
   pauseTimer: () => void;
   resumeTimer: () => void;
   resetAndStartTimer: (time: number) => void;
+  focusWorkoutDetails: WorkoutDetail;
+  savedRoutineInterval?: UseRoutineIntervalProps;
+  setSavedRoutineInterval: Dispatch<
+    SetStateAction<UseRoutineIntervalProps | undefined>
+  >;
+  customRoutineRouteGrades?: { [key: string]: number };
+  setCustomRoutineRouteGrades: Dispatch<
+    SetStateAction<{ [key: string]: number } | undefined>
+  >;
+  strengthWorkoutEstimatedCompletionTimeInSeconds?: number;
+  setStrengthWorkoutEstimatedCompletionTimeInSeconds: Dispatch<
+    SetStateAction<number | undefined>
+  >;
+  savedStrengthSliders?: SavedStrengthSliders;
+  setSavedStrengthSliders: Dispatch<
+    SetStateAction<SavedStrengthSliders | undefined>
+  >;
 }
 
 const CurrentActiveWorkoutContext =
@@ -62,18 +69,23 @@ export const CurrentActiveWorkoutProvider = ({
 }) => {
   const { formattedSeconds } = timeConverters();
 
-  /** for tabs, separate from activeStepTimer */
+  /** for which /create tab is selected */
   const [activeWorkoutStep, setActiveWorkoutStep] =
     useState<WorkoutStep>('start');
-  const [workoutInProgress, setWorkoutInProgress] = useState(false);
-  const [activeWorkout, setActiveWorkout] = useState<WorkoutSession>({
-    workoutStepsCompleted: [],
-    activeStepTimer: null,
-  });
-  /** pomoTime = seconds */
-  const [pomoTimer, setPomoTimer] = useState(60);
-  const [timerIsPaused, setTimerIsPaused] = useState(true);
+  /** if a workout currently being conducted */
+  const [workoutInProgress, setWorkoutInProgress] = useState<boolean>(false);
 
+  /** Workout Session Variables */
+  const [workoutStepsCompleted, setWorkoutStepsCompleted] = useState<
+    WorkoutStep[]
+  >([]);
+  /** which step the timer is tracking */
+  const [activeStepTimer, setActiveStepTimer] = useState<WorkoutStep>('start');
+  const [activeWorkout, setActiveWorkout] = useState<WorkoutSession>({});
+
+  /** pomoTime = seconds */
+  const [pomoTimer, setPomoTimer] = useState<number>(60);
+  const [timerIsPaused, setTimerIsPaused] = useState<boolean>(true);
   useEffect(() => {
     let interval: string | number | NodeJS.Timeout | undefined;
 
@@ -84,23 +96,9 @@ export const CurrentActiveWorkoutProvider = ({
       interval = setInterval(() => {
         setPomoTimer((prevTimer) => formattedSeconds(prevTimer - 1));
       }, 1000);
+      return () => clearInterval(interval);
     }
-
-    return () => clearInterval(interval);
   }, [formattedSeconds, pomoTimer, timerIsPaused]);
-
-  const workoutSetupIsComplete = useMemo(() => {
-    const setupValues = [
-      activeWorkout.routineOption,
-      activeWorkout.routineOptionWorkout,
-      activeWorkout.strengthOption,
-    ];
-    return setupValues.every((val) => Boolean(val));
-  }, [
-    activeWorkout.routineOption,
-    activeWorkout.routineOptionWorkout,
-    activeWorkout.strengthOption,
-  ]);
 
   const pauseTimer = () => setTimerIsPaused(true);
   const resumeTimer = () => setTimerIsPaused(false);
@@ -110,12 +108,26 @@ export const CurrentActiveWorkoutProvider = ({
       resumeTimer();
     }, 1000);
   };
-  const updateCompletedSteps = (step: WorkoutStep) => {
-    setActiveWorkout(({ workoutStepsCompleted, ...rest }) => ({
-      ...rest,
-      workoutStepsCompleted: [...workoutStepsCompleted, step],
-    }));
-  };
+
+  /** Routine Variables */
+  /** stores in-progress routine in case nav change */
+  const [savedRoutineInterval, setSavedRoutineInterval] =
+    useState<UseRoutineIntervalProps>();
+  const [customRoutineRouteGrades, setCustomRoutineRouteGrades] = useState<{
+    [key: string]: number;
+  }>();
+  const focusWorkoutDetails = useMemo(() => {
+    const { routineFocus = 'endurance', routineFocusWorkout = 'sixBySix' } =
+      activeWorkout;
+    return routineDetails[routineFocus][routineFocusWorkout];
+  }, [activeWorkout]);
+
+  const [
+    strengthWorkoutEstimatedCompletionTimeInSeconds,
+    setStrengthWorkoutEstimatedCompletionTimeInSeconds,
+  ] = useState<number>();
+  const [savedStrengthSliders, setSavedStrengthSliders] =
+    useState<SavedStrengthSliders>();
 
   return (
     <CurrentActiveWorkoutContext.Provider
@@ -126,13 +138,25 @@ export const CurrentActiveWorkoutProvider = ({
         setWorkoutInProgress,
         activeWorkout,
         setActiveWorkout,
-        updateCompletedSteps,
+        workoutStepsCompleted,
+        setWorkoutStepsCompleted,
+        activeStepTimer,
+        setActiveStepTimer,
         pomoTimer,
         setPomoTimer,
-        workoutSetupIsComplete,
+        timerIsPaused,
         pauseTimer,
         resumeTimer,
         resetAndStartTimer,
+        focusWorkoutDetails,
+        savedRoutineInterval,
+        setSavedRoutineInterval,
+        customRoutineRouteGrades,
+        setCustomRoutineRouteGrades,
+        strengthWorkoutEstimatedCompletionTimeInSeconds,
+        setStrengthWorkoutEstimatedCompletionTimeInSeconds,
+        savedStrengthSliders,
+        setSavedStrengthSliders,
       }}
     >
       {children}

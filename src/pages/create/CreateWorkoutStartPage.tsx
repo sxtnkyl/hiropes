@@ -4,20 +4,16 @@ import { timeConverters } from '@/utils/timeConverters';
 import { routineDetails, strengthWorkouts } from '@/utils/workoutDetails';
 import { Button, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo } from 'react';
-import {
-  RoutineOption,
-  StrengthOption,
-  WorkoutSession,
-} from './types/createTypes';
+import { RoutineFocus, StrengthWorkoutGroup } from './types/createTypes';
 
 const CreateWorkoutStartPage = () => {
   const {
     activeWorkout,
-    workoutSetupIsComplete,
-    setActiveWorkout,
+    setActiveStepTimer,
     setWorkoutInProgress,
+    setActiveWorkout,
     setActiveWorkoutStep,
-    updateCompletedSteps,
+    setWorkoutStepsCompleted,
     setPomoTimer,
     resumeTimer,
   } = useCurrentActiveWorkout();
@@ -25,35 +21,31 @@ const CreateWorkoutStartPage = () => {
 
   const handleStartWorkoutClick = () => {
     setWorkoutInProgress(true);
-    updateCompletedSteps('start');
-    setActiveWorkout((prevSesh) => ({
-      ...prevSesh,
-      activeStepTimer: 'warmup',
-    }));
+    setWorkoutStepsCompleted(['start']);
+    setActiveStepTimer('warmup');
     setActiveWorkoutStep('warmup');
     setPomoTimer(hoursToSeconds(0.004));
     resumeTimer();
   };
 
-  const handleRoutineOptionClick = useCallback(
+  const handleRoutineFocusClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      const routineOption = event.currentTarget.value as RoutineOption;
+      const routineFocus = event.currentTarget.value as RoutineFocus;
       setActiveWorkout((prevSesh) => ({
         ...prevSesh,
-        routineOption,
-        routineOptionWorkout: undefined,
+        routineFocus,
+        routineFocusWorkout: undefined,
       }));
     },
     [setActiveWorkout]
   );
 
-  const handleRoutineOptionWorkoutClick = useCallback(
+  const handleRoutineFocusWorkoutClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      const routineOptionWorkout = event.currentTarget
-        .value as WorkoutSession['routineOption'];
+      const routineFocusWorkout = event.currentTarget.value;
       setActiveWorkout((prevSesh) => ({
         ...prevSesh,
-        routineOptionWorkout,
+        routineFocusWorkout,
       }));
     },
     [setActiveWorkout]
@@ -61,42 +53,42 @@ const CreateWorkoutStartPage = () => {
 
   const handleStrengthWorkoutClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      const strengthOption = event.currentTarget.value as StrengthOption;
+      const strengthWorkout = event.currentTarget.value as StrengthWorkoutGroup;
       setActiveWorkout((prevSesh) => ({
         ...prevSesh,
-        strengthOption,
+        strengthWorkout,
       }));
     },
     [setActiveWorkout]
   );
 
-  const routineTypeOptionsButtons = useMemo(() => {
+  const routineFocusButtons = useMemo(() => {
     return Object.keys(routineDetails).map((routine) => (
       <Button
         key={routine}
         value={routine}
-        onClick={handleRoutineOptionClick}
+        onClick={handleRoutineFocusClick}
         variant={
-          routine === activeWorkout.routineOption ? 'contained' : 'outlined'
+          routine === activeWorkout.routineFocus ? 'contained' : 'outlined'
         }
       >
         {routine}
       </Button>
     ));
-  }, [handleRoutineOptionClick, activeWorkout.routineOption]);
+  }, [handleRoutineFocusClick, activeWorkout.routineFocus]);
 
-  const routineOptionWorkoutsButtons = useMemo(() => {
-    if (activeWorkout.routineOption) {
+  const routineFocusWorkoutsButtons = useMemo(() => {
+    if (activeWorkout.routineFocus) {
       const selectedRoutineWorkouts = Object.entries(
-        routineDetails[activeWorkout.routineOption]
+        routineDetails[activeWorkout.routineFocus]
       );
       return selectedRoutineWorkouts.map(([workoutName, workoutDetails]) => (
         <Button
           key={workoutName}
           value={workoutName}
-          onClick={handleRoutineOptionWorkoutClick}
+          onClick={handleRoutineFocusWorkoutClick}
           variant={
-            workoutName === activeWorkout.routineOptionWorkout
+            workoutName === activeWorkout.routineFocusWorkout
               ? 'contained'
               : 'outlined'
           }
@@ -106,13 +98,13 @@ const CreateWorkoutStartPage = () => {
       ));
     }
   }, [
-    handleRoutineOptionWorkoutClick,
-    activeWorkout.routineOption,
-    activeWorkout.routineOptionWorkout,
+    activeWorkout.routineFocus,
+    activeWorkout.routineFocusWorkout,
+    handleRoutineFocusWorkoutClick,
   ]);
 
-  const strengthWorkoutOptionsButtons = useMemo(() => {
-    if (activeWorkout.routineOptionWorkout) {
+  const strengthWorkoutButtons = useMemo(() => {
+    if (activeWorkout.routineFocusWorkout) {
       return Object.entries(strengthWorkouts).map(
         ([workout, workoutDetails]) => (
           <Button
@@ -120,7 +112,7 @@ const CreateWorkoutStartPage = () => {
             value={workout}
             onClick={handleStrengthWorkoutClick}
             variant={
-              workout === activeWorkout.strengthOption
+              workout === activeWorkout.strengthWorkout
                 ? 'contained'
                 : 'outlined'
             }
@@ -132,37 +124,25 @@ const CreateWorkoutStartPage = () => {
     }
   }, [
     handleStrengthWorkoutClick,
-    activeWorkout.routineOptionWorkout,
-    activeWorkout.strengthOption,
+    activeWorkout.routineFocusWorkout,
+    activeWorkout.strengthWorkout,
+  ]);
+
+  const workoutSetupIsComplete = useMemo(() => {
+    const setupValues = [
+      activeWorkout.routineFocus,
+      activeWorkout.routineFocusWorkout,
+      activeWorkout.strengthWorkout,
+    ];
+    return setupValues.every((val) => Boolean(val));
+  }, [
+    activeWorkout.routineFocus,
+    activeWorkout.routineFocusWorkout,
+    activeWorkout.strengthWorkout,
   ]);
 
   return (
     <Stack spacing={2}>
-      <CardContentContainer sx={{ height: 'auto' }} stackProps={{ spacing: 2 }}>
-        <Typography variant="h4">Select a routine type:</Typography>
-        <Stack spacing={1}>{routineTypeOptionsButtons}</Stack>
-      </CardContentContainer>
-
-      {activeWorkout.routineOption && (
-        <CardContentContainer
-          sx={{ height: 'auto' }}
-          stackProps={{ spacing: 2 }}
-        >
-          <Typography variant="h4">Select a routine option:</Typography>
-          <Stack spacing={1}>{routineOptionWorkoutsButtons}</Stack>
-        </CardContentContainer>
-      )}
-
-      {activeWorkout.routineOptionWorkout && (
-        <CardContentContainer
-          sx={{ height: 'auto' }}
-          stackProps={{ spacing: 2 }}
-        >
-          <Typography variant="h4">Select a strength type:</Typography>
-          <Stack spacing={1}>{strengthWorkoutOptionsButtons}</Stack>
-        </CardContentContainer>
-      )}
-
       {workoutSetupIsComplete && (
         <CardContentContainer
           sx={{ height: 'auto' }}
@@ -174,6 +154,31 @@ const CreateWorkoutStartPage = () => {
           </Button>
         </CardContentContainer>
       )}
+
+      {activeWorkout.routineFocusWorkout && (
+        <CardContentContainer
+          sx={{ height: 'auto' }}
+          stackProps={{ spacing: 2 }}
+        >
+          <Typography variant="h4">Select a strength type:</Typography>
+          <Stack spacing={1}>{strengthWorkoutButtons}</Stack>
+        </CardContentContainer>
+      )}
+
+      {activeWorkout.routineFocus && (
+        <CardContentContainer
+          sx={{ height: 'auto' }}
+          stackProps={{ spacing: 2 }}
+        >
+          <Typography variant="h4">Select a routine option:</Typography>
+          <Stack spacing={1}>{routineFocusWorkoutsButtons}</Stack>
+        </CardContentContainer>
+      )}
+
+      <CardContentContainer sx={{ height: 'auto' }} stackProps={{ spacing: 2 }}>
+        <Typography variant="h4">Select a routine type:</Typography>
+        <Stack spacing={1}>{routineFocusButtons}</Stack>
+      </CardContentContainer>
     </Stack>
   );
 };

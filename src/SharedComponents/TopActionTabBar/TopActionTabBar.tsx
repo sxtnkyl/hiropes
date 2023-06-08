@@ -6,8 +6,12 @@ const TopActionTabBar = ({ sx, children, ...rest }: TabsProps) => {
     <Tabs
       id="top-action-tab-bar"
       variant="fullWidth"
-      textColor="secondary"
-      sx={{ borderBottom: `1px solid ${theme.palette.primary.light}`, ...sx }}
+      textColor="inherit"
+      indicatorColor="secondary"
+      sx={{
+        borderBottom: `1px solid ${theme.palette.primary.light}`,
+        ...sx,
+      }}
       {...rest}
     >
       {children}

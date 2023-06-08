@@ -1,25 +1,18 @@
+import TimerTitle from '@/SharedComponents/TimerTitle/TimerTitle';
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
-import {
-  WorkoutStep,
-  useCurrentActiveWorkout,
-} from '@/contexts/CurrentActiveWorkoutContext';
+import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
-import { timeConverters } from '@/utils/timeConverters';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import {
-  Button,
-  ButtonProps,
-  IconButton,
-  Tab,
-  TabProps,
-  Typography,
-} from '@mui/material';
-import { SyntheticEvent } from 'react';
+import { IconButton, Tab, TabProps } from '@mui/material';
+import { SyntheticEvent, useMemo } from 'react';
 import { CreateWorkoutProjectPage } from './CreateWorkoutProjectPage';
+import { CreateWorkoutRoutinePage } from './CreateWorkoutRoutinePage';
 import CreateWorkoutStartPage from './CreateWorkoutStartPage';
+import { CreateWorkoutStrengthPage } from './CreateWorkoutStrengthPage';
 import { CreateWorkoutWarmupPage } from './CreateWorkoutWarmupPage';
+import { WorkoutStep } from './types/createTypes';
 
 const createActionTabs: TabProps[] = [
   { label: 'start', value: 'start' },
@@ -29,17 +22,6 @@ const createActionTabs: TabProps[] = [
   { label: 'strength', value: 'strength' },
 ];
 
-const TimerTitle = (props: ButtonProps) => {
-  return (
-    <Button
-      variant="outlined"
-      color="inherit"
-      sx={{ width: '50%' }}
-      {...props}
-    />
-  );
-};
-
 const CreateWorkoutPage = () => {
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
   const {
@@ -47,9 +29,27 @@ const CreateWorkoutPage = () => {
     activeWorkoutStep,
     setActiveWorkoutStep,
     workoutInProgress,
+    savedRoutineInterval,
   } = useCurrentActiveWorkout();
-  const { formattedSecondsToMinuteSeconds } = timeConverters();
-  const { minutes, seconds } = formattedSecondsToMinuteSeconds(pomoTimer);
+
+  const titlebarTitle = useMemo(() => {
+    return (
+      <TimerTitle
+        title="New Workout"
+        pomoTimer={
+          activeWorkoutStep === 'routine'
+            ? savedRoutineInterval?.previousSeconds ?? 0
+            : pomoTimer
+        }
+        workoutInProgress={workoutInProgress}
+      />
+    );
+  }, [
+    activeWorkoutStep,
+    pomoTimer,
+    savedRoutineInterval?.previousSeconds,
+    workoutInProgress,
+  ]);
 
   const createWorkoutTabs = createActionTabs.map((option, i) => (
     <Tab
@@ -75,14 +75,7 @@ const CreateWorkoutPage = () => {
             <MenuOpenIcon />
           </IconButton>
         }
-        title={
-          <Typography
-            variant="h4"
-            {...(workoutInProgress && { component: TimerTitle })}
-          >
-            {workoutInProgress ? `${minutes}m : ${seconds}s` : `New Workout`}
-          </Typography>
-        }
+        title={titlebarTitle}
         rightActionItem={<RightActionHomeLink />}
       />
 
@@ -98,6 +91,8 @@ const CreateWorkoutPage = () => {
         {activeWorkoutStep === 'start' && <CreateWorkoutStartPage />}
         {activeWorkoutStep === 'warmup' && <CreateWorkoutWarmupPage />}
         {activeWorkoutStep === 'project' && <CreateWorkoutProjectPage />}
+        {activeWorkoutStep === 'routine' && <CreateWorkoutRoutinePage />}
+        {activeWorkoutStep === 'strength' && <CreateWorkoutStrengthPage />}
       </main>
     </>
   );
