@@ -2,7 +2,13 @@
 
 ### Rock climbing tool for tracking progress maximizing gym time efficiency
 
+This app is used to help maximize workout efficiency within a 2 hour time bloc.
+
+Designed for mobile size screens.
+
 <br></br>
+
+Built using Nextjs and AWS Amplify.
 
 ### Config Refs
 
