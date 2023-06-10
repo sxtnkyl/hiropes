@@ -149,9 +149,15 @@ const CreateWorkoutStartPage = () => {
           stackProps={{ spacing: 2 }}
         >
           <Typography variant="h4">Begin this session:</Typography>
-          <Button variant="outlined" onClick={handleStartWorkoutClick}>
-            Start
-          </Button>
+          <Stack spacing={1} minWidth="75%">
+            <Button
+              variant="contained"
+              onClick={handleStartWorkoutClick}
+              color="secondary"
+            >
+              Start
+            </Button>
+          </Stack>
         </CardContentContainer>
       )}
 
@@ -161,7 +167,9 @@ const CreateWorkoutStartPage = () => {
           stackProps={{ spacing: 2 }}
         >
           <Typography variant="h4">Select a strength type:</Typography>
-          <Stack spacing={1}>{strengthWorkoutButtons}</Stack>
+          <Stack spacing={1} minWidth="75%">
+            {strengthWorkoutButtons}
+          </Stack>
         </CardContentContainer>
       )}
 
@@ -171,13 +179,17 @@ const CreateWorkoutStartPage = () => {
           stackProps={{ spacing: 2 }}
         >
           <Typography variant="h4">Select a routine option:</Typography>
-          <Stack spacing={1}>{routineFocusWorkoutsButtons}</Stack>
+          <Stack spacing={1} minWidth="75%">
+            {routineFocusWorkoutsButtons}
+          </Stack>
         </CardContentContainer>
       )}
 
       <CardContentContainer sx={{ height: 'auto' }} stackProps={{ spacing: 2 }}>
         <Typography variant="h4">Select a routine type:</Typography>
-        <Stack spacing={1}>{routineFocusButtons}</Stack>
+        <Stack spacing={1} minWidth="75%">
+          {routineFocusButtons}
+        </Stack>
       </CardContentContainer>
     </Stack>
   );
