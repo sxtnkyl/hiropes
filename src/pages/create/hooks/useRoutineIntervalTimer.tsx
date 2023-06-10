@@ -1,5 +1,11 @@
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { WorkoutDetail } from '../types/createTypes';
 
 export type IntervalType = 'rep' | 'repBreak' | 'set' | 'setBreak';
@@ -41,8 +47,26 @@ export const useRoutineIntervalTimer = ({
   previousSetBreak,
   previousInterval,
 }: UseRoutineIntervalProps): RoutineInterval => {
-  const { focusWorkoutDetails, setSavedRoutineInterval, setActiveWorkoutStep } =
-    useCurrentActiveWorkout();
+  const {
+    focusWorkoutDetails,
+    setSavedRoutineInterval,
+    setActiveStepTimer,
+    setActiveWorkoutStep,
+    setPomoTimer,
+    setWorkoutStepsCompleted,
+  } = useCurrentActiveWorkout();
+
+  const endRoutineStep = useCallback(() => {
+    setWorkoutStepsCompleted((prev) => [...prev, 'routine']);
+    setActiveWorkoutStep('strength');
+    setActiveStepTimer('strength');
+    setPomoTimer(0);
+  }, [
+    setActiveStepTimer,
+    setActiveWorkoutStep,
+    setPomoTimer,
+    setWorkoutStepsCompleted,
+  ]);
 
   const [routineIsInProgress, setRoutineIsInProgress] =
     useState<boolean>(false);
@@ -104,7 +128,7 @@ export const useRoutineIntervalTimer = ({
         // done
         else {
           clearInterval(routineInterval);
-          setActiveWorkoutStep('strength');
+          endRoutineStep();
         }
       }, 1000);
       return () => clearInterval(routineInterval);
@@ -122,6 +146,7 @@ export const useRoutineIntervalTimer = ({
     secondsLeft,
     routineIsInProgress,
     setActiveWorkoutStep,
+    endRoutineStep,
   ]);
 
   /** track and store routine for nav purposes */
