@@ -1,5 +1,6 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
 import { PauseResumeButton } from '@/SharedComponents/PauseResumeButton/PauseResumeButton';
+import { SkipButton } from '@/SharedComponents/SkipButton/SkipButton';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { timeConverters } from '@/utils/timeConverters';
 import { Button, Stack, Typography } from '@mui/material';
@@ -23,11 +24,12 @@ export const AbsAndShouldersSlidersForm = ({
     resumeTimer,
     timerIsPaused,
     pomoTimer,
-    setPomoTimer,
     strengthWorkoutEstimatedCompletionTimeInSeconds,
     setStrengthWorkoutEstimatedCompletionTimeInSeconds,
     savedStrengthSliders,
     setSavedStrengthSliders,
+    setPomoTimer,
+    setWorkoutStepsCompleted,
   } = useCurrentActiveWorkout();
   const { formattedSecondsToMinuteSeconds } = timeConverters();
 
@@ -59,6 +61,11 @@ export const AbsAndShouldersSlidersForm = ({
   const onSubmit = useCallback(() => {
     return undefined;
   }, []);
+
+  const endStrengthStep = useCallback(() => {
+    setWorkoutStepsCompleted((prev) => [...prev, 'strength']);
+    // submit workout
+  }, [setWorkoutStepsCompleted]);
 
   const updateTimerIfNotStarted = useCallback(
     (formTime: number) => {
@@ -146,9 +153,6 @@ export const AbsAndShouldersSlidersForm = ({
                   workouts. Estimated time calculated according to 10 seconds
                   per rep.
                 </Typography>
-                <Typography variant="h5" fontStyle="italic">
-                  Estimated time calculated according to 1 minute per rep.
-                </Typography>
 
                 <Stack>
                   <Typography variant="h6" fontWeight="bold">
@@ -196,6 +200,10 @@ export const AbsAndShouldersSlidersForm = ({
                   resumeText="Resume Workout"
                   pauseAction={pauseTimer}
                   pauseText="Pause Workout"
+                />
+                <SkipButton
+                  onClick={endStrengthStep}
+                  buttonText="end workout"
                 />
               </CardContentContainer>
 

@@ -1,16 +1,25 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
 import { PauseResumeButton } from '@/SharedComponents/PauseResumeButton/PauseResumeButton';
+import { SkipButton } from '@/SharedComponents/SkipButton/SkipButton';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { timeConverters } from '@/utils/timeConverters';
 import { Stack, Typography } from '@mui/material';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { RoutineRangePanel } from './components/RoutineRangePanel';
 import { WorkoutIntervalTimer } from './components/WorkoutIntervalTimer';
 import { useRoutineIntervalTimer } from './hooks/useRoutineIntervalTimer';
 
 export const CreateWorkoutRoutinePage = () => {
-  const { focusWorkoutDetails, savedRoutineInterval, resumeTimer, pauseTimer } =
-    useCurrentActiveWorkout();
+  const {
+    focusWorkoutDetails,
+    savedRoutineInterval,
+    resumeTimer,
+    pauseTimer,
+    setWorkoutStepsCompleted,
+    setActiveWorkoutStep,
+    setActiveStepTimer,
+    setPomoTimer,
+  } = useCurrentActiveWorkout();
   const { formattedSecondsToMinuteSeconds } = timeConverters();
 
   const routineInterval = useRoutineIntervalTimer({
@@ -47,6 +56,18 @@ export const CreateWorkoutRoutinePage = () => {
   const { minutes: completionMinutes, seconds: completionSeconds } =
     formattedSecondsToMinuteSeconds(estimatedRoutineCompletionTimeSeconds);
 
+  const endRoutineStep = useCallback(() => {
+    setWorkoutStepsCompleted((prev) => [...prev, 'routine']);
+    setActiveWorkoutStep('strength');
+    setActiveStepTimer('strength');
+    setPomoTimer(0);
+  }, [
+    setActiveStepTimer,
+    setActiveWorkoutStep,
+    setPomoTimer,
+    setWorkoutStepsCompleted,
+  ]);
+
   return (
     <Stack spacing={2}>
       <CardContentContainer stackProps={{ spacing: 6 }}>
@@ -75,6 +96,7 @@ export const CreateWorkoutRoutinePage = () => {
           pauseAction={handlePauseRoutineTimer}
           pauseText="Pause Workout"
         />
+        <SkipButton onClick={endRoutineStep} buttonText="skip routine" />
       </CardContentContainer>
 
       <WorkoutIntervalTimer
