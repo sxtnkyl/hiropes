@@ -91,7 +91,7 @@ export const CreateWorkoutRoutinePage = () => {
           paused={!routineInterval.routineIsInProgress}
           resumeAction={handleResumeRoutineTimer}
           resumeText={
-            savedRoutineInterval ? 'Continue Workout' : 'Start Workout'
+            savedRoutineInterval ? 'Continue Routine' : 'Start Routine'
           }
           pauseAction={handlePauseRoutineTimer}
           pauseText="Pause Workout"

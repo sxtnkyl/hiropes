@@ -1,5 +1,6 @@
 import { UseRoutineIntervalProps } from '@/pages/create/hooks/useRoutineIntervalTimer';
 import {
+  RepSetDataObject,
   SavedStrengthSliders,
   WorkoutDetail,
   WorkoutSession,
@@ -40,9 +41,9 @@ export interface CurrentActiveWorkoutContextProps {
   setSavedRoutineInterval: Dispatch<
     SetStateAction<UseRoutineIntervalProps | undefined>
   >;
-  customRoutineRouteGrades?: { [key: string]: number };
+  customRoutineRouteGrades?: RepSetDataObject;
   setCustomRoutineRouteGrades: Dispatch<
-    SetStateAction<{ [key: string]: number } | undefined>
+    SetStateAction<RepSetDataObject | undefined>
   >;
   strengthWorkoutEstimatedCompletionTimeInSeconds?: number;
   setStrengthWorkoutEstimatedCompletionTimeInSeconds: Dispatch<
@@ -72,6 +73,7 @@ export const CurrentActiveWorkoutProvider = ({
   /** for which /create tab is selected */
   const [activeWorkoutStep, setActiveWorkoutStep] =
     useState<WorkoutStep>('start');
+
   /** if a workout currently being conducted */
   const [workoutInProgress, setWorkoutInProgress] = useState<boolean>(false);
 
@@ -79,6 +81,7 @@ export const CurrentActiveWorkoutProvider = ({
   const [workoutStepsCompleted, setWorkoutStepsCompleted] = useState<
     WorkoutStep[]
   >([]);
+
   /** which step the timer is tracking */
   const [activeStepTimer, setActiveStepTimer] = useState<WorkoutStep>('start');
   const [activeWorkout, setActiveWorkout] = useState<WorkoutSession>({});
@@ -113,15 +116,15 @@ export const CurrentActiveWorkoutProvider = ({
   /** stores in-progress routine in case nav change */
   const [savedRoutineInterval, setSavedRoutineInterval] =
     useState<UseRoutineIntervalProps>();
-  const [customRoutineRouteGrades, setCustomRoutineRouteGrades] = useState<{
-    [key: string]: number;
-  }>();
+  const [customRoutineRouteGrades, setCustomRoutineRouteGrades] =
+    useState<RepSetDataObject>();
   const focusWorkoutDetails = useMemo(() => {
     const { routineFocus = 'endurance', routineFocusWorkout = 'sixBySix' } =
       activeWorkout;
     return routineDetails[routineFocus][routineFocusWorkout];
   }, [activeWorkout]);
 
+  /** Strength Variables */
   const [
     strengthWorkoutEstimatedCompletionTimeInSeconds,
     setStrengthWorkoutEstimatedCompletionTimeInSeconds,

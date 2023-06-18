@@ -1,18 +1,23 @@
+import { ListWorkoutsQuery, Workout } from '@/API';
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
+import { listWorkouts } from '@/graphql/queries';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps, Typography } from '@mui/material';
+import { withSSRContext } from 'aws-amplify';
+import { GetServerSideProps } from 'next';
 import { SyntheticEvent, useState } from 'react';
+import { TrackingWorkoutsPage } from './TrackingWorkoutsPage';
 
 const trackingActionTabs: TabProps[] = [
-  { label: 'frequency', value: 'frequency' },
+  { label: 'workouts', value: 'workouts' },
   { label: 'climbing', value: 'climbing' },
   { label: 'strength', value: 'strength' },
 ];
 
-const TrackingPage = () => {
+const TrackingPage = ({ workouts }: { workouts: Workout[] }) => {
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
 
   const [activeTab, setActiveTab] = useState<string | false>(false);
@@ -47,12 +52,28 @@ const TrackingPage = () => {
 
       <main>
         {!activeTab && <>tracking descrip</>}
-        {activeTab === 'frequency' && <>frequency</>}
+        {activeTab === 'workouts' && (
+          <TrackingWorkoutsPage workouts={workouts} />
+        )}
         {activeTab === 'climbing' && <>climbing</>}
         {activeTab === 'strength' && <>strength</>}
       </main>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const SSR = withSSRContext({ req });
+
+  const response = (await SSR.API.graphql({
+    query: listWorkouts,
+  })) as { data: ListWorkoutsQuery };
+
+  return {
+    props: {
+      workouts: response.data.listWorkouts?.items ?? [],
+    },
+  };
 };
 
 export default TrackingPage;

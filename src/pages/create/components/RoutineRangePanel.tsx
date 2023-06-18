@@ -14,7 +14,8 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback, useMemo, useState } from 'react';
+import _ from 'lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useCustomRouteRanges } from '../hooks/useCustomRouteRanges';
 import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
 import { RoutineRouteSlidersForm } from './RoutineRouteSlidersForm';
@@ -41,14 +42,20 @@ export const RoutineRangePanel = ({
   const handleAccordionChange = () => {
     setAccordionIsExpanded(!accordionIsExpanded);
   };
-  const gradeRangeSelectsAreDisabled = useMemo(() => {
-    return Boolean(customRoutineRouteGrades);
-  }, [customRoutineRouteGrades]);
 
   const { initialValues } = useCustomRouteRanges({
     bottomRange: bottomGradeRangeValue,
     topRange: topGradeRangeValue,
   });
+  useEffect(() => {
+    if (!customRoutineRouteGrades) {
+      setCustomRoutineRouteGrades(initialValues);
+    }
+  }, [customRoutineRouteGrades, initialValues, setCustomRoutineRouteGrades]);
+
+  const initialValuesAreNotCustomRanges = useMemo(() => {
+    return !_.isEqual(customRoutineRouteGrades, initialValues);
+  }, [customRoutineRouteGrades, initialValues]);
 
   const resetCustomGradeRanges = useCallback(() => {
     setCustomRoutineRouteGrades(undefined);
@@ -69,7 +76,6 @@ export const RoutineRangePanel = ({
             setBottomGradeRangeValue(e.target.value as GradeRange)
           }
           label="Lower Difficulty Range"
-          disabled={gradeRangeSelectsAreDisabled}
         >
           {routeGradeSelectItems}
         </Select>
@@ -81,12 +87,11 @@ export const RoutineRangePanel = ({
           value={topGradeRangeValue}
           onChange={(e) => setTopGradeRangeValue(e.target.value as GradeRange)}
           label="Upper Difficulty Range"
-          disabled={gradeRangeSelectsAreDisabled}
         >
           {routeGradeSelectItems}
         </Select>
       </FormControl>
-      {customRoutineRouteGrades && (
+      {initialValuesAreNotCustomRanges && (
         <Button
           variant="contained"
           color="secondary"
@@ -113,7 +118,9 @@ export const RoutineRangePanel = ({
           }}
         >
           <Stack alignItems="center">
-            <Typography>Update Routes</Typography>
+            <Typography variant="h6" fontWeight="bold">
+              Route Grades
+            </Typography>
             <ExpandMoreIcon
               sx={{
                 ...(accordionIsExpanded && { transform: 'rotate(180deg)' }),

@@ -62,3 +62,99 @@ export const deleteProject = /* GraphQL */ `
     }
   }
 `;
+export const createWorkout = /* GraphQL */ `
+  mutation CreateWorkout(
+    $input: CreateWorkoutInput!
+    $condition: ModelWorkoutConditionInput
+  ) {
+    createWorkout(input: $input, condition: $condition) {
+      id
+      routineFocus
+      routineFocusWorkout
+      routineWorkoutData
+      strengthWorkout
+      strengthWorkoutData
+      project {
+        id
+        name
+        section
+        color
+        grade
+        sessionCount
+        imageUrl
+        description
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      workoutProjectId
+      owner
+    }
+  }
+`;
+export const updateWorkout = /* GraphQL */ `
+  mutation UpdateWorkout(
+    $input: UpdateWorkoutInput!
+    $condition: ModelWorkoutConditionInput
+  ) {
+    updateWorkout(input: $input, condition: $condition) {
+      id
+      routineFocus
+      routineFocusWorkout
+      routineWorkoutData
+      strengthWorkout
+      strengthWorkoutData
+      project {
+        id
+        name
+        section
+        color
+        grade
+        sessionCount
+        imageUrl
+        description
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      workoutProjectId
+      owner
+    }
+  }
+`;
+export const deleteWorkout = /* GraphQL */ `
+  mutation DeleteWorkout(
+    $input: DeleteWorkoutInput!
+    $condition: ModelWorkoutConditionInput
+  ) {
+    deleteWorkout(input: $input, condition: $condition) {
+      id
+      routineFocus
+      routineFocusWorkout
+      routineWorkoutData
+      strengthWorkout
+      strengthWorkoutData
+      project {
+        id
+        name
+        section
+        color
+        grade
+        sessionCount
+        imageUrl
+        description
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      workoutProjectId
+      owner
+    }
+  }
+`;

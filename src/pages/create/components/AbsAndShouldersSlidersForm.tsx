@@ -1,11 +1,14 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
 import { PauseResumeButton } from '@/SharedComponents/PauseResumeButton/PauseResumeButton';
-import { SkipButton } from '@/SharedComponents/SkipButton/SkipButton';
+import { SubmitButton } from '@/SharedComponents/SubmitButton/SubmitButton';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { timeConverters } from '@/utils/timeConverters';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import UpgradeIcon from '@mui/icons-material/Upgrade';
 import { Button, Stack, Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useSubmitWorkout } from '../hooks/useSubmitWorkout';
 import {
   AbsAndShouldersSlidersFormValues,
   AbsAndShouldersWorkout,
@@ -24,25 +27,30 @@ export const AbsAndShouldersSlidersForm = ({
     resumeTimer,
     timerIsPaused,
     pomoTimer,
+    setPomoTimer,
     strengthWorkoutEstimatedCompletionTimeInSeconds,
     setStrengthWorkoutEstimatedCompletionTimeInSeconds,
     savedStrengthSliders,
     setSavedStrengthSliders,
-    setPomoTimer,
-    setWorkoutStepsCompleted,
   } = useCurrentActiveWorkout();
+  const { onSubmit, loading } = useSubmitWorkout();
   const { formattedSecondsToMinuteSeconds } = timeConverters();
 
   const initialValues = useMemo(() => {
-    return Object.fromEntries(
-      Object.entries(savedStrengthSliders ?? workouts.workouts).map(
-        ([key, val]) => {
+    return (savedStrengthSliders ??
+      Object.fromEntries(
+        Object.entries(workouts.workouts).map(([key, val]) => {
           const { name, defaultSets, ...rest } = val;
           return [key, rest];
-        }
-      )
-    ) as AbsAndShouldersSlidersFormValues;
+        })
+      )) as AbsAndShouldersSlidersFormValues;
   }, [savedStrengthSliders, workouts.workouts]);
+
+  useEffect(() => {
+    if (!savedStrengthSliders) {
+      setSavedStrengthSliders(initialValues);
+    }
+  }, [initialValues, savedStrengthSliders, setSavedStrengthSliders]);
 
   const workoutCards = useMemo(() => {
     return Object.entries(workouts.workouts).map(
@@ -57,15 +65,6 @@ export const AbsAndShouldersSlidersForm = ({
       }
     );
   }, [workouts.workouts]);
-
-  const onSubmit = useCallback(() => {
-    return undefined;
-  }, []);
-
-  const endStrengthStep = useCallback(() => {
-    setWorkoutStepsCompleted((prev) => [...prev, 'strength']);
-    // submit workout
-  }, [setWorkoutStepsCompleted]);
 
   const updateTimerIfNotStarted = useCallback(
     (formTime: number) => {
@@ -168,8 +167,8 @@ export const AbsAndShouldersSlidersForm = ({
                 ) && (
                   <Button
                     fullWidth
-                    variant="contained"
-                    color="secondary"
+                    variant="outlined"
+                    endIcon={<UpgradeIcon />}
                     onClick={() =>
                       updateEstimatedTimeAndPomoTimer(
                         formEstimatedCompletionTimeInSeconds,
@@ -184,8 +183,8 @@ export const AbsAndShouldersSlidersForm = ({
                 {savedStrengthSliders && (
                   <Button
                     fullWidth
-                    variant="contained"
-                    color="secondary"
+                    variant="outlined"
+                    endIcon={<RestartAltIcon />}
                     onClick={() =>
                       resetFormSliders(formEstimatedCompletionTimeInSeconds)
                     }
@@ -201,9 +200,16 @@ export const AbsAndShouldersSlidersForm = ({
                   pauseAction={pauseTimer}
                   pauseText="Pause Workout"
                 />
-                <SkipButton
-                  onClick={endStrengthStep}
-                  buttonText="end workout"
+                <SubmitButton
+                  status={loading}
+                  submitText="end workout"
+                  badgeProps={{
+                    sx: { width: '100%' },
+                  }}
+                  buttonProps={{
+                    variant: 'contained',
+                    onClick: onSubmit,
+                  }}
                 />
               </CardContentContainer>
 
