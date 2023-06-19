@@ -54,11 +54,11 @@ export const SubmitButton = ({
       case 'pending':
         return buttonProps?.color;
       case 'success':
-        return 'secondary';
+        return buttonProps?.color;
       case 'error':
         return 'secondary';
       default:
-        return buttonProps?.color;
+        return 'secondary';
     }
   }, [buttonProps?.color, status]);
 

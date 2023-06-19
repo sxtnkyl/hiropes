@@ -91,8 +91,6 @@ export type StrengthWorkoutDetail = {
   weight: number[];
 };
 
-export type SavedStrengthSliders = { [key: string]: WorkoutDetail };
-
 export type StrengthName = { name: string };
 export type BenchAndSquatWorkout = {
   workouts: { [key in BenchAndSquatWorkoutNames]: StrengthWorkoutDetail };
@@ -116,6 +114,7 @@ export type BenchAndSquatSlidersFormValues = {
 export type AbsAndShouldersSlidersFormValues = {
   [key in AbsAndShouldersWorkoutNames]: WorkoutFormValue;
 };
+export type SavedStrengthSliders = { [key: string]: WorkoutFormValue };
 
 /** State */
 // export type RoutineFocusWorkout<T = RoutineFocus> =
