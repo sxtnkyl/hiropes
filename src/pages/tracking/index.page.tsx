@@ -20,7 +20,7 @@ const trackingActionTabs: TabProps[] = [
 const TrackingPage = ({ workouts }: { workouts: Workout[] }) => {
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
 
-  const [activeTab, setActiveTab] = useState<string | false>(false);
+  const [activeTab, setActiveTab] = useState<string | false>('workouts');
 
   const trackingTabs = trackingActionTabs.map((option, i) => (
     <Tab {...option} key={i} />

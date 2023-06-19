@@ -13,6 +13,7 @@ import {
   ReactNode,
   SetStateAction,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -53,6 +54,7 @@ export interface CurrentActiveWorkoutContextProps {
   setSavedStrengthSliders: Dispatch<
     SetStateAction<SavedStrengthSliders | undefined>
   >;
+  resetActiveWorkout: () => void;
 }
 
 const CurrentActiveWorkoutContext =
@@ -132,6 +134,18 @@ export const CurrentActiveWorkoutProvider = ({
   const [savedStrengthSliders, setSavedStrengthSliders] =
     useState<SavedStrengthSliders>();
 
+  const resetActiveWorkout = useCallback(() => {
+    setActiveWorkoutStep('start');
+    setWorkoutInProgress(false);
+    setWorkoutStepsCompleted([]);
+    setActiveStepTimer('start');
+    setActiveWorkout({});
+    setSavedRoutineInterval(undefined);
+    setCustomRoutineRouteGrades(undefined);
+    setStrengthWorkoutEstimatedCompletionTimeInSeconds(undefined);
+    setSavedStrengthSliders(undefined);
+  }, []);
+
   return (
     <CurrentActiveWorkoutContext.Provider
       value={{
@@ -160,6 +174,7 @@ export const CurrentActiveWorkoutProvider = ({
         setStrengthWorkoutEstimatedCompletionTimeInSeconds,
         savedStrengthSliders,
         setSavedStrengthSliders,
+        resetActiveWorkout,
       }}
     >
       {children}
