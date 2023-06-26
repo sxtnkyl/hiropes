@@ -14,26 +14,18 @@ import { useEffect } from 'react';
 import config from '../aws-exports';
 import Layout from './Layout';
 
-Amplify.configure(config);
+Amplify.configure({ ...config, ssr: true });
 const clientSideEmotionCache = createEmotionCache();
 
 export interface NextWithMui extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-export default function App({
+export const App = ({
   Component,
   pageProps,
-  router,
   emotionCache = clientSideEmotionCache,
-}: NextWithMui) {
-  const { currentAuthenticatedUser } = pageProps;
-
-  const AuthenticatedComponent =
-    currentAuthenticatedUser || router.route === '/'
-      ? Component
-      : withAuthenticator(Component);
-
+}: NextWithMui) => {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -58,7 +50,7 @@ export default function App({
               <CurrentActiveWorkoutProvider>
                 <CssBaseline />
                 <Layout>
-                  <AuthenticatedComponent {...pageProps} />
+                  <Component {...pageProps} />
                 </Layout>
               </CurrentActiveWorkoutProvider>
             </GlobalSideNavProvider>
@@ -67,4 +59,6 @@ export default function App({
       </CacheProvider>
     </div>
   );
-}
+};
+
+export default withAuthenticator(App);
