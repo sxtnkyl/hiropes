@@ -1,11 +1,12 @@
 import { Workout } from '@/API';
 import { Stack } from '@mui/material';
+import ViewEditWorkoutCard from './components/ViewEditWorkoutCard';
 
 export const TrackingWorkoutsPage = ({ workouts }: { workouts: Workout[] }) => {
   return (
-    <Stack>
+    <Stack spacing={1}>
       {workouts.map((workout) => (
-        <div key={workout.id}>{workout.id}</div>
+        <ViewEditWorkoutCard key={workout.id} workout={workout} />
       ))}
     </Stack>
   );

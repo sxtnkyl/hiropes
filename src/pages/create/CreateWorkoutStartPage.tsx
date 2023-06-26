@@ -4,7 +4,12 @@ import { timeConverters } from '@/utils/timeConverters';
 import { routineDetails, strengthWorkouts } from '@/utils/workoutDetails';
 import { Button, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo } from 'react';
-import { RoutineFocus, StrengthWorkoutGroup } from './types/createTypes';
+import {
+  RoutineFocus,
+  RoutineFocusWorkoutKeys,
+  StrengthWorkoutGroup,
+  WorkoutAssertions,
+} from './types/createTypes';
 
 const CreateWorkoutStartPage = () => {
   const {
@@ -72,17 +77,17 @@ const CreateWorkoutStartPage = () => {
           routine === activeWorkout.routineFocus ? 'contained' : 'outlined'
         }
       >
-        {routine}
+        {WorkoutAssertions[routine as RoutineFocus]}
       </Button>
     ));
   }, [handleRoutineFocusClick, activeWorkout.routineFocus]);
 
   const routineFocusWorkoutsButtons = useMemo(() => {
     if (activeWorkout.routineFocus) {
-      const selectedRoutineWorkouts = Object.entries(
+      const selectedRoutineWorkouts = Object.keys(
         routineDetails[activeWorkout.routineFocus]
       );
-      return selectedRoutineWorkouts.map(([workoutName, workoutDetails]) => (
+      return selectedRoutineWorkouts.map((workoutName) => (
         <Button
           key={workoutName}
           value={workoutName}
@@ -93,7 +98,7 @@ const CreateWorkoutStartPage = () => {
               : 'outlined'
           }
         >
-          {workoutDetails.name}
+          {WorkoutAssertions[workoutName as RoutineFocusWorkoutKeys]}
         </Button>
       ));
     }
@@ -105,22 +110,18 @@ const CreateWorkoutStartPage = () => {
 
   const strengthWorkoutButtons = useMemo(() => {
     if (activeWorkout.routineFocusWorkout) {
-      return Object.entries(strengthWorkouts).map(
-        ([workout, workoutDetails]) => (
-          <Button
-            key={workout}
-            value={workout}
-            onClick={handleStrengthWorkoutClick}
-            variant={
-              workout === activeWorkout.strengthWorkout
-                ? 'contained'
-                : 'outlined'
-            }
-          >
-            {workoutDetails.name}
-          </Button>
-        )
-      );
+      return Object.keys(strengthWorkouts).map((workout) => (
+        <Button
+          key={workout}
+          value={workout}
+          onClick={handleStrengthWorkoutClick}
+          variant={
+            workout === activeWorkout.strengthWorkout ? 'contained' : 'outlined'
+          }
+        >
+          {WorkoutAssertions[workout as StrengthWorkoutGroup]}
+        </Button>
+      ));
     }
   }, [
     handleStrengthWorkoutClick,

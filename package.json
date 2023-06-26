@@ -28,6 +28,7 @@
     "@types/react-dom": "18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "aws-amplify": "^5.0.24",
+    "dayjs": "^1.11.8",
     "eslint-config-next": "13.2.4",
     "eslint-config-prettier": "^8.8.0",
     "formik": "^2.2.9",

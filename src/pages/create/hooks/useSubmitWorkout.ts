@@ -18,15 +18,7 @@ export const useSubmitWorkout = (): UseSubmitWorkout => {
     activeWorkout,
     customRoutineRouteGrades,
     savedStrengthSliders,
-    setActiveWorkoutStep,
-    setWorkoutInProgress,
-    setWorkoutStepsCompleted,
-    setActiveStepTimer,
-    setActiveWorkout,
-    setSavedRoutineInterval,
-    setCustomRoutineRouteGrades,
-    setStrengthWorkoutEstimatedCompletionTimeInSeconds,
-    setSavedStrengthSliders,
+    resetActiveWorkout,
   } = useCurrentActiveWorkout();
 
   const [loading, setLoading] = useState<SubmissionStatus>('inactive');
@@ -60,16 +52,7 @@ export const useSubmitWorkout = (): UseSubmitWorkout => {
       } else {
         setLoading('success');
         router.push('/tracking');
-        // reset current project context
-        setActiveWorkoutStep('start');
-        setWorkoutInProgress(false);
-        setWorkoutStepsCompleted([]);
-        setActiveStepTimer('start');
-        setActiveWorkout({});
-        setSavedRoutineInterval(undefined);
-        setCustomRoutineRouteGrades(undefined);
-        setStrengthWorkoutEstimatedCompletionTimeInSeconds(undefined);
-        setSavedStrengthSliders(undefined);
+        resetActiveWorkout();
       }
     } catch (err: unknown) {
       setLoading('error');
@@ -80,17 +63,9 @@ export const useSubmitWorkout = (): UseSubmitWorkout => {
     activeWorkout?.routineFocusWorkout,
     activeWorkout?.strengthWorkout,
     customRoutineRouteGrades,
+    resetActiveWorkout,
     router,
     savedStrengthSliders,
-    setActiveStepTimer,
-    setActiveWorkout,
-    setActiveWorkoutStep,
-    setCustomRoutineRouteGrades,
-    setSavedRoutineInterval,
-    setSavedStrengthSliders,
-    setStrengthWorkoutEstimatedCompletionTimeInSeconds,
-    setWorkoutInProgress,
-    setWorkoutStepsCompleted,
   ]);
 
   return { onSubmit, loading };

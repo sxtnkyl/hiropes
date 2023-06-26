@@ -10,6 +10,41 @@ import { GradeRange } from '@/pages/projects/types/projectTypes';
  */
 
 /** Workout Session */
+export const WorkoutAssertions = {
+  /** routine focus */
+  endurance: 'Endurance',
+  power: 'Power',
+  fingerStrength: 'Finger Strength',
+  /** routine focus workouts */
+  // endurance
+  sixBySix: '6x6',
+  fourByFour: '4x4',
+  thirtyCircuit: '30 Circuit',
+  pyramidLong: 'Pyramid Long',
+  // power
+  twentyInTwenty: 'Twenty In Twenty',
+  pyramidPump: 'Pyramid Pump',
+  sevenThrees: '7-3s',
+  // finger
+  quickIntervalTest: 'Quick Interval Test',
+  campus: 'Campus',
+  oneArmPullUp: 'One Arm Pull Up',
+  /** strength */
+  benchAndSquat: 'Bench and Squat',
+  absAndShoulders: 'Abs and Shoulders',
+  // bench and squat
+  bench: 'Bench',
+  squat: 'Squat',
+  singleLegSquat: 'Single Leg Squat',
+  dips: 'Dips',
+  // abs and shoulders
+  hangingKneeRaises: 'Hanging Knee Raises',
+  planche: 'Planche',
+  overheadPress: 'Overhead Press',
+  lateralToFrontRaises: 'Lateral To Front Raises',
+  oneArmInvertedRow: 'One Arm Inverted Row',
+} as const;
+
 export type RoutineFocus = 'endurance' | 'power' | 'fingerStrength';
 export type WorkoutStep =
   | 'start'
@@ -50,14 +85,20 @@ export type WorkoutDetail = {
   routeDifficultyRangeSortType: RouteDifficultyRangeSortType;
 };
 
-// export type EnduranceWorkoutKeys =
-//   | 'sixBySix'
-//   | 'fourByFour'
-//   | 'thirtyCircuit'
-//   | 'pyramidLong';
-// export type PowerWorkoutKeys = 'twentyInTwenty' | 'pyramidPump' | 'sevenThrees';
-// export type FingerStrengthWorkoutKeys = 'tempFinger';
-
+export type EnduranceWorkoutKeys =
+  | 'sixBySix'
+  | 'fourByFour'
+  | 'thirtyCircuit'
+  | 'pyramidLong';
+export type PowerWorkoutKeys = 'twentyInTwenty' | 'pyramidPump' | 'sevenThrees';
+export type FingerStrengthWorkoutKeys =
+  | 'quickIntervalTest'
+  | 'campus'
+  | 'oneArmPullUp';
+export type RoutineFocusWorkoutKeys =
+  | EnduranceWorkoutKeys
+  | PowerWorkoutKeys
+  | FingerStrengthWorkoutKeys;
 // export type EnduranceWorkouts = {
 //   [K in EnduranceWorkoutKeys]: WorkoutDetail;
 // };
@@ -83,6 +124,9 @@ export type AbsAndShouldersWorkoutNames =
   | 'overheadPress'
   | 'lateralToFrontRaises'
   | 'oneArmInvertedRow';
+export type StrengthWorkoutKeys =
+  | BenchAndSquatWorkoutNames
+  | AbsAndShouldersWorkoutNames;
 
 export type StrengthWorkoutDetail = {
   name: string;
