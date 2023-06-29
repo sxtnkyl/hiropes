@@ -132,17 +132,27 @@ const TrackingPage = ({ workouts }: { workouts: Workout[] }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const SSR = withSSRContext({ req });
+  try {
+    const SSR = withSSRContext({ req });
+    await SSR.Auth.currentAuthenticatedUser();
 
-  const response = (await SSR.API.graphql({
-    query: listWorkouts,
-  })) as { data: ListWorkoutsQuery };
+    const response = (await SSR.API.graphql({
+      query: listWorkouts,
+    })) as { data: ListWorkoutsQuery };
 
-  return {
-    props: {
-      workouts: response.data.listWorkouts?.items ?? [],
-    },
-  };
+    return {
+      props: {
+        workouts: response.data.listWorkouts?.items ?? [],
+      },
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
 };
 
 export default TrackingPage;

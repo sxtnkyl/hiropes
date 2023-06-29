@@ -40,7 +40,10 @@ export const ActiveUserProvider = ({ children }: { children: ReactNode }) => {
         case 'signIn':
           return router.push('/profile');
         case 'signOut':
-          return setSignedInUser(undefined);
+          return () => {
+            router.push('/');
+            setSignedInUser(undefined);
+          };
       }
     });
 
