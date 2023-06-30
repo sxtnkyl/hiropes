@@ -29,7 +29,7 @@ const CreateWorkoutStartPage = () => {
     setWorkoutStepsCompleted(['start']);
     setActiveStepTimer('warmup');
     setActiveWorkoutStep('warmup');
-    setPomoTimer(hoursToSeconds(0.004));
+    setPomoTimer(hoursToSeconds(0.25));
     resumeTimer();
   };
 
