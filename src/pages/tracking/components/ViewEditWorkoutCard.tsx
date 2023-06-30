@@ -1,4 +1,5 @@
 import { Workout } from '@/API';
+import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
 import { SubmitButton } from '@/SharedComponents/SubmitButton/SubmitButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -6,6 +7,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
   IconButton,
   Stack,
   Typography,
@@ -37,67 +39,72 @@ export const ViewEditWorkoutCard = ({ workout }: { workout: Workout }) => {
   }, [workout]);
 
   return (
-    <Accordion
-      expanded={isExpanded}
-      onChange={handleAccordionChange}
-      sx={{ padding: `0 1rem` }}
-    >
-      <AccordionSummary
-        sx={{
-          '& .MuiAccordionSummary-content': {
-            display: 'flex',
-            justifyContent: 'space-between',
-          },
-        }}
+    <Box position="relative">
+      <LoadingOverlay
+        loading={editLoading === 'pending' || deleteLoading === 'pending'}
+      />
+      <Accordion
+        expanded={isExpanded}
+        onChange={handleAccordionChange}
+        sx={{ padding: `0 1rem` }}
       >
-        <Typography variant="h6">{formattedDateTitle}</Typography>
-        <ExpandMoreIcon
+        <AccordionSummary
           sx={{
-            ...(isExpanded && { transform: 'rotate(180deg)' }),
+            '& .MuiAccordionSummary-content': {
+              display: 'flex',
+              justifyContent: 'space-between',
+            },
           }}
-        />
-      </AccordionSummary>
-      <AccordionDetails>
-        <Formik<ViewEditWorkoutCardFormValues>
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-          enableReinitialize
         >
-          {({ dirty, resetForm }) => (
-            <Form>
-              <Stack spacing={2.5} marginBottom={1}>
-                <IconButton
-                  sx={{ alignSelf: 'flex-end' }}
-                  onClick={() => {
-                    resetForm();
-                  }}
-                >
-                  <RestartAltIcon />
-                </IconButton>
-                <WorkoutForm />
-                <SubmitButton
-                  status={editLoading}
-                  buttonProps={{
-                    variant: 'contained',
-                    type: 'submit',
-                    disabled: !dirty || editLoading !== 'inactive',
-                  }}
-                />
-                <SubmitButton
-                  status={deleteLoading}
-                  submitText="delete"
-                  buttonProps={{
-                    variant: 'contained',
-                    type: 'button',
-                    onClick: () => onDelete(workout.id),
-                  }}
-                />
-              </Stack>
-            </Form>
-          )}
-        </Formik>
-      </AccordionDetails>
-    </Accordion>
+          <Typography variant="h6">{formattedDateTitle}</Typography>
+          <ExpandMoreIcon
+            sx={{
+              ...(isExpanded && { transform: 'rotate(180deg)' }),
+            }}
+          />
+        </AccordionSummary>
+        <AccordionDetails>
+          <Formik<ViewEditWorkoutCardFormValues>
+            initialValues={initialValues}
+            onSubmit={onSubmit}
+            enableReinitialize
+          >
+            {({ dirty, resetForm }) => (
+              <Form>
+                <Stack spacing={2.5} marginBottom={1}>
+                  <IconButton
+                    sx={{ alignSelf: 'flex-end' }}
+                    onClick={() => {
+                      resetForm();
+                    }}
+                  >
+                    <RestartAltIcon />
+                  </IconButton>
+                  <WorkoutForm />
+                  <SubmitButton
+                    status={editLoading}
+                    buttonProps={{
+                      variant: 'contained',
+                      type: 'submit',
+                      disabled: !dirty || editLoading !== 'inactive',
+                    }}
+                  />
+                  <SubmitButton
+                    status={deleteLoading}
+                    submitText="delete"
+                    buttonProps={{
+                      variant: 'contained',
+                      type: 'button',
+                      onClick: () => onDelete(workout.id),
+                    }}
+                  />
+                </Stack>
+              </Form>
+            )}
+          </Formik>
+        </AccordionDetails>
+      </Accordion>
+    </Box>
   );
 };
 

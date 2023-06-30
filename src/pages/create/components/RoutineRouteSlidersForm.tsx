@@ -37,7 +37,9 @@ export const RoutineRouteSlidersForm = ({
           <SliderFormField
             key={key}
             label={
-              <Typography
+              <Stack
+                direction="row"
+                justifyContent="space-between"
                 sx={{
                   ...(routineInterval.activeInterval === 'rep' &&
                     savedRoutineInterval?.previousRep &&
@@ -46,8 +48,9 @@ export const RoutineRouteSlidersForm = ({
                     }),
                 }}
               >
-                {label}
-              </Typography>
+                <Typography>{label}</Typography>
+                <Typography>{value}</Typography>
+              </Stack>
             }
             aria-label={label}
             name={key}
