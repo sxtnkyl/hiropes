@@ -1,4 +1,5 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
+import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
 import { PauseResumeButton } from '@/SharedComponents/PauseResumeButton/PauseResumeButton';
 import { SubmitButton } from '@/SharedComponents/SubmitButton/SubmitButton';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
@@ -143,6 +144,7 @@ export const AbsAndShouldersSlidersForm = ({
           <Form>
             <Stack spacing={3}>
               <CardContentContainer stackProps={{ spacing: 6 }}>
+                <LoadingOverlay loading={loading === 'pending'} />
                 <Typography variant="h2" fontWeight="bold">
                   {workouts.name}
                 </Typography>
