@@ -7,17 +7,17 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
   FormControl,
   InputLabel,
   Select,
   Stack,
   Typography,
 } from '@mui/material';
-import _ from 'lodash';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Formik } from 'formik';
+import { useEffect, useState } from 'react';
 import { useCustomRouteRanges } from '../hooks/useCustomRouteRanges';
 import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
+import { RepSetDataObject } from '../types/createTypes';
 import { RoutineRouteSlidersForm } from './RoutineRouteSlidersForm';
 
 export const RoutineRangePanel = ({
@@ -53,14 +53,6 @@ export const RoutineRangePanel = ({
     }
   }, [customRoutineRouteGrades, initialValues, setCustomRoutineRouteGrades]);
 
-  const initialValuesAreNotCustomRanges = useMemo(() => {
-    return !_.isEqual(customRoutineRouteGrades, initialValues);
-  }, [customRoutineRouteGrades, initialValues]);
-
-  const resetCustomGradeRanges = useCallback(() => {
-    setCustomRoutineRouteGrades(undefined);
-  }, [setCustomRoutineRouteGrades]);
-
   return (
     <CardContentContainer stackProps={{ spacing: 4 }}>
       <Typography variant="h3" fontWeight="bold">
@@ -91,15 +83,6 @@ export const RoutineRangePanel = ({
           {routeGradeSelectItems}
         </Select>
       </FormControl>
-      {initialValuesAreNotCustomRanges && (
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={resetCustomGradeRanges}
-        >
-          Reset Custom Route Ranges
-        </Button>
-      )}
 
       <Accordion
         expanded={accordionIsExpanded}
@@ -129,10 +112,15 @@ export const RoutineRangePanel = ({
           </Stack>
         </AccordionSummary>
         <AccordionDetails>
-          <RoutineRouteSlidersForm
-            initialValues={customRoutineRouteGrades ?? initialValues}
-            routineInterval={routineInterval}
-          />
+          <Formik<RepSetDataObject>
+            initialValues={initialValues}
+            enableReinitialize
+            onSubmit={(values) => setCustomRoutineRouteGrades(values)}
+          >
+            {() => (
+              <RoutineRouteSlidersForm routineInterval={routineInterval} />
+            )}
+          </Formik>
         </AccordionDetails>
       </Accordion>
     </CardContentContainer>

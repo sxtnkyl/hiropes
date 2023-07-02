@@ -2,20 +2,19 @@ import SliderFormField from '@/SharedComponents/FormFieldComponents/SliderFormFi
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import theme from '@/styles/theme';
 import { Stack, Typography } from '@mui/material';
-import { Form, Formik } from 'formik';
+import { Form, useFormikContext } from 'formik';
 import { useCallback, useMemo } from 'react';
 import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
 import { RepSetDataObject } from '../types/createTypes';
 
 export const RoutineRouteSlidersForm = ({
-  initialValues,
   routineInterval,
 }: {
-  initialValues: RepSetDataObject;
   routineInterval: RoutineInterval;
 }) => {
   const { savedRoutineInterval, setCustomRoutineRouteGrades } =
     useCurrentActiveWorkout();
+  const { values } = useFormikContext<RepSetDataObject>();
 
   const intervalTimerValuesToFormKeyFormat = useMemo(() => {
     if (
@@ -28,7 +27,7 @@ export const RoutineRouteSlidersForm = ({
 
   const sliders = useCallback(
     (values: RepSetDataObject) => {
-      return Object.entries(initialValues).map(([key, value]) => {
+      return Object.entries(values).map(([key, value]) => {
         const label = `Route ${key}`;
         const valueText = (value: number) =>
           value === 10 ? `V${value}+` : `V${value}`;
@@ -79,7 +78,6 @@ export const RoutineRouteSlidersForm = ({
       });
     },
     [
-      initialValues,
       intervalTimerValuesToFormKeyFormat,
       routineInterval.activeInterval,
       savedRoutineInterval?.previousRep,
@@ -87,16 +85,8 @@ export const RoutineRouteSlidersForm = ({
     ]
   );
   return (
-    <Formik<RepSetDataObject>
-      initialValues={initialValues}
-      enableReinitialize
-      onSubmit={(values) => setCustomRoutineRouteGrades(values)}
-    >
-      {({ values }) => (
-        <Form>
-          <Stack>{sliders(values)}</Stack>
-        </Form>
-      )}
-    </Formik>
+    <Form>
+      <Stack>{sliders(values)}</Stack>
+    </Form>
   );
 };
