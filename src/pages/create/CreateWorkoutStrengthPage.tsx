@@ -2,8 +2,8 @@ import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext'
 import { strengthWorkouts } from '@/utils/workoutDetails';
 import { Stack } from '@mui/material';
 import { useMemo } from 'react';
-import { AbsAndShouldersSlidersForm } from './components/AbsAndShouldersSlidersForm';
-import { BenchAndSquatSlidersForm } from './components/BenchAndSquatSlidersForm';
+import { AbsAndShouldersSlidersFormWrapper } from './components/AbsAndShouldersSlidersForm';
+import { BenchAndSquatSlidersFormWrapper } from './components/BenchAndSquatSlidersForm';
 import {
   AbsAndShouldersWorkout,
   BenchAndSquatWorkout,
@@ -29,12 +29,12 @@ export const CreateWorkoutStrengthPage = () => {
   return (
     <Stack spacing={2}>
       {isBenchAndSquatAndHasData && (
-        <BenchAndSquatSlidersForm
+        <BenchAndSquatSlidersFormWrapper
           workouts={strengthWorkoutDetails as BenchAndSquatWorkout}
         />
       )}
       {isAbsAndShouldersAndHasData && (
-        <AbsAndShouldersSlidersForm
+        <AbsAndShouldersSlidersFormWrapper
           workouts={strengthWorkoutDetails as AbsAndShouldersWorkout}
         />
       )}
