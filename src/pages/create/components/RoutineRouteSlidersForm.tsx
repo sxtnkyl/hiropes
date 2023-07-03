@@ -3,7 +3,7 @@ import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext'
 import theme from '@/styles/theme';
 import { Stack, Typography } from '@mui/material';
 import { Form, useFormikContext } from 'formik';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
 import { RepSetDataObject } from '../types/createTypes';
 
@@ -25,68 +25,67 @@ export const RoutineRouteSlidersForm = ({
     }
   }, [savedRoutineInterval?.previousRep, savedRoutineInterval?.previousSet]);
 
-  const sliders = useCallback(
-    (values: RepSetDataObject) => {
-      return Object.entries(values).map(([key, value]) => {
-        const label = `Route ${key}`;
-        const valueText = (value: number) =>
-          value === 10 ? `V${value}+` : `V${value}`;
+  const sliders = useMemo(() => {
+    return Object.entries(values).map(([key, value]) => {
+      const label = `Route ${key}`;
+      const valueText = (value: number) =>
+        value === 10 ? `V${value}+` : `V${value}`;
 
-        return (
-          <SliderFormField
-            key={key}
-            label={
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                sx={{
-                  ...(routineInterval.activeInterval === 'rep' &&
-                    savedRoutineInterval?.previousRep &&
-                    key === intervalTimerValuesToFormKeyFormat && {
-                      color: `${theme.palette.secondary.main}`,
-                    }),
-                }}
-              >
-                <Typography>{label}</Typography>
-                <Typography>{value}</Typography>
-              </Stack>
-            }
-            aria-label={label}
-            name={key}
-            onChange={() => setCustomRoutineRouteGrades(values)}
-            defaultValue={value}
-            getAriaValueText={(value) => valueText(value)}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => valueText(value)}
-            step={1}
-            marks
-            min={0}
-            max={10}
-            componentsProps={{
-              thumb: {
-                style: {
-                  ...(routineInterval.activeInterval === 'rep' &&
-                    savedRoutineInterval?.previousRep &&
-                    key === intervalTimerValuesToFormKeyFormat && {
-                      backgroundColor: `${theme.palette.secondary.main}`,
-                    }),
-                },
+      return (
+        <SliderFormField
+          key={key}
+          label={
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              sx={{
+                ...(routineInterval.activeInterval === 'rep' &&
+                  savedRoutineInterval?.previousRep &&
+                  key === intervalTimerValuesToFormKeyFormat && {
+                    color: `${theme.palette.secondary.main}`,
+                  }),
+              }}
+            >
+              <Typography>{label}</Typography>
+              <Typography>{value}</Typography>
+            </Stack>
+          }
+          aria-label={label}
+          name={key}
+          onChange={() => setCustomRoutineRouteGrades(values)}
+          defaultValue={value}
+          getAriaValueText={(value) => valueText(value)}
+          valueLabelDisplay="auto"
+          valueLabelFormat={(value) => valueText(value)}
+          step={1}
+          marks
+          min={0}
+          max={10}
+          componentsProps={{
+            thumb: {
+              style: {
+                ...(routineInterval.activeInterval === 'rep' &&
+                  savedRoutineInterval?.previousRep &&
+                  key === intervalTimerValuesToFormKeyFormat && {
+                    backgroundColor: `${theme.palette.secondary.main}`,
+                  }),
               },
-            }}
-          />
-        );
-      });
-    },
-    [
-      intervalTimerValuesToFormKeyFormat,
-      routineInterval.activeInterval,
-      savedRoutineInterval?.previousRep,
-      setCustomRoutineRouteGrades,
-    ]
-  );
+            },
+          }}
+        />
+      );
+    });
+  }, [
+    intervalTimerValuesToFormKeyFormat,
+    routineInterval.activeInterval,
+    savedRoutineInterval?.previousRep,
+    setCustomRoutineRouteGrades,
+    values,
+  ]);
+
   return (
     <Form>
-      <Stack>{sliders(values)}</Stack>
+      <Stack>{sliders}</Stack>
     </Form>
   );
 };
