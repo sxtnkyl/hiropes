@@ -3,7 +3,7 @@ import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext'
 import theme from '@/styles/theme';
 import { Stack, Typography } from '@mui/material';
 import { Form, useFormikContext } from 'formik';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
 import { RepSetDataObject } from '../types/createTypes';
 
@@ -15,6 +15,9 @@ export const RoutineRouteSlidersForm = ({
   const { savedRoutineInterval, setCustomRoutineRouteGrades } =
     useCurrentActiveWorkout();
   const { values } = useFormikContext<RepSetDataObject>();
+  useEffect(() => {
+    setCustomRoutineRouteGrades(values);
+  }, [setCustomRoutineRouteGrades, values]);
 
   const intervalTimerValuesToFormKeyFormat = useMemo(() => {
     if (
@@ -52,7 +55,6 @@ export const RoutineRouteSlidersForm = ({
           }
           aria-label={label}
           name={key}
-          onChange={() => setCustomRoutineRouteGrades(values)}
           defaultValue={value}
           getAriaValueText={(value) => valueText(value)}
           valueLabelDisplay="auto"
@@ -79,7 +81,6 @@ export const RoutineRouteSlidersForm = ({
     intervalTimerValuesToFormKeyFormat,
     routineInterval.activeInterval,
     savedRoutineInterval?.previousRep,
-    setCustomRoutineRouteGrades,
     values,
   ]);
 
