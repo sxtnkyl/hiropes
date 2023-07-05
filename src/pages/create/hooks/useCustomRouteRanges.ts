@@ -15,6 +15,11 @@ export interface UseCustomRouteRanges {
   initialValues: RepSetDataObject;
 }
 
+/**
+ *
+ * @returns RepSetDataObject key as 'set-rep'
+ * ex. {'1-1': 8, '1-2': 9}
+ */
 export const useCustomRouteRanges = ({
   bottomRange,
   topRange,

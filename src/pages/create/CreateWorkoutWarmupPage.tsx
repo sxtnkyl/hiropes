@@ -25,7 +25,7 @@ export const CreateWorkoutWarmupPage = () => {
     setWorkoutStepsCompleted((prev) => [...prev, 'warmup']);
     setActiveWorkoutStep('project');
     setActiveStepTimer('project');
-    setPomoTimer(hoursToSeconds(0.025));
+    setPomoTimer(hoursToSeconds(0.25));
   }, [
     hoursToSeconds,
     setActiveStepTimer,

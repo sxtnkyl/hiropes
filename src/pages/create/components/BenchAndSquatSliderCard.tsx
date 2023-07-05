@@ -1,7 +1,9 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
 import SliderFormField from '@/SharedComponents/FormFieldComponents/SliderFormField';
+import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { Box, Stack, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
+import { useEffect } from 'react';
 import {
   BenchAndSquatSlidersFormValues,
   BenchAndSquatWorkoutNames,
@@ -15,7 +17,11 @@ export const BenchAndSquatSliderCard = ({
   workoutKey: BenchAndSquatWorkoutNames;
   workoutDetails: StrengthWorkoutDetail;
 }) => {
+  const { setSavedStrengthSliders } = useCurrentActiveWorkout();
   const { values } = useFormikContext<BenchAndSquatSlidersFormValues>();
+  useEffect(() => {
+    setSavedStrengthSliders(values);
+  }, [setSavedStrengthSliders, values]);
 
   return (
     <CardContentContainer>

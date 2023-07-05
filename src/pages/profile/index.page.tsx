@@ -3,10 +3,10 @@ import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionH
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
 import { useActiveUser } from '@/contexts/ActiveUserContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
+import { useAuthenticator } from '@aws-amplify/ui-react';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps, Typography } from '@mui/material';
-import { useRouter } from 'next/router';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useCallback, useState } from 'react';
 
 const profileActionTabs: TabProps[] = [
   { label: 'update', value: 'update' },
@@ -17,7 +17,7 @@ const profileActionTabs: TabProps[] = [
 type ActiveProfileTab = 'update' | 'settings' | 'logout';
 
 const ProfilePage = () => {
-  const router = useRouter();
+  const auth = useAuthenticator();
   const { signedInUser } = useActiveUser();
   const { setIsGlobalSideNavOpen } = useGlobalSideNav();
 
@@ -27,12 +27,9 @@ const ProfilePage = () => {
     <Tab {...option} key={i} />
   ));
 
-  const signoutHandler = () => {
-    if (signedInUser?.signOut) {
-      signedInUser?.signOut();
-      router.push('/');
-    }
-  };
+  const signOutHandler = useCallback(() => {
+    auth.signOut();
+  }, [auth]);
 
   const handleTabChange = (
     event: SyntheticEvent,
@@ -68,7 +65,7 @@ const ProfilePage = () => {
         {activeTab === 'settings' && <div>update settings</div>}
         {activeTab === 'logout' && (
           <div>
-            <button onClick={signoutHandler}>Sign Out</button>
+            <button onClick={signOutHandler}>Sign Out</button>
           </div>
         )}
       </main>

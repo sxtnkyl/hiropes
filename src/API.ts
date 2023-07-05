@@ -107,18 +107,26 @@ export type DeleteProjectInput = {
   id: string;
 };
 
-export type ModelProjectFilterInput = {
-  id?: ModelIDInput | null;
-  name?: ModelStringInput | null;
-  section?: ModelStringInput | null;
-  color?: ModelStringInput | null;
-  grade?: ModelStringInput | null;
-  sessionCount?: ModelIntInput | null;
-  imageUrl?: ModelStringInput | null;
-  description?: ModelStringInput | null;
-  and?: Array<ModelProjectFilterInput | null> | null;
-  or?: Array<ModelProjectFilterInput | null> | null;
-  not?: ModelProjectFilterInput | null;
+export type CreateWorkoutInput = {
+  id?: string | null;
+  routineFocus?: string | null;
+  routineFocusWorkout?: string | null;
+  routineWorkoutData?: string | null;
+  strengthWorkout?: string | null;
+  strengthWorkoutData?: string | null;
+  workoutProjectId?: string | null;
+};
+
+export type ModelWorkoutConditionInput = {
+  routineFocus?: ModelStringInput | null;
+  routineFocusWorkout?: ModelStringInput | null;
+  routineWorkoutData?: ModelStringInput | null;
+  strengthWorkout?: ModelStringInput | null;
+  strengthWorkoutData?: ModelStringInput | null;
+  and?: Array<ModelWorkoutConditionInput | null> | null;
+  or?: Array<ModelWorkoutConditionInput | null> | null;
+  not?: ModelWorkoutConditionInput | null;
+  workoutProjectId?: ModelIDInput | null;
 };
 
 export type ModelIDInput = {
@@ -137,9 +145,71 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null;
 };
 
+export type Workout = {
+  __typename: 'Workout';
+  id: string;
+  routineFocus?: string | null;
+  routineFocusWorkout?: string | null;
+  routineWorkoutData?: string | null;
+  strengthWorkout?: string | null;
+  strengthWorkoutData?: string | null;
+  project?: Project | null;
+  createdAt: string;
+  updatedAt: string;
+  workoutProjectId?: string | null;
+  owner?: string | null;
+};
+
+export type UpdateWorkoutInput = {
+  id: string;
+  routineFocus?: string | null;
+  routineFocusWorkout?: string | null;
+  routineWorkoutData?: string | null;
+  strengthWorkout?: string | null;
+  strengthWorkoutData?: string | null;
+  workoutProjectId?: string | null;
+};
+
+export type DeleteWorkoutInput = {
+  id: string;
+};
+
+export type ModelProjectFilterInput = {
+  id?: ModelIDInput | null;
+  name?: ModelStringInput | null;
+  section?: ModelStringInput | null;
+  color?: ModelStringInput | null;
+  grade?: ModelStringInput | null;
+  sessionCount?: ModelIntInput | null;
+  imageUrl?: ModelStringInput | null;
+  description?: ModelStringInput | null;
+  and?: Array<ModelProjectFilterInput | null> | null;
+  or?: Array<ModelProjectFilterInput | null> | null;
+  not?: ModelProjectFilterInput | null;
+};
+
 export type ModelProjectConnection = {
   __typename: 'ModelProjectConnection';
   items: Array<Project | null>;
+  nextToken?: string | null;
+};
+
+export type ModelWorkoutFilterInput = {
+  id?: ModelIDInput | null;
+  routineFocus?: ModelStringInput | null;
+  routineFocusWorkout?: ModelStringInput | null;
+  routineWorkoutData?: ModelStringInput | null;
+  strengthWorkout?: ModelStringInput | null;
+  strengthWorkoutData?: ModelStringInput | null;
+  and?: Array<ModelWorkoutFilterInput | null> | null;
+  or?: Array<ModelWorkoutFilterInput | null> | null;
+  not?: ModelWorkoutFilterInput | null;
+  workoutProjectId?: ModelIDInput | null;
+};
+
+export type ModelWorkoutConnection = {
+  __typename: 'ModelWorkoutConnection';
+  items: Array<Workout | null>;
   nextToken?: string | null;
 };
 
@@ -196,6 +266,17 @@ export type ModelSubscriptionIntInput = {
   between?: Array<number | null> | null;
   in?: Array<number | null> | null;
   notIn?: Array<number | null> | null;
+};
+
+export type ModelSubscriptionWorkoutFilterInput = {
+  id?: ModelSubscriptionIDInput | null;
+  routineFocus?: ModelSubscriptionStringInput | null;
+  routineFocusWorkout?: ModelSubscriptionStringInput | null;
+  routineWorkoutData?: ModelSubscriptionStringInput | null;
+  strengthWorkout?: ModelSubscriptionStringInput | null;
+  strengthWorkoutData?: ModelSubscriptionStringInput | null;
+  and?: Array<ModelSubscriptionWorkoutFilterInput | null> | null;
+  or?: Array<ModelSubscriptionWorkoutFilterInput | null> | null;
 };
 
 export type CreateProjectMutationVariables = {
@@ -264,6 +345,111 @@ export type DeleteProjectMutation = {
   } | null;
 };
 
+export type CreateWorkoutMutationVariables = {
+  input: CreateWorkoutInput;
+  condition?: ModelWorkoutConditionInput | null;
+};
+
+export type CreateWorkoutMutation = {
+  createWorkout?: {
+    __typename: 'Workout';
+    id: string;
+    routineFocus?: string | null;
+    routineFocusWorkout?: string | null;
+    routineWorkoutData?: string | null;
+    strengthWorkout?: string | null;
+    strengthWorkoutData?: string | null;
+    project?: {
+      __typename: 'Project';
+      id: string;
+      name: string;
+      section?: string | null;
+      color?: string | null;
+      grade?: string | null;
+      sessionCount?: number | null;
+      imageUrl?: string | null;
+      description?: string | null;
+      createdAt: string;
+      updatedAt: string;
+      owner?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+    workoutProjectId?: string | null;
+    owner?: string | null;
+  } | null;
+};
+
+export type UpdateWorkoutMutationVariables = {
+  input: UpdateWorkoutInput;
+  condition?: ModelWorkoutConditionInput | null;
+};
+
+export type UpdateWorkoutMutation = {
+  updateWorkout?: {
+    __typename: 'Workout';
+    id: string;
+    routineFocus?: string | null;
+    routineFocusWorkout?: string | null;
+    routineWorkoutData?: string | null;
+    strengthWorkout?: string | null;
+    strengthWorkoutData?: string | null;
+    project?: {
+      __typename: 'Project';
+      id: string;
+      name: string;
+      section?: string | null;
+      color?: string | null;
+      grade?: string | null;
+      sessionCount?: number | null;
+      imageUrl?: string | null;
+      description?: string | null;
+      createdAt: string;
+      updatedAt: string;
+      owner?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+    workoutProjectId?: string | null;
+    owner?: string | null;
+  } | null;
+};
+
+export type DeleteWorkoutMutationVariables = {
+  input: DeleteWorkoutInput;
+  condition?: ModelWorkoutConditionInput | null;
+};
+
+export type DeleteWorkoutMutation = {
+  deleteWorkout?: {
+    __typename: 'Workout';
+    id: string;
+    routineFocus?: string | null;
+    routineFocusWorkout?: string | null;
+    routineWorkoutData?: string | null;
+    strengthWorkout?: string | null;
+    strengthWorkoutData?: string | null;
+    project?: {
+      __typename: 'Project';
+      id: string;
+      name: string;
+      section?: string | null;
+      color?: string | null;
+      grade?: string | null;
+      sessionCount?: number | null;
+      imageUrl?: string | null;
+      description?: string | null;
+      createdAt: string;
+      updatedAt: string;
+      owner?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+    workoutProjectId?: string | null;
+    owner?: string | null;
+  } | null;
+};
+
 export type GetProjectQueryVariables = {
   id: string;
 };
@@ -306,6 +492,80 @@ export type ListProjectsQuery = {
       description?: string | null;
       createdAt: string;
       updatedAt: string;
+      owner?: string | null;
+    } | null>;
+    nextToken?: string | null;
+  } | null;
+};
+
+export type GetWorkoutQueryVariables = {
+  id: string;
+};
+
+export type GetWorkoutQuery = {
+  getWorkout?: {
+    __typename: 'Workout';
+    id: string;
+    routineFocus?: string | null;
+    routineFocusWorkout?: string | null;
+    routineWorkoutData?: string | null;
+    strengthWorkout?: string | null;
+    strengthWorkoutData?: string | null;
+    project?: {
+      __typename: 'Project';
+      id: string;
+      name: string;
+      section?: string | null;
+      color?: string | null;
+      grade?: string | null;
+      sessionCount?: number | null;
+      imageUrl?: string | null;
+      description?: string | null;
+      createdAt: string;
+      updatedAt: string;
+      owner?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+    workoutProjectId?: string | null;
+    owner?: string | null;
+  } | null;
+};
+
+export type ListWorkoutsQueryVariables = {
+  filter?: ModelWorkoutFilterInput | null;
+  limit?: number | null;
+  nextToken?: string | null;
+};
+
+export type ListWorkoutsQuery = {
+  listWorkouts?: {
+    __typename: 'ModelWorkoutConnection';
+    items: Array<{
+      __typename: 'Workout';
+      id: string;
+      routineFocus?: string | null;
+      routineFocusWorkout?: string | null;
+      routineWorkoutData?: string | null;
+      strengthWorkout?: string | null;
+      strengthWorkoutData?: string | null;
+      project?: {
+        __typename: 'Project';
+        id: string;
+        name: string;
+        section?: string | null;
+        color?: string | null;
+        grade?: string | null;
+        sessionCount?: number | null;
+        imageUrl?: string | null;
+        description?: string | null;
+        createdAt: string;
+        updatedAt: string;
+        owner?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+      workoutProjectId?: string | null;
       owner?: string | null;
     } | null>;
     nextToken?: string | null;
@@ -374,6 +634,111 @@ export type OnDeleteProjectSubscription = {
     description?: string | null;
     createdAt: string;
     updatedAt: string;
+    owner?: string | null;
+  } | null;
+};
+
+export type OnCreateWorkoutSubscriptionVariables = {
+  filter?: ModelSubscriptionWorkoutFilterInput | null;
+  owner?: string | null;
+};
+
+export type OnCreateWorkoutSubscription = {
+  onCreateWorkout?: {
+    __typename: 'Workout';
+    id: string;
+    routineFocus?: string | null;
+    routineFocusWorkout?: string | null;
+    routineWorkoutData?: string | null;
+    strengthWorkout?: string | null;
+    strengthWorkoutData?: string | null;
+    project?: {
+      __typename: 'Project';
+      id: string;
+      name: string;
+      section?: string | null;
+      color?: string | null;
+      grade?: string | null;
+      sessionCount?: number | null;
+      imageUrl?: string | null;
+      description?: string | null;
+      createdAt: string;
+      updatedAt: string;
+      owner?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+    workoutProjectId?: string | null;
+    owner?: string | null;
+  } | null;
+};
+
+export type OnUpdateWorkoutSubscriptionVariables = {
+  filter?: ModelSubscriptionWorkoutFilterInput | null;
+  owner?: string | null;
+};
+
+export type OnUpdateWorkoutSubscription = {
+  onUpdateWorkout?: {
+    __typename: 'Workout';
+    id: string;
+    routineFocus?: string | null;
+    routineFocusWorkout?: string | null;
+    routineWorkoutData?: string | null;
+    strengthWorkout?: string | null;
+    strengthWorkoutData?: string | null;
+    project?: {
+      __typename: 'Project';
+      id: string;
+      name: string;
+      section?: string | null;
+      color?: string | null;
+      grade?: string | null;
+      sessionCount?: number | null;
+      imageUrl?: string | null;
+      description?: string | null;
+      createdAt: string;
+      updatedAt: string;
+      owner?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+    workoutProjectId?: string | null;
+    owner?: string | null;
+  } | null;
+};
+
+export type OnDeleteWorkoutSubscriptionVariables = {
+  filter?: ModelSubscriptionWorkoutFilterInput | null;
+  owner?: string | null;
+};
+
+export type OnDeleteWorkoutSubscription = {
+  onDeleteWorkout?: {
+    __typename: 'Workout';
+    id: string;
+    routineFocus?: string | null;
+    routineFocusWorkout?: string | null;
+    routineWorkoutData?: string | null;
+    strengthWorkout?: string | null;
+    strengthWorkoutData?: string | null;
+    project?: {
+      __typename: 'Project';
+      id: string;
+      name: string;
+      section?: string | null;
+      color?: string | null;
+      grade?: string | null;
+      sessionCount?: number | null;
+      imageUrl?: string | null;
+      description?: string | null;
+      createdAt: string;
+      updatedAt: string;
+      owner?: string | null;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+    workoutProjectId?: string | null;
     owner?: string | null;
   } | null;
 };

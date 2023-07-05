@@ -7,16 +7,17 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
   FormControl,
   InputLabel,
   Select,
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback, useMemo, useState } from 'react';
+import { Formik } from 'formik';
+import { useEffect, useState } from 'react';
 import { useCustomRouteRanges } from '../hooks/useCustomRouteRanges';
 import { RoutineInterval } from '../hooks/useRoutineIntervalTimer';
+import { RepSetDataObject } from '../types/createTypes';
 import { RoutineRouteSlidersForm } from './RoutineRouteSlidersForm';
 
 export const RoutineRangePanel = ({
@@ -41,18 +42,16 @@ export const RoutineRangePanel = ({
   const handleAccordionChange = () => {
     setAccordionIsExpanded(!accordionIsExpanded);
   };
-  const gradeRangeSelectsAreDisabled = useMemo(() => {
-    return Boolean(customRoutineRouteGrades);
-  }, [customRoutineRouteGrades]);
 
   const { initialValues } = useCustomRouteRanges({
     bottomRange: bottomGradeRangeValue,
     topRange: topGradeRangeValue,
   });
-
-  const resetCustomGradeRanges = useCallback(() => {
-    setCustomRoutineRouteGrades(undefined);
-  }, [setCustomRoutineRouteGrades]);
+  useEffect(() => {
+    if (!customRoutineRouteGrades) {
+      setCustomRoutineRouteGrades(initialValues);
+    }
+  }, [customRoutineRouteGrades, initialValues, setCustomRoutineRouteGrades]);
 
   return (
     <CardContentContainer stackProps={{ spacing: 4 }}>
@@ -69,7 +68,6 @@ export const RoutineRangePanel = ({
             setBottomGradeRangeValue(e.target.value as GradeRange)
           }
           label="Lower Difficulty Range"
-          disabled={gradeRangeSelectsAreDisabled}
         >
           {routeGradeSelectItems}
         </Select>
@@ -81,20 +79,10 @@ export const RoutineRangePanel = ({
           value={topGradeRangeValue}
           onChange={(e) => setTopGradeRangeValue(e.target.value as GradeRange)}
           label="Upper Difficulty Range"
-          disabled={gradeRangeSelectsAreDisabled}
         >
           {routeGradeSelectItems}
         </Select>
       </FormControl>
-      {customRoutineRouteGrades && (
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={resetCustomGradeRanges}
-        >
-          Reset Custom Route Ranges
-        </Button>
-      )}
 
       <Accordion
         expanded={accordionIsExpanded}
@@ -113,7 +101,9 @@ export const RoutineRangePanel = ({
           }}
         >
           <Stack alignItems="center">
-            <Typography>Update Routes</Typography>
+            <Typography variant="h6" fontWeight="bold">
+              Route Grades
+            </Typography>
             <ExpandMoreIcon
               sx={{
                 ...(accordionIsExpanded && { transform: 'rotate(180deg)' }),
@@ -122,10 +112,15 @@ export const RoutineRangePanel = ({
           </Stack>
         </AccordionSummary>
         <AccordionDetails>
-          <RoutineRouteSlidersForm
-            initialValues={customRoutineRouteGrades ?? initialValues}
-            routineInterval={routineInterval}
-          />
+          <Formik<RepSetDataObject>
+            initialValues={initialValues}
+            enableReinitialize
+            onSubmit={(values) => setCustomRoutineRouteGrades(values)}
+          >
+            {() => (
+              <RoutineRouteSlidersForm routineInterval={routineInterval} />
+            )}
+          </Formik>
         </AccordionDetails>
       </Accordion>
     </CardContentContainer>

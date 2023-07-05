@@ -1,11 +1,12 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
-import { useActiveUser } from '@/contexts/ActiveUserContext';
-import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
-import HardwareIcon from '@mui/icons-material/Hardware';
-
 import { PauseResumeButton } from '@/SharedComponents/PauseResumeButton/PauseResumeButton';
 import { SkipButton } from '@/SharedComponents/SkipButton/SkipButton';
+import { useActiveUser } from '@/contexts/ActiveUserContext';
+import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
+import AddIcon from '@mui/icons-material/Add';
+import HardwareIcon from '@mui/icons-material/Hardware';
 import {
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -14,7 +15,8 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CreateNewProjectForm } from '../projects/components/CreateProjectForm';
 import { EditProjectForm } from '../projects/components/EditProjectForm';
 import { createProjectFormValuesFromProject } from '../projects/utils/createProjectFormValuesFromProject';
 
@@ -33,6 +35,9 @@ export const CreateWorkoutProjectPage = () => {
     timerIsPaused,
   } = useCurrentActiveWorkout();
 
+  const [hasCreateNewProjectSection, setHasCreateNewProjectSection] =
+    useState<boolean>(false);
+
   const projectOptions = useMemo(() => {
     return projects?.map((proj) => (
       <MenuItem key={proj.id} value={proj.id}>
@@ -43,6 +48,7 @@ export const CreateWorkoutProjectPage = () => {
 
   const handleSelectedProjectChange = useCallback(
     (event: SelectChangeEvent) => {
+      setHasCreateNewProjectSection(false);
       const project = projects?.find((proj) => event.target.value === proj.id);
       project && setActiveWorkout((prevSesh) => ({ ...prevSesh, project }));
     },
@@ -106,7 +112,17 @@ export const CreateWorkoutProjectPage = () => {
           buttonText="skip project"
           disabled={!activeWorkout.project}
         />
+        <Button
+          fullWidth
+          variant="outlined"
+          onClick={() => setHasCreateNewProjectSection(true)}
+          endIcon={<AddIcon />}
+          disabled={hasCreateNewProjectSection}
+        >
+          create new project
+        </Button>
       </CardContentContainer>
+      {hasCreateNewProjectSection && <CreateNewProjectForm />}
       {activeWorkout.project && (
         <EditProjectForm
           initialValues={createProjectFormValuesFromProject(

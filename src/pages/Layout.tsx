@@ -8,6 +8,7 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import HardwareIcon from '@mui/icons-material/Hardware';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import {
   List,
   ListItem,
@@ -15,7 +16,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { ReactNode } from 'react';
+import { ReactNode, useCallback } from 'react';
 
 const StListItemIcon = styled(ListItemIcon)`
   align-items: center;
@@ -24,14 +25,23 @@ const StListItemText = styled(ListItemText)`
   padding-left: 1rem;
   text-transform: uppercase;
 `;
+const StSubListItemText = styled(ListItemText)`
+  padding-left: 0.5rem;
+  text-transform: capitalize;
+`;
 
 const Layout = ({ children }: { children: ReactNode }) => {
-  const { workoutInProgress } = useCurrentActiveWorkout();
+  const { workoutInProgress, resetActiveWorkout } = useCurrentActiveWorkout();
   const { isGlobalSideNavOpen, setIsGlobalSideNavOpen } = useGlobalSideNav();
 
-  const closeSideNav = () => {
+  const closeSideNav = useCallback(() => {
     setIsGlobalSideNavOpen(false);
-  };
+  }, [setIsGlobalSideNavOpen]);
+
+  const onResetWorkoutClick = useCallback(() => {
+    resetActiveWorkout();
+    closeSideNav();
+  }, [closeSideNav, resetActiveWorkout]);
 
   return (
     <>
@@ -41,7 +51,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
         PaperProps={{ sx: { width: '80%' } }}
       >
         <List>
-          <ListItem key="new workout" divider>
+          <ListItem
+            key="new workout"
+            divider
+            sx={{ display: 'flex', flexDirection: 'column' }}
+          >
             <MuiNextLink
               href="/create"
               onClick={closeSideNav}
@@ -58,6 +72,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 </StListItemIcon>
               </ListItemButton>
             </MuiNextLink>
+            {workoutInProgress && (
+              <ListItemButton onClick={onResetWorkoutClick}>
+                <StListItemIcon>
+                  <RestartAltIcon />
+                  <StSubListItemText primary="reset workout" />
+                </StListItemIcon>
+              </ListItemButton>
+            )}
           </ListItem>
           <ListItem key="calendar" divider>
             <MuiNextLink

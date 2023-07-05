@@ -8,3 +8,13 @@ type Project @model @auth(rules: [{ allow: owner }]) {
   imageUrl: String
   description: String
 }
+
+type Workout @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  routineFocus: String
+  routineFocusWorkout: String
+  routineWorkoutData: AWSJSON
+  strengthWorkout: String
+  strengthWorkoutData: AWSJSON
+  project: Project @hasOne
+}

@@ -43,3 +43,68 @@ export const listProjects = /* GraphQL */ `
     }
   }
 `;
+export const getWorkout = /* GraphQL */ `
+  query GetWorkout($id: ID!) {
+    getWorkout(id: $id) {
+      id
+      routineFocus
+      routineFocusWorkout
+      routineWorkoutData
+      strengthWorkout
+      strengthWorkoutData
+      project {
+        id
+        name
+        section
+        color
+        grade
+        sessionCount
+        imageUrl
+        description
+        createdAt
+        updatedAt
+        owner
+      }
+      createdAt
+      updatedAt
+      workoutProjectId
+      owner
+    }
+  }
+`;
+export const listWorkouts = /* GraphQL */ `
+  query ListWorkouts(
+    $filter: ModelWorkoutFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listWorkouts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        routineFocus
+        routineFocusWorkout
+        routineWorkoutData
+        strengthWorkout
+        strengthWorkoutData
+        project {
+          id
+          name
+          section
+          color
+          grade
+          sessionCount
+          imageUrl
+          description
+          createdAt
+          updatedAt
+          owner
+        }
+        createdAt
+        updatedAt
+        workoutProjectId
+        owner
+      }
+      nextToken
+    }
+  }
+`;
