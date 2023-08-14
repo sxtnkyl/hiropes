@@ -1,7 +1,7 @@
 import CardContentContainer from '@/SharedComponents/CardContentContainer.tsx/CardContentContainer';
 import MuiNextLink from '@/SharedComponents/MuiNext/MuiNextLink';
 import theme from '@/styles/theme';
-import { Refresh } from '@mui/icons-material';
+import Refresh from '@mui/icons-material/Refresh';
 import { IconButton, Typography } from '@mui/material';
 
 export default function NotFound() {
