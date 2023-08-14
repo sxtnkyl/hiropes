@@ -1,3 +1,4 @@
+import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
 import TimerTitle from '@/SharedComponents/TimerTitle/TimerTitle';
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
@@ -6,9 +7,21 @@ import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext'
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { SyntheticEvent, useState } from 'react';
-import { CreateProjectPage } from './CreateProjectPage';
-import { ManageProjectsPage } from './ManageProjectsPage';
+
+const DynamicCreateProjectPage = dynamic(
+  () => import('./CreateProjectPage').then((res) => res.CreateProjectPage),
+  {
+    loading: () => <LoadingOverlay loading={true} />,
+  }
+);
+const DynamicManageProjectsPage = dynamic(
+  () => import('./ManageProjectsPage').then((res) => res.ManageProjectsPage),
+  {
+    loading: () => <LoadingOverlay loading={true} />,
+  }
+);
 
 const projectsPageTabs: TabProps[] = [
   { label: 'create', value: 'create' },
@@ -66,8 +79,8 @@ const ProjectsPage = () => {
       </TopActionTabBar>
 
       <main>
-        {activeProjectTab === 'create' && <CreateProjectPage />}
-        {activeProjectTab === 'manage' && <ManageProjectsPage />}
+        {activeProjectTab === 'create' && <DynamicCreateProjectPage />}
+        {activeProjectTab === 'manage' && <DynamicManageProjectsPage />}
       </main>
     </>
   );

@@ -4,6 +4,7 @@ import {
   OnUpdateWorkoutSubscription,
   Workout,
 } from '@/API';
+import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
 import TopActionTabBar from '@/SharedComponents/TopActionTabBar/TopActionTabBar';
@@ -15,8 +16,16 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps, Typography } from '@mui/material';
 import { API, graphqlOperation, withSSRContext } from 'aws-amplify';
 import { GetServerSideProps } from 'next';
+import dynamic from 'next/dynamic';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { TrackingWorkoutsPage } from './TrackingWorkoutsPage';
+
+const DynamicTrackingWorkoutsPage = dynamic(
+  () =>
+    import('./TrackingWorkoutsPage').then((res) => res.TrackingWorkoutsPage),
+  {
+    loading: () => <LoadingOverlay loading={true} />,
+  }
+);
 
 const trackingActionTabs: TabProps[] = [
   { label: 'workouts', value: 'workouts' },
@@ -122,7 +131,7 @@ const TrackingPage = ({ workouts }: { workouts: Workout[] }) => {
       <main>
         {!activeTab && <>tracking descrip</>}
         {activeTab === 'workouts' && (
-          <TrackingWorkoutsPage workouts={subscribedWorkouts} />
+          <DynamicTrackingWorkoutsPage workouts={subscribedWorkouts} />
         )}
         {activeTab === 'climbing' && <>climbing</>}
         {activeTab === 'strength' && <>strength</>}

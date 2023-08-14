@@ -1,5 +1,6 @@
 import MuiNextLink from '@/SharedComponents/MuiNext/MuiNextLink';
-import SideDrawer from '@/SharedComponents/SideDrawer/SideDrawer';
+
+import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import styled from '@emotion/styled';
@@ -16,7 +17,15 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { ReactNode, useCallback } from 'react';
+
+const DynamicSideDrawer = dynamic(
+  () => import('../SharedComponents/SideDrawer/SideDrawer'),
+  {
+    loading: () => <LoadingOverlay loading={true} />,
+  }
+);
 
 const StListItemIcon = styled(ListItemIcon)`
   align-items: center;
@@ -45,7 +54,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <>
-      <SideDrawer
+      <DynamicSideDrawer
         open={isGlobalSideNavOpen}
         onClose={closeSideNav}
         PaperProps={{ sx: { width: '80%' } }}
@@ -138,7 +147,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </MuiNextLink>
           </ListItem>
         </List>
-      </SideDrawer>
+      </DynamicSideDrawer>
       {children}
     </>
   );

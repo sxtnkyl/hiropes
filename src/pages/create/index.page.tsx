@@ -1,3 +1,4 @@
+import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
 import TimerTitle from '@/SharedComponents/TimerTitle/TimerTitle';
 import TitleBar from '@/SharedComponents/TitleBar/TitleBar';
 import RightActionHomeLink from '@/SharedComponents/TopActionTabBar/RightActionHomeLink';
@@ -6,13 +7,47 @@ import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext'
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton, Tab, TabProps } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { SyntheticEvent, useMemo } from 'react';
-import { CreateWorkoutProjectPage } from './CreateWorkoutProjectPage';
-import { CreateWorkoutRoutinePage } from './CreateWorkoutRoutinePage';
 import CreateWorkoutStartPage from './CreateWorkoutStartPage';
-import { CreateWorkoutStrengthPage } from './CreateWorkoutStrengthPage';
-import { CreateWorkoutWarmupPage } from './CreateWorkoutWarmupPage';
 import { WorkoutStep } from './types/createTypes';
+
+const DynamicCreateWorkoutWarmupPage = dynamic(
+  () =>
+    import('./CreateWorkoutWarmupPage').then(
+      (res) => res.CreateWorkoutWarmupPage
+    ),
+  {
+    loading: () => <LoadingOverlay loading={true} />,
+  }
+);
+const DynamicCreateWorkoutProjectPage = dynamic(
+  () =>
+    import('./CreateWorkoutProjectPage').then(
+      (res) => res.CreateWorkoutProjectPage
+    ),
+  {
+    loading: () => <LoadingOverlay loading={true} />,
+  }
+);
+const DynamicCreateWorkoutRoutinePage = dynamic(
+  () =>
+    import('./CreateWorkoutRoutinePage').then(
+      (res) => res.CreateWorkoutRoutinePage
+    ),
+  {
+    loading: () => <LoadingOverlay loading={true} />,
+  }
+);
+const DynamicCreateWorkoutStrengthPage = dynamic(
+  () =>
+    import('./CreateWorkoutStrengthPage').then(
+      (res) => res.CreateWorkoutStrengthPage
+    ),
+  {
+    loading: () => <LoadingOverlay loading={true} />,
+  }
+);
 
 const createActionTabs: TabProps[] = [
   { label: 'start', value: 'start' },
@@ -89,10 +124,12 @@ const CreateWorkoutPage = () => {
 
       <main>
         {activeWorkoutStep === 'start' && <CreateWorkoutStartPage />}
-        {activeWorkoutStep === 'warmup' && <CreateWorkoutWarmupPage />}
-        {activeWorkoutStep === 'project' && <CreateWorkoutProjectPage />}
-        {activeWorkoutStep === 'routine' && <CreateWorkoutRoutinePage />}
-        {activeWorkoutStep === 'strength' && <CreateWorkoutStrengthPage />}
+        {activeWorkoutStep === 'warmup' && <DynamicCreateWorkoutWarmupPage />}
+        {activeWorkoutStep === 'project' && <DynamicCreateWorkoutProjectPage />}
+        {activeWorkoutStep === 'routine' && <DynamicCreateWorkoutRoutinePage />}
+        {activeWorkoutStep === 'strength' && (
+          <DynamicCreateWorkoutStrengthPage />
+        )}
       </main>
     </>
   );
