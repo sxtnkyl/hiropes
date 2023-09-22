@@ -1,22 +1,34 @@
+import { LoadingOverlay } from '@/SharedComponents/LoadingOverlay/LoadingOverlay';
 import MuiNextLink from '@/SharedComponents/MuiNext/MuiNextLink';
-import SideDrawer from '@/SharedComponents/SideDrawer/SideDrawer';
 import { useCurrentActiveWorkout } from '@/contexts/CurrentActiveWorkoutContext';
 import { useGlobalSideNav } from '@/contexts/GlobalSideNavContext';
+import { withAuthenticator } from '@aws-amplify/ui-react';
 import styled from '@emotion/styled';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import HardwareIcon from '@mui/icons-material/Hardware';
+import HikingIcon from '@mui/icons-material/Hiking';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import {
+  Box,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { ReactNode, useCallback } from 'react';
+
+const DynamicSideDrawer = dynamic(
+  () => import('../SharedComponents/SideDrawer/SideDrawer'),
+  {
+    loading: () => <LoadingOverlay loading={true} />,
+  }
+);
 
 const StListItemIcon = styled(ListItemIcon)`
   align-items: center;
@@ -45,7 +57,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <>
-      <SideDrawer
+      <DynamicSideDrawer
         open={isGlobalSideNavOpen}
         onClose={closeSideNav}
         PaperProps={{ sx: { width: '80%' } }}
@@ -138,9 +150,20 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </MuiNextLink>
           </ListItem>
         </List>
-      </SideDrawer>
+      </DynamicSideDrawer>
       {children}
     </>
   );
 };
-export default Layout;
+export default withAuthenticator(Layout, {
+  components: {
+    SignIn: {
+      Header: () => (
+        <Box display="flex" alignItems="center" marginBottom="0.5rem">
+          <HikingIcon />
+          <Typography variant="h4">Hiropes Bouldering</Typography>
+        </Box>
+      ),
+    },
+  },
+});
